@@ -66,6 +66,13 @@ void ofApp::draw(){
     levelDepth = floorHeight / GLfloat(resY);
 	plataformas();
 	glPopMatrix();// level pop
+	glPushMatrix();// perspective push
+	marioPosHeight = floorHeight / GLfloat(resY);
+	marioPosWidth = floorWidth / GLfloat(resX);
+	marioPosDepth = floorHeight / GLfloat(resY);
+	Mario m(0.5, marioPosHeight, 0, 0,  (resY / 2)/2, resY);
+	m.draw();
+	glPopMatrix();// mario pop
 	glPopMatrix();// perspective pop
 }
 //--------------------------------------------------------------

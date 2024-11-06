@@ -5,6 +5,7 @@
 #include "cg_drawing_extras.h"
 #include "cg_cam_extras.h"
 #include "plataforma.h"
+#include "mario.h"
 
 class ofApp : public ofBaseApp{
 
@@ -33,8 +34,13 @@ class ofApp : public ofBaseApp{
 		GLint resX = 9, resY = 9;
 		GLfloat floorWidth = gw() * 0.5, floorHeight = gw() * 0.5, floorHeightPos = 0.;
 		GLfloat levelWidth, levelHeight, levelDepth;
+
 		//view
 		GLint view;
+
+		//mario
+		GLfloat marioSize = 0.5;
+		GLfloat marioPosHeight, marioPosWidth, marioPosDepth;
 
 
 		
