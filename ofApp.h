@@ -10,6 +10,7 @@
 class ofApp : public ofBaseApp{
 
 	public:
+		ofApp();
 		void setup() override;
 		void update() override;
 		void draw() override;
@@ -28,7 +29,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo) override;
 		void gotMessage(ofMessage msg) override;
 		void perspective1();
+		void perspective2();
 		void plataformas();
+
+		// Perspective variables
+        GLfloat LensAngle;
+        GLfloat alpha;
+        GLfloat beta;
+        GLfloat lensAngle;
 
 		//floor
 		GLint resX = 9, resY = 9;
@@ -40,8 +48,7 @@ class ofApp : public ofBaseApp{
 
 		//mario
 		GLfloat marioSize = 0.5;
-		GLfloat marioPosHeight, marioPosWidth, marioPosDepth;
-
-
+		GLfloat marioHeight, marioWidth, marioDepth, marioPosHeight;
+		Mario marioInstance;
 		
 };

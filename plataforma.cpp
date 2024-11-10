@@ -9,7 +9,7 @@ Platform::Platform(GLfloat levelWidth, GLfloat levelHeight, GLfloat levelDepth, 
     this->levelHeight = levelHeight;
     this->levelDepth = levelDepth;
     if(height != 0){
-        this->height = (resY / 2) / height;
+        this->height = height;
     }else{
         this->height = 0;
     }

@@ -4,9 +4,19 @@
 
 class Mario {
     public:
-        Mario(GLfloat Size, GLfloat PositionHeight, GLfloat PositionWidth, GLfloat PositionDepth, GLfloat StartinglevelHeight, GLfloat resY);
+        Mario(GLfloat Mariosize, GLfloat MarioWidth, GLfloat MarioHeight, GLfloat PositionHeight, GLfloat MarioDepth, GLfloat StartinglevelHeight, GLint resY);
         void draw();
+        void moveLeft();
+        void moveRight();
+        void moveFront();
+        void moveBack();
+        void setPerspective(int perspective);
     private:
-        GLfloat size, PositionHeight, PositionWidth, PositionDepth,  StartinglevelHeight, resY;
-};
+        GLfloat Mariosize, PositionHeight, MarioWidth, MarioDepth, MarioHeight,  StartinglevelHeight, resY;
+        GLfloat positionX = 0.0f;
+        GLfloat positionY = 0.0f;
+        GLfloat positionZ = 0.0f;
+        GLfloat speed = 0.1f;
+        GLint currentPerspective;
+};  
 #endif // MARIO_H

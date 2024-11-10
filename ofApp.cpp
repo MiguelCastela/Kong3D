@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
-
+ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
+} //default constructor for marioInstance so he can move 
 //--------------------------------------------------------------
 void ofApp::setup(){
     glEnable(GL_DEPTH_TEST);
@@ -19,10 +20,21 @@ void ofApp::setup(){
 	glPointSize(200);
 	glLineWidth(3);
 
+	marioInstance = Mario(0.25, marioWidth, marioHeight, marioPosHeight, marioDepth, 3, resY);
+
+	LensAngle = 30;
+	alpha = 10;
+	beta = 1000;
+	
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	marioInstance.moveLeft();
+	marioInstance.moveRight();
+	marioInstance.moveFront();
+	marioInstance.moveBack();
 
 }
 void ofApp::perspective1(){
@@ -32,15 +44,27 @@ void ofApp::perspective1(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	lookat(0,0,1,0,0,0,0,1,0);
+}
 
+void ofApp::perspective2(){
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	perspective(LensAngle, alpha, beta);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	lookat(gw()*0.5, -400, 1500, gw()*0.5, gh()*0.44, 0, 0, -1, 0);
+	
+	
 }
 void ofApp::plataformas(){//talvez fazer modular, com o argumento a ser o numero de plat que quero
-	for (int i = -(resY / 2)/2; i <= (resY / 2)/2; i++) {
+	for (int i = -(resY / 2); i <= (resY / 2); i += 2) {
 		Platform p(levelWidth, levelHeight, levelDepth, i, resY);
 		p.draw();
 	}
 
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -50,8 +74,11 @@ void ofApp::draw(){
 	switch (view) {
 	case 0:
 		perspective1();
+		marioInstance.setPerspective(1);
 		break;
 	case 1:
+		perspective2();
+		marioInstance.setPerspective(2);
 		break;
 	}
     glColor3f(1, 1, 1);
@@ -66,12 +93,13 @@ void ofApp::draw(){
     levelDepth = floorHeight / GLfloat(resY);
 	plataformas();
 	glPopMatrix();// level pop
-	glPushMatrix();// perspective push
+	glPushMatrix();// mario push
 	marioPosHeight = floorHeight / GLfloat(resY);
-	marioPosWidth = floorWidth / GLfloat(resX);
-	marioPosDepth = floorHeight / GLfloat(resY);
-	Mario m(0.5, marioPosHeight, 0, 0,  (resY / 2)/2, resY);
-	m.draw();
+	marioWidth = floorWidth/ (GLfloat(resX)*2);
+	marioDepth = floorHeight / (GLfloat(resY)*2);
+	marioHeight = floorHeight / (GLfloat(resY)*2);
+	marioInstance.draw();
+	//mario();
 	glPopMatrix();// mario pop
 	glPopMatrix();// perspective pop
 }
@@ -106,9 +134,21 @@ void ofApp::keyPressed(int key){
 		break;
 		//tank
     case 't':
-		view ++;
+		view = (view+1) %2;
 		break;
-}
+	case OF_KEY_RIGHT:
+		marioInstance.moveRight();
+		break;
+	case OF_KEY_LEFT:
+		marioInstance.moveLeft();
+		break;
+	case OF_KEY_UP:
+		marioInstance.moveFront();
+		break;
+	case OF_KEY_DOWN:
+		marioInstance.moveBack();
+		break;
+	}
 }
 
 //--------------------------------------------------------------
