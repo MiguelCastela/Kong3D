@@ -26,42 +26,8 @@ void Platform::draw() {
     glTranslatef(gw() * 0.5, (gh() * 0.5) + (height * levelHeight) , 0);
 	glScalef(levelWidth, levelHeight, levelDepth);
 	cube_unit(0.5);
+    cube_unit_outline(0.5);
 	glPopMatrix();//level pop
     
-    
-    glColor3f(0, 0, 0);  // Black for the edges
-    glPushMatrix();
-    glTranslatef(gw() * 0.5, (gh() * 0.5) + (height * levelHeight), 0);
-    
-    GLfloat x1 = -levelWidth * 0.5;
-    GLfloat x2 = levelWidth * 0.5;
-    GLfloat y1 = -levelHeight * 0.5;
-    GLfloat y2 = levelHeight * 0.5;
-    GLfloat z1 = -levelDepth * 0.5;
-    GLfloat z2 = levelDepth * 0.5;
-
-    glBegin(GL_LINES);
-
-    // Front rectangle edges (4 edges)
-    glVertex3f(x1, y1, z1); glVertex3f(x2, y1, z1);
-    glVertex3f(x2, y1, z1); glVertex3f(x2, y2, z1);
-    glVertex3f(x2, y2, z1); glVertex3f(x1, y2, z1);
-    glVertex3f(x1, y2, z1); glVertex3f(x1, y1, z1);
-
-    // Back rectangle edges (4 edges)
-    glVertex3f(x1, y1, z2); glVertex3f(x2, y1, z2);
-    glVertex3f(x2, y1, z2); glVertex3f(x2, y2, z2);
-    glVertex3f(x2, y2, z2); glVertex3f(x1, y2, z2);
-    glVertex3f(x1, y2, z2); glVertex3f(x1, y1, z2);
-
-    // Vertical edges (4 edges)
-    glVertex3f(x1, y1, z1); glVertex3f(x1, y1, z2);
-    glVertex3f(x2, y1, z1); glVertex3f(x2, y1, z2);
-    glVertex3f(x2, y2, z1); glVertex3f(x2, y2, z2);
-    glVertex3f(x1, y2, z1); glVertex3f(x1, y2, z2);
-
-    glEnd();  
-
-    glPopMatrix();
 }
 

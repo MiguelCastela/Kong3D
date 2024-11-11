@@ -33,6 +33,7 @@ void Mario::draw() {
     glScalef(MarioWidth, MarioHeight, MarioDepth);
     glTranslatef(positionX, positionY, positionZ);
     cube_unit(Mariosize);
+    cube_unit_outline(Mariosize);
     glPopMatrix();//level pop
     glColor3f(0, 0, 0);
 }

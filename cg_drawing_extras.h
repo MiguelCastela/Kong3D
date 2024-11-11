@@ -98,24 +98,24 @@ inline void cube_unit(GLfloat p) {
     glVertex3f(p, -p, -p);
 
     glEnd();
-
-    // Draw the edges (12 lines in black)
-    glColor3f(0, 0, 0);  // Black for the edges
+}
+inline void cube_unit_outline(GLfloat p) {
+    glColor3f(0, 0, 0); // Set color to black for the outline
     glBegin(GL_LINES);
 
-    // Front rectangle edges
+    // Front face edges
     glVertex3f(-p, -p, p); glVertex3f(p, -p, p);
     glVertex3f(p, -p, p); glVertex3f(p, p, p);
     glVertex3f(p, p, p); glVertex3f(-p, p, p);
     glVertex3f(-p, p, p); glVertex3f(-p, -p, p);
 
-    // Back rectangle edges
+    // Back face edges
     glVertex3f(-p, -p, -p); glVertex3f(p, -p, -p);
     glVertex3f(p, -p, -p); glVertex3f(p, p, -p);
     glVertex3f(p, p, -p); glVertex3f(-p, p, -p);
     glVertex3f(-p, p, -p); glVertex3f(-p, -p, -p);
 
-    // Vertical edges
+    // Connecting edges between front and back faces
     glVertex3f(-p, -p, p); glVertex3f(-p, -p, -p);
     glVertex3f(p, -p, p); glVertex3f(p, -p, -p);
     glVertex3f(p, p, p); glVertex3f(p, p, -p);
