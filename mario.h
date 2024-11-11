@@ -10,13 +10,22 @@ class Mario {
         void moveRight();
         void moveFront();
         void moveBack();
+        void jump();
+        void jumpKey();
         void setPerspective(int perspective);
     private:
         GLfloat Mariosize, PositionHeight, MarioWidth, MarioDepth, MarioHeight,  StartinglevelHeight, resY;
-        GLfloat positionX = 0.0f;
-        GLfloat positionY = 0.0f;
-        GLfloat positionZ = 0.0f;
-        GLfloat speed = 0.1f;
+        GLfloat positionX;
+        GLfloat positionY;
+        GLfloat positionZ;
+        GLfloat speed;
         GLint currentPerspective;
+            // Jumping variables
+        bool isJumping;      // Is Mario currently jumping
+        GLfloat jumpVelocity; // Initial velocity for the jump
+        GLfloat gravity;     // Gravity factor to pull Mario down
+        GLfloat groundLevel;
+
+
 };  
 #endif // MARIO_H

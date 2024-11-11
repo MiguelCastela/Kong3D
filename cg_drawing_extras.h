@@ -58,50 +58,70 @@ inline void malha_unit(GLint m, GLint n) {
 
 
 inline void cube_unit(GLfloat p) {
+    // Draw the body of the cube (as quads)
+    glBegin(GL_QUADS);
 
-	glBegin(GL_QUADS);
+    // Front face
+    glVertex3f(-p, -p, p);
+    glVertex3f(-p, p, p);
+    glVertex3f(p, p, p);
+    glVertex3f(p, -p, p);
 
-	//frente
-	//glColor3f(1, 0, 0);
-	glVertex3f(-p, -p, p);
-	glVertex3f(-p, p, p);
-	glVertex3f(p, p, p);
-	glVertex3f(p, -p, p);
+    // Back face
+    glVertex3f(-p, -p, -p);
+    glVertex3f(p, -p, -p);
+    glVertex3f(p, p, -p);
+    glVertex3f(-p, p, -p);
 
-	//tras
-	//glColor3f(0, 1, 0);
-	glVertex3f(-p, -p, -p);
-	glVertex3f(p, -p, -p);
-	glVertex3f(p, p, -p);
-	glVertex3f(-p, p, -p);
+    // Bottom face
+    glVertex3f(-p, -p, -p);
+    glVertex3f(-p, -p, p);
+    glVertex3f(p, -p, p);
+    glVertex3f(p, -p, -p);
 
-	//glColor3f(1, 1, 1);
-	//cima
-	glVertex3f(-p, -p, -p);
-	glVertex3f(-p, -p, p);
-	glVertex3f(p, -p, p);
-	glVertex3f(p, -p, -p);
+    // Top face
+    glVertex3f(-p, p, p);
+    glVertex3f(-p, p, -p);
+    glVertex3f(p, p, -p);
+    glVertex3f(p, p, p);
 
-	//baixo
-	glVertex3f(-p, p, p);
-	glVertex3f(-p, p, -p);
-	glVertex3f(p, p, -p);
-	glVertex3f(p, p, p);
+    // Left face
+    glVertex3f(-p, -p, p);
+    glVertex3f(-p, -p, -p);
+    glVertex3f(-p, p, -p);
+    glVertex3f(-p, p, p);
 
-	//esq
-	glVertex3f(-p, -p, p);
-	glVertex3f(-p, -p, -p);
-	glVertex3f(-p, p, -p);
-	glVertex3f(-p, p, p);
+    // Right face
+    glVertex3f(p, -p, p);
+    glVertex3f(p, p, p);
+    glVertex3f(p, p, -p);
+    glVertex3f(p, -p, -p);
 
-	//dir
-	glVertex3f(p, -p, p);
-	glVertex3f(p, p, p);
-	glVertex3f(p, p, -p);
-	glVertex3f(p, -p, -p);
+    glEnd();
 
-	glEnd();
+    // Draw the edges (12 lines in black)
+    glColor3f(0, 0, 0);  // Black for the edges
+    glBegin(GL_LINES);
 
+    // Front rectangle edges
+    glVertex3f(-p, -p, p); glVertex3f(p, -p, p);
+    glVertex3f(p, -p, p); glVertex3f(p, p, p);
+    glVertex3f(p, p, p); glVertex3f(-p, p, p);
+    glVertex3f(-p, p, p); glVertex3f(-p, -p, p);
+
+    // Back rectangle edges
+    glVertex3f(-p, -p, -p); glVertex3f(p, -p, -p);
+    glVertex3f(p, -p, -p); glVertex3f(p, p, -p);
+    glVertex3f(p, p, -p); glVertex3f(-p, p, -p);
+    glVertex3f(-p, p, -p); glVertex3f(-p, -p, -p);
+
+    // Vertical edges
+    glVertex3f(-p, -p, p); glVertex3f(-p, -p, -p);
+    glVertex3f(p, -p, p); glVertex3f(p, -p, -p);
+    glVertex3f(p, p, p); glVertex3f(p, p, -p);
+    glVertex3f(-p, p, p); glVertex3f(-p, p, -p);
+
+    glEnd();
 }
 
 //funcao que desenha cubo unit�rio com malha_unit()

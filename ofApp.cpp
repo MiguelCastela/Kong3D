@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
-} //default constructor for marioInstance so he can move 
+} //default constructor for marioInstance so it can use its functions
 //--------------------------------------------------------------
 void ofApp::setup(){
     glEnable(GL_DEPTH_TEST);
@@ -35,6 +35,8 @@ void ofApp::update(){
 	marioInstance.moveRight();
 	marioInstance.moveFront();
 	marioInstance.moveBack();
+	marioInstance.jump();
+	marioInstance.jumpKey();
 
 }
 void ofApp::perspective1(){
@@ -81,11 +83,10 @@ void ofApp::draw(){
 		marioInstance.setPerspective(2);
 		break;
 	}
-    glColor3f(1, 1, 1);
     glPushMatrix();//floor push
     glTranslatef(gw() * 0.5, gh() * 0.5, 0);
     glScalef(floorWidth, floorHeight, 1.);
-	malha_unit(resX, resY);
+	//malha_unit(resX, resY);
 	glPopMatrix();//floor pop
 	glPushMatrix();// level push
 	levelWidth = floorWidth;
@@ -147,6 +148,9 @@ void ofApp::keyPressed(int key){
 		break;
 	case OF_KEY_DOWN:
 		marioInstance.moveBack();
+		break;
+	case ' ':
+		marioInstance.jumpKey();
 		break;
 	}
 }

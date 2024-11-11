@@ -7,6 +7,7 @@ public:
     void draw();    
 private:
     GLfloat levelWidth, levelHeight, levelDepth, height, resY;
+
     
 };
 #endif // PLATFORM_H
