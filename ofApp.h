@@ -4,8 +4,10 @@
 #include "cg_extras.h"
 #include "cg_drawing_extras.h"
 #include "cg_cam_extras.h"
+#include "escadas.h"
 #include "plataforma.h"
 #include "mario.h"
+#include <vector>
 
 class ofApp : public ofBaseApp{
 
@@ -30,7 +32,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg) override;
 		void perspective1();
 		void perspective2();
-		void plataformas();
 
 		// Perspective variables
         GLfloat LensAngle;
@@ -50,5 +51,10 @@ class ofApp : public ofBaseApp{
 		GLfloat marioSize = 0.5;
 		GLfloat marioHeight, marioWidth, marioDepth, marioPosHeight;
 		Mario marioInstance;
-		
+
+		//platform vector
+		std::vector<Platform> platforms;	
+
+		//ladder vector
+		std::vector<Ladder> ladders;	
 };

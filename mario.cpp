@@ -29,22 +29,19 @@ Mario::Mario(GLfloat Mariosize, GLfloat MarioWidth, GLfloat MarioHeight, GLfloat
 void Mario::draw() {
     glColor3f(1, 0, 0);
     glPushMatrix();//base push
-    glTranslatef(gw() * 0.5, groundLevel , 0);
-    glScalef(MarioWidth, MarioHeight, MarioDepth);
-    glTranslatef(positionX, positionY, positionZ);
-    cube_unit(Mariosize);
-    cube_unit_outline(Mariosize);
+        glTranslatef(gw() * 0.5, groundLevel , 0);
+        glScalef(MarioWidth, MarioHeight, MarioDepth);
+        glTranslatef(positionX, positionY, positionZ);
+        cube_unit(Mariosize);
+        cube_unit_outline(Mariosize);
     glPopMatrix();//level pop
     glColor3f(0, 0, 0);
 }
 void Mario::setPerspective(int perspective) {
     if (currentPerspective != perspective) {
-        // Adjust Mario's position based on the new perspective
         if (perspective == 1) {
-            // For perspective 1, ensure Mario's position is correct
             positionX = abs(positionX);  // Ensure Mario is in the positive X direction
-        } else if (perspective == 2) {
-            // For perspective 2, invert Mario's X position
+        }else if (perspective == 2) {
             positionX = -abs(positionX);  // Ensure Mario is in the negative X direction
         }
     }
@@ -53,48 +50,61 @@ void Mario::setPerspective(int perspective) {
 
 void Mario::moveRight() {
         if (ofGetKeyPressed(OF_KEY_RIGHT)) {
-            if(currentPerspective == 1){
+            if(positionX < resY-Mariosize){
                     positionX += speed; 
-            }else if(currentPerspective == 2){
-            positionX -= speed;
+            }else{
+                positionX = resY-Mariosize;
             }
-            if(positionX < -resY+Mariosize){
-                positionX = -resY+Mariosize;
-            }
-        }
+    }
 }
 void Mario::moveLeft() {
        if (ofGetKeyPressed(OF_KEY_LEFT)) {
-            if(currentPerspective == 1){
-
+            if(positionX > -resY+Mariosize){
                 positionX -= speed; 
-            }else if(currentPerspective == 2){
-            positionX += speed;   
-            }
-            if(positionX > resY-Mariosize){
-                positionX = resY-Mariosize;
+            }else{
+                positionX = -resY+Mariosize;
         }
-       }
+    }
 }
 void Mario::moveFront() {
         if (ofGetKeyPressed(OF_KEY_UP)) {
-            positionZ -= speed; // Move front  
-        if(positionZ < ((-resY+Mariosize)/resY)+Mariosize){
-            positionZ = ((-resY+Mariosize)/resY)+Mariosize;
-
+            if(positionZ < ((resY-Mariosize)/resY)-Mariosize){
+            positionZ += speed; // Move front  
         }
+        else{
+            positionZ = ((resY-Mariosize)/resY)-Mariosize;
+
+    }
 }
 }
 void Mario::moveBack() {
         if (ofGetKeyPressed(OF_KEY_DOWN)) {
-            positionZ += speed; // Move back
-
-        if(positionZ > ((resY-Mariosize)/resY)-Mariosize){
-            positionZ = ((resY-Mariosize)/resY)-Mariosize;
+            if(positionZ > ((-resY+Mariosize)/resY)+Mariosize){
+            positionZ -= speed; // Move back
+        }else{
+            positionZ = ((-resY+Mariosize)/resY)+Mariosize;
         }
-        }
+    }
 }
-    
+/*
+bool Mario::isOnLadder(const LadderPosition& ladder) {
+    // Half dimensions of Mario
+    float halfWidth = MarioWidth / 2.0f;
+    float halfDepth = MarioDepth / 2.0f;
+
+    // Check if Mario's position overlaps with the ladder's hitbox
+    bool isInXRange = (positionX + halfWidth >= ladder.x - ladder.width / 2) &&
+                      (positionX - halfWidth <= ladder.x + ladder.width / 2);
+
+    bool isInZRange = (positionZ + halfDepth >= ladder.z - ladder.depth / 2) &&
+                      (positionZ - halfDepth <= ladder.z + ladder.depth / 2);
+
+    // Check if Mario is within the ladder's vertical range (y-axis)
+    bool isInYRange = (positionY >= ladder.y && positionY <= ladder.y + ladder.height);
+
+    return isInXRange && isInZRange && isInYRange;
+}
+*/
 
 void Mario::jumpKey() {
     if (ofGetKeyPressed(' ') && !isJumping) { // Jump only if Mario is not already jumping
@@ -103,7 +113,6 @@ void Mario::jumpKey() {
     }
 }
 
-// Handle jump logic
 void Mario::jump() {
     if (isJumping) {
         positionY -= jumpVelocity;     

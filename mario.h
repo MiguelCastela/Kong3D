@@ -13,6 +13,7 @@ class Mario {
         void jump();
         void jumpKey();
         void setPerspective(int perspective);
+        //bool isOnLadder(const LadderPosition& ladder);
     private:
         GLfloat Mariosize, PositionHeight, MarioWidth, MarioDepth, MarioHeight,  StartinglevelHeight, resY;
         GLfloat positionX;
@@ -20,7 +21,7 @@ class Mario {
         GLfloat positionZ;
         GLfloat speed;
         GLint currentPerspective;
-            // Jumping variables
+        // Jumping variables
         bool isJumping;      // Is Mario currently jumping
         GLfloat jumpVelocity; // Initial velocity for the jump
         GLfloat gravity;     // Gravity factor to pull Mario down

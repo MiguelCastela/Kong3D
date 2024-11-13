@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+
 ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
 } //default constructor for marioInstance so it can use its functions
 //--------------------------------------------------------------
@@ -25,6 +26,21 @@ void ofApp::setup(){
 	LensAngle = 30;
 	alpha = 10;
 	beta = 1000;
+	platforms.clear();
+	ladders.clear();
+	int index = resY/2;
+    for (int i = -(resY / 2); i <= (resY / 2); i += 2) {
+        Platform p(levelWidth, levelHeight, levelDepth, i, resY);
+		Ladder l(levelWidth, levelHeight, levelDepth, i, resY);
+        p.setIndex(index);
+		l.setIndex(index); 
+        platforms.push_back(p);
+		ladders.push_back(l);
+        index--;
+    }
+
+
+
 	
 
 }
@@ -42,7 +58,7 @@ void ofApp::update(){
 void ofApp::perspective1(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0 , gw(), gh(), 0, -gh(), gh());
+	glOrtho(0 , gw(), gh(), 0, -5*gw(), 5*gw());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	lookat(0,0,1,0,0,0,0,1,0);
@@ -54,24 +70,29 @@ void ofApp::perspective2(){
 	perspective(LensAngle, alpha, beta);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	lookat(gw()*0.5, -400, 1500, gw()*0.5, gh()*0.44, 0, 0, -1, 0);
-	
-	
+	lookat(
+		gw()*0.5, -gw()/5, -gw(),
+		gw()*0.5, gh()*0.44, 0, 
+		0, -1, 0
+		);
 }
+/*
 void ofApp::plataformas(){//talvez fazer modular, com o argumento a ser o numero de plat que quero
+	int index=4;
 	for (int i = -(resY / 2); i <= (resY / 2); i += 2) {
+		glTranslatef(0, 0, 0);
 		Platform p(levelWidth, levelHeight, levelDepth, i, resY);
-		p.draw();
+		p.draw(index);
+		p.ladders(index);
+        index--;
 	}
 
 }
 
-
+*/
 
 //--------------------------------------------------------------
-void ofApp::draw(){
-
- 
+void ofApp::draw(){ 
 	glPushMatrix();// perspective push
 	switch (view) {
 	case 0:
@@ -92,7 +113,15 @@ void ofApp::draw(){
 	levelWidth = floorWidth;
     levelHeight = floorHeight / GLfloat(resY);
     levelDepth = floorHeight / GLfloat(resY);
-	plataformas();
+	//plataformas();
+    for (auto& platform : platforms) {
+        platform.draw(platform.getIndex());
+		}  // Pass the index if needed
+	for (auto& ladder : ladders) {
+		if (ladder.getIndex() != 4) {
+        ladder.draw(ladder.getIndex());
+		}
+    }
 	glPopMatrix();// level pop
 	glPushMatrix();// mario push
 	marioPosHeight = floorHeight / GLfloat(resY);
