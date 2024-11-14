@@ -53,12 +53,40 @@ void ofApp::update(){
 	marioInstance.moveBack();
 	marioInstance.jump();
 	marioInstance.jumpKey();
+	marioPos = marioInstance.getMarioPosition();
 
+    // Collision detection threshold for proximity
+	float thresholdX = 5.0f;  
+	float thresholdY = 5.0f;  
+	float thresholdZ = 5.0f;
+
+    for (auto& ladder : ladders) {
+        // Extract ladder's x, y, z positions
+        float ladderPosX = ladder.escadasx;
+        float ladderPosY = ladder.escadasy;
+        float ladderPosZ = ladder.escadasz;
+
+		std::cout << "Mario Position - X: " << marioPos[0] << ", Y: " << marioPos[1] << ", Z: " << marioPos[2] << std::endl;
+        std::cout << "Ladder Position - X: " << ladderPosX << ", Y: " << ladderPosY << ", Z: " << ladderPosZ << std::endl;
+
+        // Check if Mario is within the defined threshold in all three dimensions
+        bool xCollision = std::abs(marioPos[0] - ladderPosX) < thresholdX;
+        bool yCollision = std::abs(marioPos[1] - ladderPosY) < thresholdY;
+        bool zCollision = std::abs(marioPos[2] - ladderPosZ) < thresholdZ;
+
+		std::cout << "xCollision: " << xCollision << ", yCollision: " << yCollision << ", zCollision: " << zCollision << std::endl;
+
+
+        // If Mario is close enough in all dimensions, he's on the ladder
+        if (xCollision && yCollision && zCollision) {
+            std::cout << "Mario is climbing the ladder" << std::endl;
+        }
+    }
 }
 void ofApp::perspective1(){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0 , gw(), gh(), 0, -5*gw(), 5*gw());
+	glOrtho(0 , gw(), gh(), 0, 5*gw(), -5*gw());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	lookat(0,0,1,0,0,0,0,1,0);
@@ -97,11 +125,9 @@ void ofApp::draw(){
 	switch (view) {
 	case 0:
 		perspective1();
-		marioInstance.setPerspective(1);
 		break;
 	case 1:
 		perspective2();
-		marioInstance.setPerspective(2);
 		break;
 	}
     glPushMatrix();//floor push

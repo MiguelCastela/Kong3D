@@ -12,8 +12,7 @@ class Mario {
         void moveBack();
         void jump();
         void jumpKey();
-        void setPerspective(int perspective);
-        //bool isOnLadder(const LadderPosition& ladder);
+        std::vector<float> getMarioPosition();
     private:
         GLfloat Mariosize, PositionHeight, MarioWidth, MarioDepth, MarioHeight,  StartinglevelHeight, resY;
         GLfloat positionX;

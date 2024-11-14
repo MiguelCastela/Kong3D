@@ -11,10 +11,11 @@ class Ladder{
         int getIndex() const;
         //void addLadderPosition(int levelIndex, float x, float y, float z);
         //LadderPosition getLadderPosition(int levelIndex) const;
+        int escadasx, escadasy, escadasz;
+
     private:
         GLfloat ladderWidth, ladderHeight, ladderDepth, height;
         GLint resY, ladderOffset;
         int index, idx;
-        int escadasx, escadasy, escadasz;
 };
 #endif // ESCADAS_H

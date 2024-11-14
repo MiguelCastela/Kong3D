@@ -57,4 +57,10 @@ class ofApp : public ofBaseApp{
 
 		//ladder vector
 		std::vector<Ladder> ladders;	
+
+		//mario pos
+		std::vector<float> marioPos;
+		GLfloat thresholdDistance = 5.0f;
+
 };
+

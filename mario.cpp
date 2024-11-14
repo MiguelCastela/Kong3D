@@ -37,16 +37,7 @@ void Mario::draw() {
     glPopMatrix();//level pop
     glColor3f(0, 0, 0);
 }
-void Mario::setPerspective(int perspective) {
-    if (currentPerspective != perspective) {
-        if (perspective == 1) {
-            positionX = abs(positionX);  // Ensure Mario is in the positive X direction
-        }else if (perspective == 2) {
-            positionX = -abs(positionX);  // Ensure Mario is in the negative X direction
-        }
-    }
-    currentPerspective = perspective;
-}
+
 
 void Mario::moveRight() {
         if (ofGetKeyPressed(OF_KEY_RIGHT)) {
@@ -86,31 +77,19 @@ void Mario::moveBack() {
         }
     }
 }
-/*
-bool Mario::isOnLadder(const LadderPosition& ladder) {
-    // Half dimensions of Mario
-    float halfWidth = MarioWidth / 2.0f;
-    float halfDepth = MarioDepth / 2.0f;
-
-    // Check if Mario's position overlaps with the ladder's hitbox
-    bool isInXRange = (positionX + halfWidth >= ladder.x - ladder.width / 2) &&
-                      (positionX - halfWidth <= ladder.x + ladder.width / 2);
-
-    bool isInZRange = (positionZ + halfDepth >= ladder.z - ladder.depth / 2) &&
-                      (positionZ - halfDepth <= ladder.z + ladder.depth / 2);
-
-    // Check if Mario is within the ladder's vertical range (y-axis)
-    bool isInYRange = (positionY >= ladder.y && positionY <= ladder.y + ladder.height);
-
-    return isInXRange && isInZRange && isInYRange;
-}
-*/
 
 void Mario::jumpKey() {
     if (ofGetKeyPressed(' ') && !isJumping) { // Jump only if Mario is not already jumping
         isJumping = true;
         jumpVelocity = 0.13f; // Reset jump velocity
     }
+}
+std::vector<float> Mario::getMarioPosition() {
+    float MarioPositionX = positionX + gw() * 0.5;
+    float MarioPositionY = positionY + groundLevel;
+    float MarioPositionZ = positionZ;
+
+    return {MarioPositionX, MarioPositionY, MarioPositionZ};
 }
 
 void Mario::jump() {
