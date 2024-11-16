@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 
-ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
+ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
 } //default constructor for marioInstance so it can use its functions
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -38,7 +38,7 @@ void ofApp::setup(){
 	ladderDepth = levelHeight / GLfloat(resY);
 	ladderPosWidth = (floorWidth/2 + (marioWidth* marioSize));
 
-	marioInstance = Mario(marioSize, marioWidth, marioHeight, marioPosHeight, marioDepth, 3, resY, marioPosWidth);
+	marioInstance = Mario(marioSize, marioWidth, marioHeight, marioPosHeight, marioDepth, 3, resY, marioPosWidth, levelDepth);
 
 	LensAngle = 30;
 	alpha = 10;
@@ -80,8 +80,7 @@ void ofApp::update(){
         float ladderPosZ = ladder.adjustedescadasz;
 
         bool xCollision = std::abs(marioPos[0] - ladderPosX) < thresholdX;
-        bool yCollision = std::abs(marioPos[1] - ladderPosY) < (2* thresholdY)+ 3*(marioHeight * marioSize);
-		//bool yCollision = marioPos[1] >= ladderPosY && marioPos[1] <= (ladderPosY + ladderHeight);
+        bool yCollision = std::abs(marioPos[1] - ladderPosY) < ((2* thresholdY)+ 3*(marioHeight * marioSize));
         bool zCollision = std::abs(marioPos[2] - ladderPosZ) < thresholdZ;
 
 		cout << "Mario: " << marioPos[0] << " " << marioPos[1] << " " << marioPos[2] << endl;
@@ -89,22 +88,29 @@ void ofApp::update(){
 		cout << "Threshold: " << thresholdX << " " << thresholdY << " " << thresholdZ << endl;
 
 		index++;
-        if (xCollision && yCollision && zCollision) {
+        if (xCollision && zCollision && yCollision) {
 			cout << "Mario is on ladder" << endl;
             isOnLadder = true;
-            break;
+            break;	
         }
     }
 
- 	bool stillOnLadder = marioInstance.climbLadder(isOnLadder);
-	if(!stillOnLadder){
-    marioInstance.moveLeft();
-    marioInstance.moveRight();
-    marioInstance.moveBack(isOnLadder);
-    marioInstance.jump();	
-    marioInstance.jumpKey(isOnLadder);
-    marioInstance.moveFront(isOnLadder);
+ 	bool stillOnLadder = marioInstance.climbLadder(isOnLadder, MarioLevel);
+		if(!stillOnLadder){
+    	marioInstance.moveLeft(isOnLadder);
+    	marioInstance.moveRight(isOnLadder);
+    	marioInstance.moveBack(isOnLadder, MarioLevel);
+   	 	marioInstance.jump();	
+    	marioInstance.jumpKey(isOnLadder);
+    	marioInstance.moveFront(isOnLadder, MarioLevel);
 	}
+	    if (wasOnLadder && !isOnLadder) {
+        MarioLevel++; // Increment level only when Mario leaves the ladder
+        cout << "Mario reached the top of the ladder. Mario is now on level " << MarioLevel << endl;
+    }
+
+    // Update `wasOnLadder` to the current state
+    wasOnLadder = isOnLadder;
 }
 void ofApp::perspective1(){
 	glMatrixMode(GL_PROJECTION);

@@ -63,5 +63,9 @@ class ofApp : public ofBaseApp{
 		std::vector<float> marioPos;
 		GLfloat thresholdDistance = 5.0f;
 
+
+		bool wasOnLadder = false;  // Track if Mario is climbing
+		int MarioLevel = 0; 
+
 };
 

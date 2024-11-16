@@ -4,13 +4,13 @@
 
 class Mario {
     public:
-        Mario(GLfloat Mariosize, GLfloat MarioWidth, GLfloat MarioHeight, GLfloat PositionHeight, GLfloat MarioDepth, GLfloat StartinglevelHeight, GLint resY, GLfloat positionWidth);
+        Mario(GLfloat Mariosize, GLfloat MarioWidth, GLfloat MarioHeight, GLfloat PositionHeight, GLfloat MarioDepth, GLfloat StartinglevelHeight, GLint resY, GLfloat positionWidth, GLfloat LevelDepth);
         void draw();
-        void moveLeft();
-        void moveRight();
-        void moveFront(bool isOnLadder);
-        bool climbLadder(bool isOnLadder);
-        void moveBack(bool isOnLadder);
+        void moveLeft(bool isOnLadder);
+        void moveRight(bool isOnLadder);
+        void moveFront(bool isOnLadder, int index);
+        bool climbLadder(bool isOnLadder, int index);
+        void moveBack(bool isOnLadder, int index);
         void jump();
         void jumpKey(bool isOnLadder);
         std::vector<float> getMarioPosition();
@@ -33,6 +33,8 @@ class Mario {
         GLfloat gravity;     // Gravity factor to pull Mario down
         GLfloat groundLevel;
         GLfloat positionWidth;
+        GLfloat LevelDepth;
+
 
 
 };  
