@@ -1,13 +1,14 @@
 #include "ofApp.h"
 
 
-ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
+ofApp::ofApp() : marioInstance(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0) {
 } //default constructor for marioInstance so it can use its functions
 //--------------------------------------------------------------
 void ofApp::setup(){
     glEnable(GL_DEPTH_TEST);
 	ofBackground(0.05, 0.05, 0.05);
 
+	
 
 	view = 0;
 
@@ -21,7 +22,23 @@ void ofApp::setup(){
 	glPointSize(200);
 	glLineWidth(3);
 
-	marioInstance = Mario(0.25, marioWidth, marioHeight, marioPosHeight, marioDepth, 3, resY);
+	levelWidth = floorWidth;
+    levelHeight = floorHeight / GLfloat(resY);
+    levelDepth = floorHeight / GLfloat(resY);
+
+
+	marioPosHeight = levelHeight;
+	marioPosWidth = (floorWidth/2 + (marioWidth* marioSize));
+	marioWidth = floorWidth/ (GLfloat(resX)*2);
+	marioDepth = floorHeight / (GLfloat(resY)*2); 
+	marioHeight = floorHeight / (GLfloat(resY)*2);
+
+	ladderWidth = levelWidth / GLfloat(resY);
+	ladderHeight = levelHeight;
+	ladderDepth = levelHeight / GLfloat(resY);
+	ladderPosWidth = (floorWidth/2 + (marioWidth* marioSize));
+
+	marioInstance = Mario(marioSize, marioWidth, marioHeight, marioPosHeight, marioDepth, 3, resY, marioPosWidth);
 
 	LensAngle = 30;
 	alpha = 10;
@@ -31,7 +48,7 @@ void ofApp::setup(){
 	int index = resY/2;
     for (int i = -(resY / 2); i <= (resY / 2); i += 2) {
         Platform p(levelWidth, levelHeight, levelDepth, i, resY);
-		Ladder l(levelWidth, levelHeight, levelDepth, i, resY);
+		Ladder l(levelWidth, levelHeight, levelDepth, i, resY, ladderPosWidth);
         p.setIndex(index);
 		l.setIndex(index); 
         platforms.push_back(p);
@@ -47,41 +64,47 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	marioInstance.moveLeft();
-	marioInstance.moveRight();
-	marioInstance.moveFront();
-	marioInstance.moveBack();
-	marioInstance.jump();
-	marioInstance.jumpKey();
-	marioPos = marioInstance.getMarioPosition();
+    bool isOnLadder = false; // Assume Mario is not on a ladder
+
+    marioPos = marioInstance.getMarioPosition();
+	int index = 0;
 
     // Collision detection threshold for proximity
-	float thresholdX = 5.0f;  
-	float thresholdY = 5.0f;  
-	float thresholdZ = 5.0f;
+    float thresholdX = (marioWidth * marioSize) + (ladderWidth * 0.5);
+    float thresholdY = (marioHeight * marioSize) + (ladderHeight * 0.5);
+    float thresholdZ = (marioDepth * marioSize) + (ladderDepth * 0.5);
 
     for (auto& ladder : ladders) {
-        // Extract ladder's x, y, z positions
         float ladderPosX = ladder.escadasx;
         float ladderPosY = ladder.escadasy;
-        float ladderPosZ = ladder.escadasz;
+        float ladderPosZ = ladder.adjustedescadasz;
 
-		std::cout << "Mario Position - X: " << marioPos[0] << ", Y: " << marioPos[1] << ", Z: " << marioPos[2] << std::endl;
-        std::cout << "Ladder Position - X: " << ladderPosX << ", Y: " << ladderPosY << ", Z: " << ladderPosZ << std::endl;
-
-        // Check if Mario is within the defined threshold in all three dimensions
         bool xCollision = std::abs(marioPos[0] - ladderPosX) < thresholdX;
-        bool yCollision = std::abs(marioPos[1] - ladderPosY) < thresholdY;
+        bool yCollision = std::abs(marioPos[1] - ladderPosY) < (2* thresholdY)+ 3*(marioHeight * marioSize);
+		//bool yCollision = marioPos[1] >= ladderPosY && marioPos[1] <= (ladderPosY + ladderHeight);
         bool zCollision = std::abs(marioPos[2] - ladderPosZ) < thresholdZ;
 
-		std::cout << "xCollision: " << xCollision << ", yCollision: " << yCollision << ", zCollision: " << zCollision << std::endl;
+		cout << "Mario: " << marioPos[0] << " " << marioPos[1] << " " << marioPos[2] << endl;
+		cout << "Ladder: " << index << ladderPosX << " " << ladderPosY << " " << ladderPosZ << endl;
+		cout << "Threshold: " << thresholdX << " " << thresholdY << " " << thresholdZ << endl;
 
-
-        // If Mario is close enough in all dimensions, he's on the ladder
+		index++;
         if (xCollision && yCollision && zCollision) {
-            std::cout << "Mario is climbing the ladder" << std::endl;
+			cout << "Mario is on ladder" << endl;
+            isOnLadder = true;
+            break;
         }
     }
+
+ 	bool stillOnLadder = marioInstance.climbLadder(isOnLadder);
+	if(!stillOnLadder){
+    marioInstance.moveLeft();
+    marioInstance.moveRight();
+    marioInstance.moveBack(isOnLadder);
+    marioInstance.jump();	
+    marioInstance.jumpKey(isOnLadder);
+    marioInstance.moveFront(isOnLadder);
+	}
 }
 void ofApp::perspective1(){
 	glMatrixMode(GL_PROJECTION);
@@ -136,9 +159,7 @@ void ofApp::draw(){
 	//malha_unit(resX, resY);
 	glPopMatrix();//floor pop
 	glPushMatrix();// level push
-	levelWidth = floorWidth;
-    levelHeight = floorHeight / GLfloat(resY);
-    levelDepth = floorHeight / GLfloat(resY);
+
 	//plataformas();
     for (auto& platform : platforms) {
         platform.draw(platform.getIndex());
@@ -150,10 +171,7 @@ void ofApp::draw(){
     }
 	glPopMatrix();// level pop
 	glPushMatrix();// mario push
-	marioPosHeight = floorHeight / GLfloat(resY);
-	marioWidth = floorWidth/ (GLfloat(resX)*2);
-	marioDepth = floorHeight / (GLfloat(resY)*2);
-	marioHeight = floorHeight / (GLfloat(resY)*2);
+
 	marioInstance.draw();
 	//mario();
 	glPopMatrix();// mario pop
@@ -191,21 +209,6 @@ void ofApp::keyPressed(int key){
 		//tank
     case 't':
 		view = (view+1) %2;
-		break;
-	case OF_KEY_RIGHT:
-		marioInstance.moveRight();
-		break;
-	case OF_KEY_LEFT:
-		marioInstance.moveLeft();
-		break;
-	case OF_KEY_UP:
-		marioInstance.moveFront();
-		break;
-	case OF_KEY_DOWN:
-		marioInstance.moveBack();
-		break;
-	case ' ':
-		marioInstance.jumpKey();
 		break;
 	}
 }

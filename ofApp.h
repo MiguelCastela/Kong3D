@@ -48,8 +48,8 @@ class ofApp : public ofBaseApp{
 		GLint view;
 
 		//mario
-		GLfloat marioSize = 0.5;
-		GLfloat marioHeight, marioWidth, marioDepth, marioPosHeight;
+		GLfloat marioSize = 0.25;
+		GLfloat marioHeight, marioWidth, marioDepth, marioPosHeight, marioPosWidth;
 		Mario marioInstance;
 
 		//platform vector
@@ -57,6 +57,7 @@ class ofApp : public ofBaseApp{
 
 		//ladder vector
 		std::vector<Ladder> ladders;	
+		GLfloat ladderWidth, ladderHeight, ladderDepth, ladderPosWidth;
 
 		//mario pos
 		std::vector<float> marioPos;

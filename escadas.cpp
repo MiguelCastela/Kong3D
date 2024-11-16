@@ -3,10 +3,11 @@
 #include "escadas.h"
 using namespace std;
 
-Ladder::Ladder(GLfloat ladderWidth, GLfloat ladderHeight, GLfloat ladderDepth, GLfloat height, GLint resY) {
-    this->ladderWidth = ladderWidth;
+Ladder::Ladder(GLfloat ladderWidth, GLfloat ladderHeight, GLfloat ladderDepth, GLfloat height, GLint resY, GLfloat ladderPosWidth) {
+    this -> ladderPosWidth = ladderPosWidth;
+    this->ladderWidth = ladderWidth/resY;
     this->ladderHeight = ladderHeight;
-    this->ladderDepth = ladderDepth;
+    this->ladderDepth = ladderDepth/resY;
     if(height != 0){
         this->height = height;
     }else{
@@ -15,20 +16,26 @@ Ladder::Ladder(GLfloat ladderWidth, GLfloat ladderHeight, GLfloat ladderDepth, G
     this->resY = resY;
     int tmp = resY/2;
     this->ladderOffset = (rand() % resY) - tmp;
-    this->escadasx = gw() * 0.5 + (((gw()/2)/resY)*ladderOffset);
-    this->escadasy = ((gh() * 0.5) + (height * ladderHeight))- ladderHeight;
-    this->escadasz = ladderDepth/2 + ladderDepth/resY;
+    this->escadasx = 0.0f;
+    this->escadasy = 0.0f;
+    this->escadasz = 0.0f;
+    this->adjustedescadasz = escadasz;
 
 
 }
 
 
 void Ladder::draw(int index){
+    adjustedescadasz = abs(index * (ladderDepth*resY))+  (ladderDepth*resY)/2 + ladderDepth/2;
+    escadasy = ((gh() * 0.5) + (height * ladderHeight))- ladderHeight;
+    escadasx = gw() * 0.5 + (((gw()/2)/resY)*ladderOffset);
+    //escadasx = ladderPosWidth + (((gw()/2)/resY)*ladderOffset);
     glColor3f(0.5f, 0.2f, 0.0f);
     glPushMatrix();//ladder push
-        glTranslatef(escadasx, escadasy, abs(index * ladderDepth)+escadasz);
-        glScalef(ladderWidth/resY, ladderHeight, ladderDepth/resY);
+        glTranslatef(escadasx, escadasy, escadasz + adjustedescadasz);
+        glScalef(ladderWidth, ladderHeight, ladderDepth);
         cube_unit(0.5);
+        cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
 }
 
