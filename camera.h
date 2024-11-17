@@ -1,0 +1,23 @@
+#pragma once
+
+#include "ofMain.h"
+#include "cg_extras.h"
+
+class Camera{
+    public:
+        Camera(GLfloat fov = 60, GLfloat distance = 100, ofVec3f position = ofVec3f(0, 0, 0));
+        void update();
+        void apply(ofVec3f marioPos, ofVec3f marioLookAt);
+        void applyp1(ofVec3f marioPos);
+        void applyp2(ofVec3f marioPos);
+        void applyp3(ofVec3f marioPos, ofVec3f marioLookAt);
+        GLint camMode;
+    private:
+
+        GLfloat fov;
+        GLfloat distance;
+        ofVec3f position;
+        GLint alpha;
+        GLint beta;
+
+};

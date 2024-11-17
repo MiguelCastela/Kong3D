@@ -1,163 +1,108 @@
 #include <bits/stdc++.h>
 #include "ofApp.h"
 #include "mario.h"
+#include "global.h"
+
 using namespace std;
 
 
-Mario::Mario(GLfloat Mariosize, GLfloat MarioWidth, GLfloat MarioHeight, GLfloat PositionHeight, GLfloat MarioDepth, GLfloat StartinglevelHeight, GLint resY, GLfloat positionWidth, GLfloat LevelDepth) {
-    this-> LevelDepth = LevelDepth;
-    this->Mariosize = Mariosize;
-    this->MarioOnLevel = 0;
-    this->PositionHeight = PositionHeight;
-    this->MarioWidth = MarioWidth;
-    this->MarioDepth = MarioDepth;
-    this->MarioHeight = MarioHeight;
-    this->positionWidth  = positionWidth;
-    if(StartinglevelHeight != 0){
-        this->StartinglevelHeight = StartinglevelHeight;
-    }else{
-        this->StartinglevelHeight = 0;
-    }
-    this->positionX = 0.0f;
-    this->positionY = 0.0f;
-    this->positionZ = 0.0f;
-    this->speed = 0.1f;
-    this->resY = resY;
-    this->jumpVelocity = 0.13f; 
+Mario::Mario(ofVec3f dimensions, ofVec3f position) {
     this->gravity = 0.01f;   
-    this->groundLevel = (gh() * 0.5) + (StartinglevelHeight * PositionHeight) + ((PositionHeight / 2) - (Mariosize * PositionHeight / 2));
     this->isJumping = false;
+    this->dimensions = dimensions;
+    this->position = position;
+    this->speed = 0.5;
+
+    this->on_ladder = false; 
+    this->is_climbing = false;
+    this->jump_vel_const = 0.5f;
+    this->jumpVelocity = jump_vel_const;
+    this->pre_jump_y = 0;
+
+    this->base_position_y = 0;
+    this->next_position_y = 0;
+
+    this->marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
 }
 
 void Mario::draw() {
+    jump();
     glColor3f(1, 0, 0);
-    glPushMatrix();//base push
-        glTranslatef(positionWidth, groundLevel , 0);
-        glScalef(MarioWidth, MarioHeight, MarioDepth);
-        glTranslatef(positionX, positionY, positionZ);
-        cube_unit(Mariosize);
-        cube_unit_outline(Mariosize);
-    glPopMatrix();//level pop
-    glColor3f(0, 0, 0);
+    glPushMatrix();
+        glTranslatef(position.x, position.y, position.z);
+        glScalef(dimensions.x, dimensions.y, dimensions.z);
+        cube_unit(0.5);
+        cube_unit_outline(0.5);
+    glPopMatrix();
 }
 
-bool Mario::climbLadder(bool isOnLadder, int index) {
-    if (isOnLadder) {
-        if (positionY <= 0.0f) {
-            if (ofGetKeyPressed(OF_KEY_UP)) {
-            positionY -= speed;
-            }
-    cout << "positionY: " << positionY << endl;
-    } else {
-        positionY = (0.0f);
-        return false;
-    }
-    }
-    return false;
-}
 
-void Mario::moveRight(bool isOnLadder) {
-    if (!isOnLadder) {
-        if (ofGetKeyPressed(OF_KEY_RIGHT)) {
-            if(positionX < (resY-Mariosize)*2){
-                    positionX += speed; 
-            }else{
-                positionX = (resY-Mariosize)*2;
-            }
-    }
-    }
-}
-void Mario::moveLeft(bool isOnLadder) {
-    if (!isOnLadder) {
-       if (ofGetKeyPressed(OF_KEY_LEFT)) {
-            if(positionX > 0){
-                positionX -= speed; 
-            }else{
-                positionX = 0;
-        }
-       }
-    }
-}
-void Mario::moveFront(bool isOnLadder, int index) {
-    if (!isOnLadder) {
-        if (ofGetKeyPressed(OF_KEY_UP)) {
-            float upperLimit = ((resY - Mariosize) / resY) - Mariosize;
-            float lowerLimit = ((-resY+Mariosize)/resY)+Mariosize ;
-            float Depth = upperLimit - lowerLimit; 
-
-            
-                if (index == 0){
-                    if(positionZ < upperLimit){
-                    positionZ += speed; 
-                    }else{
-                    positionZ = upperLimit;
-                }
-                }else{
-
-
-            float adjustedUpperLimit = upperLimit + (index * ((Depth) + (Depth/2) )- (Mariosize));
-
-            cout << "upperLimit: " << adjustedUpperLimit << endl;
-            if (positionZ < adjustedUpperLimit) {
-                positionZ += speed;  
-            } else {
-                positionZ = adjustedUpperLimit; 
-            }
-        }
-        }
-    }
-}
-
-void Mario::moveBack(bool isOnLadder, int index) {
-    if (!isOnLadder) {
-        if (ofGetKeyPressed(OF_KEY_DOWN)) {
-            float lowerLimit = ((-resY+Mariosize)/resY)+Mariosize ;
-            float upperLimit = ((resY - Mariosize) / resY) - Mariosize;
-            float Depth = upperLimit - lowerLimit; 
-
-            if(index == 0){
-                if(positionZ > lowerLimit){
-                positionZ -= speed; // Move back
-            }else{
-                positionZ = lowerLimit;
-            }
-            }else{
-                float adjustedLowerLimit = upperLimit + ((index-1) * ((Depth) + (Depth/2))) + (Mariosize*2);
-                cout << "upperLimit: " << adjustedLowerLimit << endl;
-            if(positionZ > adjustedLowerLimit){
-            positionZ -= speed; // Move back
-            }else{
-            positionZ = adjustedLowerLimit;
-        }
-        }
-    }
-}
-}
-
-void Mario::jumpKey(bool isOnLadder) {
-    if (!isOnLadder && ofGetKeyPressed(' ') && !isJumping) { // Jump only if Mario is not already jumping
+void Mario::start_jump() {
+    if (!isJumping && !is_climbing) { // Jump only if Mario is not already jumping
         isJumping = true;
-        jumpVelocity = 0.13f; // Reset jump velocity
+        jumpVelocity = jump_vel_const; // Reset jump velocity
+        pre_jump_y = position.y;
     }
-}
-std::vector<float> Mario::getMarioPosition() {
-
-    float MarioPositionX = (positionX * (((1/speed * 1/speed)/2)+ resY/2)) + (gw()/4);
-    float MarioPositionY = (positionY * (((1/speed * 1/speed)/2)+ resY/2)) + groundLevel;
-    float MarioPositionZ = positionZ * (((1/speed * 1/speed)/2)+ resY/2);
-
-    return {MarioPositionX, MarioPositionY, MarioPositionZ};
 }
 
 void Mario::jump() {
-    if (isJumping) {
-        positionY -= jumpVelocity;     
+    if (isJumping && !is_climbing) {
+        position.y += jumpVelocity;     
         jumpVelocity -= gravity;        
 
-        if (positionY >= 0.0f) { 
-            positionY = 0.0f;    
+        if (position.y <= pre_jump_y) { 
+            position.y = pre_jump_y;    
             isJumping = false;         
-            jumpVelocity = 0.13f;        
+            jumpVelocity = jump_vel_const;        
         }
     }
+}
+
+void Mario::move_left(){
+    marioLookAt = ofVec3f(global.left_limit*2, position.y, position.z);
+    if (position.x > global.left_limit){
+        position.x -= speed;
+    }else{
+        position.x = global.left_limit;
+    }
+}
+
+void Mario::move_right(){
+    marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
+
+    if (position.x < global.right_limit){
+        position.x += speed;
+    }else{
+        position.x = global.right_limit;
+    }
+}
+
+void Mario::climb_up(){
+    is_climbing = true;
+    marioLookAt.y = position.y + 50;
+    marioLookAt.x = position.x;
+    marioLookAt.z = position.z - 20;
+
+
+    position.y += 0.5;
+    if(position.y >= next_position_y){
+        base_position_y = next_position_y;
+        is_climbing = false;
+        position.z -= global.platDim.z;
+    }
+
+}
+void Mario::climb_down(){
+    is_climbing = true;
+
+    position.y -= 0.5;
+    if(position.y <= base_position_y){
+        position.y = base_position_y;
+        is_climbing = false;
+    }
+}
+
+void Mario::go_down(){
+    cout << "going down" << endl;
+    position.y = base_position_y;
 }

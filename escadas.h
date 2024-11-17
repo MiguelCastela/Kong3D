@@ -5,18 +5,9 @@
 
 class Ladder{
     public:
-        Ladder(GLfloat ladderWidth, GLfloat ladderHeight, GLfloat ladderDepth, GLfloat height, GLint resY, GLfloat ladderPosWidth);
-        void draw(int index);
-        void setIndex(int idx);
-        int getIndex() const;
-        //void addLadderPosition(int levelIndex, float x, float y, float z);
-        //LadderPosition getLadderPosition(int levelIndex) const;
-        int escadasx, escadasy, escadasz;
-        int adjustedescadasz;
-
-    private:
-        GLfloat ladderWidth, ladderHeight, ladderDepth, height, ladderPosWidth;
-        GLint resY, ladderOffset;
-        int index, idx;
+        Ladder(ofVec3f dimension, ofVec3f position);
+        void draw();
+        ofVec3f dimension;
+        ofVec3f position;
 };
 #endif // ESCADAS_H
