@@ -5,7 +5,7 @@ Developed for the Computer Graphics course @:
 Informatics Engineering Department
 University of Coimbra
 by
-André Perrotta & Evgheni Polisciuc
+Andrï¿½ Perrotta & Evgheni Polisciuc
 
 Coimbra, 09/2023
 */
@@ -62,7 +62,7 @@ inline void coutProjectionMatrix() {
 	//return;
 }
 
-//pega os valores de Translação da matriz modelview
+//pega os valores de Translaï¿½ï¿½o da matriz modelview
 inline ofVec3f getModelViewMatrixPos() {
 	GLfloat Matriz[4][4];
 	glGetFloatv(GL_MODELVIEW_MATRIX, &Matriz[0][0]);

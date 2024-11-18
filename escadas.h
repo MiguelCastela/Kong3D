@@ -7,6 +7,7 @@ class Ladder{
     public:
         Ladder(ofVec3f dimension, ofVec3f position);
         void draw();
+        void draw_hitbox();
         ofVec3f dimension;
         ofVec3f position;
 };

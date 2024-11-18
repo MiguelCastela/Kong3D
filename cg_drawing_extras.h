@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "cg_extras.h"
+#include <cmath>
 
 
 //desenha ponto 3D na origem
@@ -99,6 +100,42 @@ inline void cube_unit(GLfloat p) {
 
     glEnd();
 }
+
+inline void sphere_unit(GLfloat radius, GLint slices, GLint stacks) {
+    for (int i = 0; i < stacks; ++i) {
+        // Latitude bounds for this stack
+        float theta1 = i * M_PI / stacks - M_PI / 2.0f; // Bottom of stack
+        float theta2 = (i + 1) * M_PI / stacks - M_PI / 2.0f; // Top of stack
+
+        for (int j = 0; j < slices; ++j) {
+            // Longitude bounds for this slice
+            float phi1 = j * 2.0f * M_PI / slices; // Left of slice
+            float phi2 = (j + 1) * 2.0f * M_PI / slices; // Right of slice
+
+            // Compute vertices for the current quad
+            GLfloat v1[3] = {radius * cosf(theta1) * cosf(phi1), radius * sinf(theta1), radius * cosf(theta1) * sinf(phi1)};
+            GLfloat v2[3] = {radius * cosf(theta2) * cosf(phi1), radius * sinf(theta2), radius * cosf(theta2) * sinf(phi1)};
+            GLfloat v3[3] = {radius * cosf(theta2) * cosf(phi2), radius * sinf(theta2), radius * cosf(theta2) * sinf(phi2)};
+            GLfloat v4[3] = {radius * cosf(theta1) * cosf(phi2), radius * sinf(theta1), radius * cosf(theta1) * sinf(phi2)};
+
+            // Draw the two triangles forming the quad
+            glBegin(GL_TRIANGLES);
+
+            // Triangle 1
+            glVertex3fv(v1);
+            glVertex3fv(v2);
+            glVertex3fv(v3);
+
+            // Triangle 2
+            glVertex3fv(v1);
+            glVertex3fv(v3);
+            glVertex3fv(v4);
+
+            glEnd();
+        }
+    }
+}
+
 inline void cube_unit_outline(GLfloat p) {
     glColor3f(0, 0, 0); // Set color to black for the outline
     glBegin(GL_LINES);

@@ -19,3 +19,12 @@ void Ladder::draw(){
     glPopMatrix();//ladder pop
 }
 
+void Ladder::draw_hitbox(){
+    glColor3f(0.6f, 0.3f, 0.0f);
+    glPushMatrix();
+        glTranslatef(position.x, position.y, position.z+1);
+        glScalef(dimension.x, dimension.y, dimension.z);
+        cube_unit_outline(0.5);
+    glPopMatrix();//ladder pop
+}
+

@@ -2,18 +2,21 @@
 #include "mario.h"
 #include "plataforma.h"
 #include "escadas.h"
-//#include "global.h"
+#include "barril.h"
 
 
 
 Game::Game(){
     glEnable(GL_DEPTH_TEST);
     
-    // TODO: MUDAR PARA STARTING POSITION DO MARIO
+    // TODO: MUDAR PARA STARTING POSITION DO MARIO/BARRIL
     marioPos = ofVec3f(0,0,0);
     marioDim = global.marioDim;
     platDim = global.platDim;
     ladDim = global.ladDim;
+    ladHitBoxDim = global.ladHitBoxDim;
+    barrelDim = global.barrelDim;
+    barrelPos = ofVec3f(0,0,0);
 
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
@@ -25,6 +28,7 @@ Game::Game(){
     ofVec3f base_plat_pos = marioPos;
     base_plat_pos.y -= platDim.y;
     base_plat_pos.y += marioDim.y*0.5; 
+
     for(int i = 0; i < plat_ct; i++){        
         // Determine in which half the ladder can be drawn
         GLfloat ladder_right_lim;
@@ -53,6 +57,12 @@ Game::Game(){
                 cur_lad_pos
             )
         );
+        ladHitBoxVec.push_back(
+            new Ladder(
+                ladHitBoxDim,
+                cur_lad_pos
+            )
+        );
         platVec.push_back(
             new Platform(
                 platDim,
@@ -60,12 +70,27 @@ Game::Game(){
                 ofVec3f(ofRandom(0, 1), ofRandom(0, 1), ofRandom(0, 1))
             )
         );
+        lastPlatPos = cur_plat_pos;
     }
+
+    lastPlatPos.y += global.empty_space + platDim.y;
+    lastPlatPos.z -= platDim.z;
+    lastPlat = new Platform(platDim , lastPlatPos, ofVec3f(0,0,0));
+
+
+    initBarrelPos = lastPlatPos;
+    initBarrelPos.y += platDim.y/2 + barrelDim.y/2;
+    barrelPos = initBarrelPos;
+
+
+    barrel = new Barrel(barrelDim, barrelPos);
 }
 
 void Game::update(){
     update_movement();
     marioPos = mario->position;
+    barrelPos = barrel->position;
+    cout << "barrel position: " << barrelPos.x << " " << barrelPos.y << " " << barrelPos.z << endl;
     if(!mario->is_climbing){
         mario->marioLookAt.y = marioPos.y;
         mario->marioLookAt.z = marioPos.z;
@@ -83,11 +108,31 @@ void Game::update(){
         mario->on_ladder = true;
         mario->is_climbing = false;
     }
+    if (check_collision(marioDim, marioPos, barrelDim, barrelPos)) {
+        //cout << "Collision detected" << endl;
+        keep_drawing = false;
+    }
+    barrel->on_ladder = false;
+    barrel_flag = false;
+    //bool flag_barrel = false;
+    for(auto curLad : ladHitBoxVec){
+        if (check_collision(barrelDim, barrelPos, curLad->dimension, curLad->position)) {
+            cout << "collision from barrel with ladder" << endl;
+            //barrel-> level_below_y = barrelPos.y - ladDim.y;
+            barrel_flag = true;
+        }
+    }
+    if (barrel_flag){
+        barrel->on_ladder = true;
+    }
+
 }
 
 void Game::draw(){
     cam->apply(marioPos, mario->marioLookAt);
     cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
+    draw_scene();
+    cam -> miniMap(marioPos);
     draw_scene();
 
 }
@@ -98,10 +143,22 @@ void Game::draw_scene(){
     for(auto cur_plat: platVec){
         cur_plat->draw();
     }    
-
+    lastPlat->draw();
     for(auto cur_lad: ladVec){
         cur_lad->draw();
     }
+    for(auto cur_lad: ladHitBoxVec){
+        cur_lad->draw_hitbox();
+    }
+    draw_barrels();
+    
+}
+
+void Game::draw_barrels(){
+    barrel->draw();
+    barrel->move_back();
+    barrel->move_down();
+
 }
 
 void Game::key_pressed(int key){
@@ -120,7 +177,7 @@ void Game::update_movement(){
     if(ofGetKeyPressed(OF_KEY_UP) && !mario->on_ladder && !mario->isJumping){
         mario->climb_up();
     }
-    if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->isJumping){
+    if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->on_ladder && !mario->isJumping){
         mario->climb_down();
     }
     if(ofGetKeyPressed(' ')){

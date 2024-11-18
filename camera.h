@@ -11,6 +11,7 @@ class Camera{
         void applyp1(ofVec3f marioPos);
         void applyp2(ofVec3f marioPos);
         void applyp3(ofVec3f marioPos, ofVec3f marioLookAt);
+        void miniMap(ofVec3f marioPos);
         GLint camMode;
     private:
 

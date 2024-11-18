@@ -21,6 +21,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
 
     this->base_position_y = 0;
     this->next_position_y = 0;
+    
 
     this->marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
 }
@@ -94,7 +95,11 @@ void Mario::climb_up(){
 }
 void Mario::climb_down(){
     is_climbing = true;
-
+    marioLookAt.y = position.y - 1;
+    marioLookAt.x = position.x;
+    marioLookAt.z = position.z + 2;
+    
+    
     position.y -= 0.5;
     if(position.y <= base_position_y){
         position.y = base_position_y;
@@ -103,6 +108,7 @@ void Mario::climb_down(){
 }
 
 void Mario::go_down(){
-    cout << "going down" << endl;
+    //cout << "going down" << endl;
     position.y = base_position_y;
 }
+
