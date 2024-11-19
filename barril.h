@@ -17,6 +17,12 @@ class Barrel{
         float position_x_on_impact;
         float speed;
         float next_position_z;
+        float next_position_y;
+        float base_position_z;
+        float base_position_y;
+        bool leave_ladder;
+        
+
     
 
 };

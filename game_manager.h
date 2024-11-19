@@ -28,6 +28,7 @@ class Game{
             ofVec3f dim1, ofVec3f pos1,
             ofVec3f dim2, ofVec3f pos2        
         );
+        void barrel_movement();
 
         // Player
         ofVec3f marioPos;

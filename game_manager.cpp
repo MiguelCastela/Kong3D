@@ -34,11 +34,11 @@ Game::Game(){
         GLfloat ladder_right_lim;
         GLfloat ladder_left_lim;
         if(i % 2 == 0){
-            ladder_right_lim = 0;
+            ladder_right_lim = 0 + (ladDim.x);
             ladder_left_lim = global.right_limit - (ladDim.x*0.5); 
         }
         else{
-            ladder_left_lim = 0;
+            ladder_left_lim = 0 - (ladDim.x);
             ladder_right_lim = global.left_limit + (ladDim.x*0.5);
         }
 
@@ -60,7 +60,7 @@ Game::Game(){
         ladHitBoxVec.push_back(
             new Ladder(
                 ladHitBoxDim,
-                cur_lad_pos
+                ofVec3f(cur_lad_pos.x, cur_lad_pos.y + (ladDim.y*0.5), cur_lad_pos.z)
             )
         );
         platVec.push_back(
@@ -84,6 +84,8 @@ Game::Game(){
 
 
     barrel = new Barrel(barrelDim, barrelPos);
+    barrel->base_position_z = barrelPos.z;
+    barrel->base_position_y = barrelPos.y;
 }
 
 void Game::update(){
@@ -109,23 +111,35 @@ void Game::update(){
         mario->is_climbing = false;
     }
     if (check_collision(marioDim, marioPos, barrelDim, barrelPos)) {
-        //cout << "Collision detected" << endl;
+        cout << "Collision detected" << endl;
         keep_drawing = false;
-    }
-    barrel->on_ladder = false;
+    };
     barrel_flag = false;
-    //bool flag_barrel = false;
+
+    if (!barrel->leave_ladder){
     for(auto curLad : ladHitBoxVec){
         if (check_collision(barrelDim, barrelPos, curLad->dimension, curLad->position)) {
             cout << "collision from barrel with ladder" << endl;
-            //barrel-> level_below_y = barrelPos.y - ladDim.y;
+            barrel -> next_position_z = barrel -> base_position_z + global.platDim.z;
+            barrel -> next_position_y = barrel -> base_position_y - ladDim.y;
             barrel_flag = true;
+            barrel -> on_ladder = true;
+            break;
         }
     }
-    if (barrel_flag){
-        barrel->on_ladder = true;
     }
-
+if (barrel_flag && barrel->on_ladder) {
+    cout << "Calling move_down()" << endl;
+    barrel->move_down();
+} else {
+    cout << "Calling barrel_movement()" << endl;
+    barrel_movement();
+}
+if (barrel->leave_ladder) {
+    cout << "Leaving ladder, resetting state." << endl;
+    barrel->on_ladder = false;
+    barrel->leave_ladder = false;
+}
 }
 
 void Game::draw(){
@@ -156,9 +170,16 @@ void Game::draw_scene(){
 
 void Game::draw_barrels(){
     barrel->draw();
-    barrel->move_back();
-    barrel->move_down();
 
+}
+void Game::barrel_movement(){
+    if(barrel -> on_ladder == false){
+        if(barrel -> is_moving_left){
+            barrel -> move_back();
+        }else{
+            barrel -> move_front();
+        }
+    }
 }
 
 void Game::key_pressed(int key){

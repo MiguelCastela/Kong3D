@@ -11,7 +11,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
     this->isJumping = false;
     this->dimensions = dimensions;
     this->position = position;
-    this->speed = 0.5;
+    this->speed = 1.5;
 
     this->on_ladder = false; 
     this->is_climbing = false;

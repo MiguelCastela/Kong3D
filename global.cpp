@@ -10,7 +10,7 @@ Global::Global(){
     empty_space = platDim.y;
     ladDim = ofVec3f(marioDim.x*3, empty_space + platDim.y, marioDim.z/4);
     barrelDim = ofVec3f(marioDim.x, marioDim.y, marioDim.z);
-    ladHitBoxDim = ofVec3f(ladDim.x, ladDim.y+1, ladDim.z*2);
+    ladHitBoxDim = ofVec3f(ladDim.x, 1 , ladDim.z*2);
 
     left_limit = -platDim.x/2 + marioDim.x/2;
     right_limit = platDim.x/2 - marioDim.x/2;
