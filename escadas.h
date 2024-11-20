@@ -8,6 +8,7 @@ class Ladder{
         Ladder(ofVec3f dimension, ofVec3f position);
         void draw();
         void draw_hitbox();
+        void draw_fake_lad();
         ofVec3f dimension;
         ofVec3f position;
 };

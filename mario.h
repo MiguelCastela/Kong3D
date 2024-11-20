@@ -13,6 +13,7 @@ class Mario {
         void climb_up();
         void go_down();
         void climb_down();
+        void draw_pov();
 
 
         // Positioning

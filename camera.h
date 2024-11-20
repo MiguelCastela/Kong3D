@@ -13,6 +13,7 @@ class Camera{
         void applyp3(ofVec3f marioPos, ofVec3f marioLookAt);
         void miniMap(ofVec3f marioPos);
         GLint camMode;
+        bool camFlag;
     private:
 
         GLfloat fov;

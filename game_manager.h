@@ -23,12 +23,10 @@ class Game{
         void key_pressed(int key);
         void key_released(int key);
         void update_movement();
-        void draw_barrels();
         bool check_collision(
             ofVec3f dim1, ofVec3f pos1,
             ofVec3f dim2, ofVec3f pos2        
         );
-        void barrel_movement();
 
         // Player
         ofVec3f marioPos;
@@ -40,19 +38,32 @@ class Game{
         ofVec3f ladDim;
         ofVec3f platDim;
         ofVec3f barrelDim;
+        ofVec3f fakeLadDim;
         GLint plat_ct;
-        std::vector<Platform*> platVec;
-        std::vector<Ladder*> ladVec;
-        std::vector<Ladder*> ladHitBoxVec;
-
-
         Platform* lastPlat;
         ofVec3f lastPlatPos;
 
+        std::vector<Platform*> platVec;
+        std::vector<Ladder*> ladVec;
+        std::vector<Ladder*> ladHitBoxVec;
+        std::vector<Ladder*> fakeLadVec;
+
+
+
+        //barrel
+        std::vector<Barrel*> barrelVec;
         ofVec3f barrelPos;
-        bool keep_drawing = true;
         ofVec3f initBarrelPos;
         bool barrel_flag = false;
+        float lastBarrelSpawnTime; 
+        int barrelsSpawned;       
+        const float barrelSpawnDelay = 2.0f;
+
+
+
+        //state
+        bool keep_drawing = true;
+ 
     private:
         Camera* cam;
         Mario* mario;

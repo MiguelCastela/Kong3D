@@ -12,11 +12,14 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
     this -> on_ladder = false;
     this -> is_moving_left = true;
     this -> position_x_on_impact = 0;
-    this -> speed = 0.05;
+    this -> speed = 0.5;
     this -> next_position_z = 0;
     this -> next_position_y = 0;
-    this -> base_position_z = 0;
-    this -> base_position_z = 0;
+    this->moving_x = true;
+    this->moving_y = false;
+    this->moving_z = false;
+    this->moving_down = false;
+    this->currentState = MOVING_X;
 }
 
 void Barrel::draw(){
@@ -41,6 +44,12 @@ void Barrel::move_back(){
     position.x -= speed;   
 }
 void Barrel::move_down(){
+        if(next_position_z == 0){
+            next_position_z = position.z + global.platDim.z;
+        }
+        if(next_position_y == 0){
+            next_position_y = position.y - global.ladDim.y + 1;
+        }
         if (position_x_on_impact == 0){
             position_x_on_impact = position.x;
         }
@@ -50,52 +59,100 @@ void Barrel::move_down(){
         }else{
             target_x = position_x_on_impact + (global.ladDim.x*0.5) + (global.barrelDim.x*0.5);
         }
-    
-        //cout << "Position x on impact: " << position_x_on_impact << endl;
-        //cout << "Target x: " << target_x << endl;
-        //cout << "Current x: " << position.x << endl;
-        //cout << "base position z: " << base_position_z << endl;
-        //cout << "next position z: " << next_position_z << endl;
+        /*
+        if (moving_x && !moving_y && !moving_z){
         if(is_moving_left){
             if(position.x > target_x){
-                position.x = target_x;
-            }else{
-            position.x = target_x;
+                position.x -= speed;
             }
         }else{
             if(position.x < target_x){
-                //position.x += speed;
-                position.x = target_x;
-            }else{
-                //position.x = target_x;
-                position.x = target_x;
+                position.x += speed;
+        }
+        }
+        moving_z = true;
+        moving_x = false;
+        }
+        if (!moving_x && !moving_y && moving_z){
+        if (position.z < next_position_z){
+            position.z += speed;
+            //position.z = next_position_z;
+        }
+        moving_z = false;
+        moving_y = true;
+        }
+        if (!moving_x && moving_y && !moving_z){
+        if (position.y > next_position_y){
+            position.y -= speed;
+            //position.y = next_position_y;
+        }
+        moving_x = true;
+        moving_y = false;
+        }
+        */
+         switch (currentState) {
+        case MOVING_X: {
+            // Move in X direction
+            if (is_moving_left) {
+                if (position.x > target_x) {
+                    //position.x -= speed;
+                    position.x = std::max(position.x - speed, target_x);
+                } else {
+                    currentState = MOVING_Z; // Transition to Z movement
+                }
+            } else {
+                if (position.x < target_x) {
+                    //position.x += speed;
+                    position.x = std::min(position.x + speed, target_x);                   
+                } else {
+                    currentState = MOVING_Z; // Transition to Z movement
+                }
+            }
+            break;
+        }
 
+        case MOVING_Z: {
+            // Move in Z direction
+            if (position.z < next_position_z) {
+                //position.z += speed;
+                position.z = std::min(position.z + speed, next_position_z);
+            } else {
+                currentState = MOVING_Y; // Transition to Y movement
+            }
+            break;
+        }
+
+        case MOVING_Y: {
+            // Move in Y direction
+            if (position.y > next_position_y) {
+                //position.y -= speed;
+                position.y = std::max(position.y - speed, next_position_y);
             }
         }
-        if (position.z < next_position_z){
-            //position.z += speed;
-            position.z = next_position_z;
+         }
 
-        }
-        if (position.y > next_position_y){
-            //position.y -= speed;
-            position.y = next_position_y;
-        }
-        if (position.x == target_x && position.z == next_position_z && position.y == next_position_y) {
+        if ((position.x == target_x) && (position.y == next_position_y)){
+            position.y -= 1;
+            
+            
             is_moving_left = !is_moving_left;
 
             cout << "Direction switched. Now moving " << (is_moving_left ? "left" : "right") << endl;
 
-            // Update base positions
-            base_position_z = position.z;
-            base_position_y = position.y;
 
             // The barrel is no longer on the ladder
             leave_ladder = true;
+            moving_x = true;
+            moving_y = false;
+            moving_z = false;
+            currentState = MOVING_X;
 
             // Reset the impact position for the next ladder
             position_x_on_impact = 0;
+            next_position_z = 0;
+            next_position_y = 0;
 
             
         }
     }
+

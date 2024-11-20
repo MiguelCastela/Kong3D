@@ -11,7 +11,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
     this->isJumping = false;
     this->dimensions = dimensions;
     this->position = position;
-    this->speed = 1.5;
+    this->speed = 0.75;
 
     this->on_ladder = false; 
     this->is_climbing = false;
@@ -32,11 +32,22 @@ void Mario::draw() {
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
-        cube_unit(0.5);
+        //if(camera.camFlag = true){
+            cube_unit(0.5);
+        //}
         cube_unit_outline(0.5);
     glPopMatrix();
 }
 
+void Mario::draw_pov(){
+    jump();
+    glColor3f(1, 0, 0);
+    glPushMatrix();
+        glTranslatef(position.x, position.y, position.z);
+        glScalef(dimensions.x, dimensions.y, dimensions.z);
+        cube_unit_outline(0.5);
+    glPopMatrix();
+}
 
 void Mario::start_jump() {
     if (!isJumping && !is_climbing) { // Jump only if Mario is not already jumping
@@ -85,7 +96,7 @@ void Mario::climb_up(){
     marioLookAt.z = position.z - 20;
 
 
-    position.y += 0.5;
+    position.y += speed;
     if(position.y >= next_position_y){
         base_position_y = next_position_y;
         is_climbing = false;

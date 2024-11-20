@@ -11,6 +11,7 @@ class Global{
         ofVec3f ladHitBoxDim;
         ofVec3f marioDim;
         ofVec3f barrelDim;
+        ofVec3f fakeLadDim;
 
         GLfloat left_limit;
         GLfloat right_limit;

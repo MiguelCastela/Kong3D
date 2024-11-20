@@ -1,6 +1,8 @@
 #include "camera.h"
 #include "cg_cam_extras.h"
 
+
+
 Camera::Camera(GLfloat fov, GLfloat distance, ofVec3f position){
     camMode = 0;
     this -> fov = fov;
@@ -27,6 +29,7 @@ void Camera::apply(ofVec3f marioPos, ofVec3f marioLookAt){
 }
 
 void Camera::applyp1(ofVec3f marioPos){
+    camFlag = false;
     perspective(fov, alpha, beta);
     lookat(
         0, marioPos.y + 50, marioPos.z + distance,
@@ -36,6 +39,7 @@ void Camera::applyp1(ofVec3f marioPos){
 }
 
 void Camera::applyp2(ofVec3f marioPos){
+    camFlag = false;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-gw()/8, gw()/8, -gh()/8, gh()/8, 10, 10000);
@@ -47,9 +51,10 @@ void Camera::applyp2(ofVec3f marioPos){
 }
 
 void Camera::applyp3(ofVec3f marioPos, ofVec3f marioLookAt){
+    camFlag = true;
     perspective(fov, alpha*100, beta*100);
     lookat(
-        marioPos.x, marioPos.y + 10, marioPos.z,
+        marioPos.x, marioPos.y , marioPos.z,
         marioLookAt.x, marioLookAt.y, marioLookAt.z,
         0, 1, 0
     );

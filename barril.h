@@ -18,10 +18,13 @@ class Barrel{
         float speed;
         float next_position_z;
         float next_position_y;
-        float base_position_z;
-        float base_position_y;
         bool leave_ladder;
-        
+        bool moving_x;
+        bool moving_y;
+        bool moving_z;
+        bool moving_down;
+        enum BarrelState { MOVING_X, MOVING_Z, MOVING_Y }; // Declare the enum
+        BarrelState currentState; 
 
     
 

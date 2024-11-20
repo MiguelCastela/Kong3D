@@ -211,6 +211,4 @@ inline void cube_malha_unit(GLint m, GLint n) {
 	glTranslated(0., 0., 0.5);
 	malha_unit(m, n);
 	glPopMatrix();
-
-
 }

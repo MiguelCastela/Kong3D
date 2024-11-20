@@ -15,19 +15,29 @@ Game::Game(){
     platDim = global.platDim;
     ladDim = global.ladDim;
     ladHitBoxDim = global.ladHitBoxDim;
+    fakeLadDim = global.fakeLadDim;
     barrelDim = global.barrelDim;
     barrelPos = ofVec3f(0,0,0);
 
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
+    barrel = new Barrel(barrelDim, barrelPos);
 
+
+
+    //barrel
+    lastBarrelSpawnTime = 0;
     // Number of platforms
     plat_ct = 10;
+
 
     // First platform's position
     ofVec3f base_plat_pos = marioPos;
     base_plat_pos.y -= platDim.y;
     base_plat_pos.y += marioDim.y*0.5; 
+
+    int s=1;
+
 
     for(int i = 0; i < plat_ct; i++){        
         // Determine in which half the ladder can be drawn
@@ -60,7 +70,7 @@ Game::Game(){
         ladHitBoxVec.push_back(
             new Ladder(
                 ladHitBoxDim,
-                ofVec3f(cur_lad_pos.x, cur_lad_pos.y + (ladDim.y*0.5), cur_lad_pos.z)
+                ofVec3f(cur_lad_pos.x, cur_lad_pos.y+ barrelDim.y*0.5 +1, cur_lad_pos.z)
             )
         );
         platVec.push_back(
@@ -70,7 +80,28 @@ Game::Game(){
                 ofVec3f(ofRandom(0, 1), ofRandom(0, 1), ofRandom(0, 1))
             )
         );
+
+        if(i % 2 == 0 && ((i / 2) % 2 == 0)){
+            GLfloat fake_ladder_left_lim = 0 - (ladDim.x);
+            GLfloat fake_ladder_right_lim = global.left_limit + (ladDim.x*0.5);
+
+
+            ofVec3f fake_lad_pos = ofVec3f(
+                ofRandom(fake_ladder_left_lim, fake_ladder_right_lim), 
+                cur_plat_pos.y + (ladDim.y*0.5) + (platDim.y*0.5),
+                cur_plat_pos.z - (platDim.z*0.5) - (ladDim.z*0.5)  
+            );
+
+            fakeLadVec.push_back(
+                new Ladder(
+                    fakeLadDim,
+                    fake_lad_pos
+                )
+            );
+        }
         lastPlatPos = cur_plat_pos;
+        s++;
+        
     }
 
     lastPlatPos.y += global.empty_space + platDim.y;
@@ -83,16 +114,40 @@ Game::Game(){
     barrelPos = initBarrelPos;
 
 
-    barrel = new Barrel(barrelDim, barrelPos);
-    barrel->base_position_z = barrelPos.z;
-    barrel->base_position_y = barrelPos.y;
-}
+    barrelVec.push_back(
+        new Barrel(
+            barrelDim,
+            ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
+        )
+    );
+    cout << "first barrel spawned" << endl;
+    barrelsSpawned = 1;
+    }
 
 void Game::update(){
     update_movement();
+    float curTime = ofGetElapsedTimef();
+        if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
+        barrelVec.push_back(
+            new Barrel(
+                barrelDim,
+                ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
+            )
+        );
+
+        lastBarrelSpawnTime = curTime;
+        barrelsSpawned++;
+
+        cout << "Barrel spawned at: " << curTime << " seconds." << endl;
+    }
+    
+    
+    
+    
+    
+    
     marioPos = mario->position;
-    barrelPos = barrel->position;
-    cout << "barrel position: " << barrelPos.x << " " << barrelPos.y << " " << barrelPos.z << endl;
+
     if(!mario->is_climbing){
         mario->marioLookAt.y = marioPos.y;
         mario->marioLookAt.z = marioPos.z;
@@ -110,35 +165,36 @@ void Game::update(){
         mario->on_ladder = true;
         mario->is_climbing = false;
     }
-    if (check_collision(marioDim, marioPos, barrelDim, barrelPos)) {
+    for(auto curBar : barrelVec){
+    if (check_collision(marioDim, marioPos, curBar->dimensions, curBar->position)) {
         cout << "Collision detected" << endl;
         keep_drawing = false;
     };
-    barrel_flag = false;
-
-    if (!barrel->leave_ladder){
+        bool ladder_collision = false;
+        //curBar->next_position_z = curBar->position.z + barrelDim.z*0.5;
+        //curBar->next_position_y = curBar->position.y - ladDim.y;
     for(auto curLad : ladHitBoxVec){
-        if (check_collision(barrelDim, barrelPos, curLad->dimension, curLad->position)) {
+        if (check_collision(curBar->dimensions, curBar->position, curLad->dimension, curLad->position)) {
             cout << "collision from barrel with ladder" << endl;
-            barrel -> next_position_z = barrel -> base_position_z + global.platDim.z;
-            barrel -> next_position_y = barrel -> base_position_y - ladDim.y;
-            barrel_flag = true;
-            barrel -> on_ladder = true;
-            break;
+            ladder_collision = true;
+            curBar->on_ladder = true;
         }
     }
-    }
-if (barrel_flag && barrel->on_ladder) {
+if (ladder_collision && curBar->on_ladder) {
     cout << "Calling move_down()" << endl;
-    barrel->move_down();
-} else {
-    cout << "Calling barrel_movement()" << endl;
-    barrel_movement();
-}
-if (barrel->leave_ladder) {
+    curBar->move_down();
+} else if (!curBar->on_ladder) {
+        if (curBar->is_moving_left) {
+            curBar->move_back();
+        } else {
+            curBar->move_front();
+        }
+    }
+if (curBar->leave_ladder) {
     cout << "Leaving ladder, resetting state." << endl;
-    barrel->on_ladder = false;
-    barrel->leave_ladder = false;
+    curBar->on_ladder = false;
+    curBar->leave_ladder = false;
+    }
 }
 }
 
@@ -152,7 +208,11 @@ void Game::draw(){
 }
 
 void Game::draw_scene(){
-    mario->draw();
+    if(!cam->camFlag){
+        mario->draw();
+    }else{
+        mario->draw_pov();
+    }
     
     for(auto cur_plat: platVec){
         cur_plat->draw();
@@ -161,27 +221,17 @@ void Game::draw_scene(){
     for(auto cur_lad: ladVec){
         cur_lad->draw();
     }
+    for(auto cur_lad: fakeLadVec){
+        cur_lad->draw_fake_lad();
+    }
     for(auto cur_lad: ladHitBoxVec){
         cur_lad->draw_hitbox();
     }
-    draw_barrels();
+    for(auto curBar : barrelVec){
+        curBar->draw();
+    }
     
 }
-
-void Game::draw_barrels(){
-    barrel->draw();
-
-}
-void Game::barrel_movement(){
-    if(barrel -> on_ladder == false){
-        if(barrel -> is_moving_left){
-            barrel -> move_back();
-        }else{
-            barrel -> move_front();
-        }
-    }
-}
-
 void Game::key_pressed(int key){
     if (key == 'T' || key == 't') {
         cam->camMode = ((cam->camMode)+1)%3;
