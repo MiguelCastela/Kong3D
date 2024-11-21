@@ -5,6 +5,11 @@
 #include <cmath>
 
 
+inline void filled(){
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+
 //desenha ponto 3D na origem
 inline void drawPoint() {
 	glBegin(GL_POINTS);

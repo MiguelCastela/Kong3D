@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "global.h"
 
+
 #include <vector>   
 
 class Camera;
@@ -14,6 +15,7 @@ class Mario;
 class Platform;
 class Ladder;
 class Barrel;
+class Particle;
 class Game{
     public:
         Game();
@@ -57,15 +59,19 @@ class Game{
         bool barrel_flag = false;
         float lastBarrelSpawnTime; 
         int barrelsSpawned;       
-        const float barrelSpawnDelay = 2.0f;
+        float barrelSpawnDelay;
 
+
+        //particles 
+        vector<Particle*> explosion;
 
 
         //state
-        bool keep_drawing = true;
+        bool mario_dead = false;
  
     private:
         Camera* cam;
         Mario* mario;
         Barrel *barrel;
+        Particle *marioParticle;
 };

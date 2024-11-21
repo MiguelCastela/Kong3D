@@ -34,14 +34,22 @@ void Barrel::draw(){
 }
 
 void Barrel::move_front(){
-        cout << "Moving front" << endl;
+    if (position.x < global.right_limit + global.barrelDim.x) {
+        //cout << "Moving front" << endl;
     is_moving_left = false;
     position.x += speed;
+    }else{
+        position.y -= speed;
+    }
 }
 void Barrel::move_back(){
-    cout << "Moving back" << endl;
+    if (position.x > global.left_limit - global.barrelDim.x) {
+    //cout << "Moving back" << endl;
     is_moving_left = true;
     position.x -= speed;   
+    }else{
+        position.y -= speed;
+    }   
 }
 void Barrel::move_down(){
         if(next_position_z == 0){
@@ -134,10 +142,12 @@ void Barrel::move_down(){
         if ((position.x == target_x) && (position.y == next_position_y)){
             position.y -= 1;
             
-            
-            is_moving_left = !is_moving_left;
+            if (rand() % 100 < 75) {
+                is_moving_left = !is_moving_left;
 
-            cout << "Direction switched. Now moving " << (is_moving_left ? "left" : "right") << endl;
+            }
+
+            //cout << "Direction switched. Now moving " << (is_moving_left ? "left" : "right") << endl;
 
 
             // The barrel is no longer on the ladder

@@ -3,6 +3,7 @@
 #include "plataforma.h"
 #include "escadas.h"
 #include "barril.h"
+#include "particula.h"
 
 
 
@@ -22,6 +23,7 @@ Game::Game(){
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
     barrel = new Barrel(barrelDim, barrelPos);
+    
 
 
 
@@ -120,13 +122,18 @@ Game::Game(){
             ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
         )
     );
-    cout << "first barrel spawned" << endl;
+    //cout << "first barrel spawned" << endl;
     barrelsSpawned = 1;
+
+
+
+
     }
 
 void Game::update(){
     update_movement();
     float curTime = ofGetElapsedTimef();
+    barrelSpawnDelay = ofRandom(1.0f, 8.0f);
         if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
         barrelVec.push_back(
             new Barrel(
@@ -138,7 +145,7 @@ void Game::update(){
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
 
-        cout << "Barrel spawned at: " << curTime << " seconds." << endl;
+        //cout << "Barrel spawned at: " << curTime << " seconds." << endl;
     }
     
     
@@ -168,20 +175,33 @@ void Game::update(){
     for(auto curBar : barrelVec){
     if (check_collision(marioDim, marioPos, curBar->dimensions, curBar->position)) {
         cout << "Collision detected" << endl;
-        keep_drawing = false;
-    };
+        mario_dead = true;
+            explosion.push_back(
+        new Particle(
+            marioPos,
+            ofVec3f(1, 1, 1),
+            ofVec3f(1, 0, 0)
+        )
+        );
+
+
+
+  
+        }
+        
+    
         bool ladder_collision = false;
         //curBar->next_position_z = curBar->position.z + barrelDim.z*0.5;
         //curBar->next_position_y = curBar->position.y - ladDim.y;
     for(auto curLad : ladHitBoxVec){
         if (check_collision(curBar->dimensions, curBar->position, curLad->dimension, curLad->position)) {
-            cout << "collision from barrel with ladder" << endl;
+            //cout << "collision from barrel with ladder" << endl;
             ladder_collision = true;
             curBar->on_ladder = true;
         }
     }
 if (ladder_collision && curBar->on_ladder) {
-    cout << "Calling move_down()" << endl;
+    //cout << "Calling move_down()" << endl;
     curBar->move_down();
 } else if (!curBar->on_ladder) {
         if (curBar->is_moving_left) {
@@ -191,7 +211,7 @@ if (ladder_collision && curBar->on_ladder) {
         }
     }
 if (curBar->leave_ladder) {
-    cout << "Leaving ladder, resetting state." << endl;
+    //cout << "Leaving ladder, resetting state." << endl;
     curBar->on_ladder = false;
     curBar->leave_ladder = false;
     }
@@ -200,7 +220,7 @@ if (curBar->leave_ladder) {
 
 void Game::draw(){
     cam->apply(marioPos, mario->marioLookAt);
-    cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
+    //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
     draw_scene();
     cam -> miniMap(marioPos);
     draw_scene();
@@ -208,7 +228,7 @@ void Game::draw(){
 }
 
 void Game::draw_scene(){
-    if(!cam->camFlag){
+    if(!cam->camFlag && !mario_dead){
         mario->draw();
     }else{
         mario->draw_pov();
@@ -229,6 +249,11 @@ void Game::draw_scene(){
     }
     for(auto curBar : barrelVec){
         curBar->draw();
+    }
+    if(mario_dead){
+        for(auto curExplosion : explosion){
+            curExplosion->draw();
+        }
     }
     
 }
