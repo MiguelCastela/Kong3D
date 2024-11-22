@@ -16,6 +16,9 @@ class Global{
         GLfloat left_limit;
         GLfloat right_limit;
 
+        ofVec3f marioPos;
+        ofVec3f barrelPos;
+
         GLfloat empty_space;
 };
 

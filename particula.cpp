@@ -1,5 +1,6 @@
 #include "particula.h"
 #include <bits/stdc++.h>
+#include "global.h"
 #include "ofApp.h"
 
 
@@ -9,16 +10,18 @@ Particle::Particle(ofVec3f position, ofVec3f dimensions, ofVec3f color) {
     this->position = position;
     this->dimensions = dimensions;
     this->color = color;
+
+    this->velocity = ofVec3f(ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0), ofRandom(-1.0, 1.0));
 }
 void Particle::shoot(float speed) {
     // Generate a random direction for the particle
     float randomX = ofRandom(-1.0, 1.0); // Random value for the x direction
     float randomY = ofRandom(-1.0, 1.0); // Random value for the y direction
     float randomZ = ofRandom(-1.0, 1.0); // Random value for the z direction
-    
+
     // Create a random direction vector using these values
     ofVec3f direction(randomX, randomY, randomZ);
-    
+
     // Normalize the direction vector and multiply by speed to get the final velocity
     this->velocity = direction.getNormalized() * speed;
 }

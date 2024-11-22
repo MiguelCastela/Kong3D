@@ -12,7 +12,7 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
     this -> on_ladder = false;
     this -> is_moving_left = true;
     this -> position_x_on_impact = 0;
-    this -> speed = 0.5;
+    this -> speed = 0.4;
     this -> next_position_z = 0;
     this -> next_position_y = 0;
     this->moving_x = true;

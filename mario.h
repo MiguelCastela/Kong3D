@@ -14,7 +14,11 @@ class Mario {
         void go_down();
         void climb_down();
         void draw_pov();
+        void spawn_back();
 
+
+        float respawnStartTime;  // Tracks the time when respawn was triggered.
+        bool isRespawning; 
 
         // Positioning
         ofVec3f dimensions;

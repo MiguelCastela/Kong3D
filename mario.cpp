@@ -11,7 +11,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
     this->isJumping = false;
     this->dimensions = dimensions;
     this->position = position;
-    this->speed = 0.75;
+    this->speed = 0.5;
 
     this->on_ladder = false; 
     this->is_climbing = false;
@@ -21,6 +21,8 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
 
     this->base_position_y = 0;
     this->next_position_y = 0;
+
+    this->isRespawning = false;
     
 
     this->marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
@@ -48,6 +50,37 @@ void Mario::draw_pov(){
         cube_unit_outline(0.5);
     glPopMatrix();
 }
+
+void Mario::spawn_back() {
+    float currentTime = ofGetElapsedTimef();
+
+    if (!isRespawning) {
+        // Start the respawn timer
+        respawnStartTime = currentTime;
+        isRespawning = true;
+        return;
+    }
+
+    if (currentTime - respawnStartTime >= 5.0f && position != global.marioPos) {
+        // Move Mario to the respawn position after 5 seconds
+        position = global.marioPos;
+        is_climbing = false;
+        on_ladder = false;
+        isJumping = false;
+        pre_jump_y = 0;
+        base_position_y = 0;
+        next_position_y = 0;
+
+        // Update the timer to track the additional 1 second in respawning state
+        respawnStartTime = currentTime;
+    }
+
+    if (currentTime - respawnStartTime >= 1.0f && position == global.marioPos) {
+        // Exit the respawning state after 1 second at the respawn position
+        isRespawning = false;
+    }
+}
+
 
 void Mario::start_jump() {
     if (!isJumping && !is_climbing) { // Jump only if Mario is not already jumping

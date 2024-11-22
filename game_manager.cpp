@@ -11,14 +11,14 @@ Game::Game(){
     glEnable(GL_DEPTH_TEST);
     
     // TODO: MUDAR PARA STARTING POSITION DO MARIO/BARRIL
-    marioPos = ofVec3f(0,0,0);
+    marioPos = global.marioPos;
     marioDim = global.marioDim;
     platDim = global.platDim;
     ladDim = global.ladDim;
     ladHitBoxDim = global.ladHitBoxDim;
     fakeLadDim = global.fakeLadDim;
     barrelDim = global.barrelDim;
-    barrelPos = ofVec3f(0,0,0);
+    barrelPos = global.barrelPos;
 
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
@@ -69,12 +69,14 @@ Game::Game(){
                 cur_lad_pos
             )
         );
+        if (i!=0){
         ladHitBoxVec.push_back(
             new Ladder(
                 ladHitBoxDim,
                 ofVec3f(cur_lad_pos.x, cur_lad_pos.y+ barrelDim.y*0.5 +1, cur_lad_pos.z)
             )
         );
+        }
         platVec.push_back(
             new Platform(
                 platDim,
@@ -83,7 +85,7 @@ Game::Game(){
             )
         );
 
-        if(i % 2 == 0 && ((i / 2) % 2 == 0)){
+        if(i == 2 || (i % 2 == 0 && ((i / 2) % 2 == 0 && i !=0 ) )){
             GLfloat fake_ladder_left_lim = 0 - (ladDim.x);
             GLfloat fake_ladder_right_lim = global.left_limit + (ladDim.x*0.5);
 
@@ -145,7 +147,15 @@ void Game::update(){
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
 
+        //cout << barrelsSpawned << " barrels spawned." << endl;
+
         //cout << "Barrel spawned at: " << curTime << " seconds." << endl;
+    }
+
+ 
+
+    for(auto curExplosion : explosion){
+        curExplosion->update();
     }
     
     
@@ -163,7 +173,8 @@ void Game::update(){
     bool flag = false;
     mario->on_ladder = false;
     for(auto curLad : ladVec){
-        if (check_collision(marioDim, marioPos, curLad->dimension, curLad->position)) {
+        if (check_collision(marioDim, marioPos, curLad->dimension, curLad->position)) { 
+            std::cout << "Collision with ladder detected after respawn!" << std::endl;
             mario->next_position_y = mario->base_position_y + ladDim.y;
             flag = true;
         }
@@ -189,7 +200,6 @@ void Game::update(){
   
         }
         
-    
         bool ladder_collision = false;
         //curBar->next_position_z = curBar->position.z + barrelDim.z*0.5;
         //curBar->next_position_y = curBar->position.y - ladDim.y;
@@ -219,18 +229,26 @@ if (curBar->leave_ladder) {
 }
 
 void Game::draw(){
+
     cam->apply(marioPos, mario->marioLookAt);
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
+    if (mario_dead) {
+        mario->spawn_back(); 
+        if (!mario->isRespawning) {
+            mario_dead = false;  
+        }
+    }
     draw_scene();
-    cam -> miniMap(marioPos);
-    draw_scene();
+
+    cam->miniMap(marioPos);
+        draw_scene();
 
 }
 
 void Game::draw_scene(){
-    if(!cam->camFlag && !mario_dead){
+    if(!cam->camFlag){
         mario->draw();
-    }else{
+    }else if (cam->camFlag){
         mario->draw_pov();
     }
     
@@ -264,19 +282,19 @@ void Game::key_pressed(int key){
 }
 
 void Game::update_movement(){
-    if(ofGetKeyPressed(OF_KEY_RIGHT) && !mario->is_climbing){
+    if(ofGetKeyPressed(OF_KEY_RIGHT) && !mario->is_climbing && !mario->isRespawning){
         mario->move_right();
     }
-    if(ofGetKeyPressed(OF_KEY_LEFT) && !mario->is_climbing){
+    if(ofGetKeyPressed(OF_KEY_LEFT) && !mario->is_climbing && !mario->isRespawning){
         mario->move_left();
     }
-    if(ofGetKeyPressed(OF_KEY_UP) && !mario->on_ladder && !mario->isJumping){
+    if(ofGetKeyPressed(OF_KEY_UP) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
         mario->climb_up();
     }
-    if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->on_ladder && !mario->isJumping){
+    if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
         mario->climb_down();
     }
-    if(ofGetKeyPressed(' ')){
+    if(ofGetKeyPressed(' ') && !mario->isRespawning){
         if(!mario->is_climbing){
             mario->start_jump();
         }

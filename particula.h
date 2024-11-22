@@ -2,7 +2,7 @@
 #ifndef PARTICULAS_H
 #define PARTICULAS_H
 
-#include "ofMain.h"
+#include "global.h"
 
 
 class Particle{
