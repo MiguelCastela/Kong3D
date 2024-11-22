@@ -61,7 +61,6 @@ void Camera::applyp3(ofVec3f marioPos, ofVec3f marioLookAt){
 }
 
 void Camera::miniMap(ofVec3f marioPos){
-
     glViewport(gw()-gw()/4, gh()-gw()/4, gw()/4, gh()/4);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

@@ -24,7 +24,8 @@ class Barrel{
         bool moving_z;
         bool moving_down;
         enum BarrelState { MOVING_X, MOVING_Z, MOVING_Y }; // Declare the enum
-        BarrelState currentState; 
+        BarrelState currentState;
+        bool is_active; 
 
     
 

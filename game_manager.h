@@ -21,7 +21,7 @@ class Game{
         Game();
         void draw();
         void update();
-        void draw_scene();
+        void draw_scene(bool pov);
         void key_pressed(int key);
         void key_released(int key);
         void update_movement();

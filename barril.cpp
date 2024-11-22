@@ -20,9 +20,13 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
     this->moving_z = false;
     this->moving_down = false;
     this->currentState = MOVING_X;
+    this->is_active = true;
 }
 
 void Barrel::draw(){
+    if (position.y < 0) {
+        is_active = false;
+    }
     glColor3f(0, 0, 1);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);

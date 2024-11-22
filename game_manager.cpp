@@ -233,47 +233,57 @@ void Game::draw(){
     cam->apply(marioPos, mario->marioLookAt);
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
     if (mario_dead) {
+
         mario->spawn_back(); 
         if (!mario->isRespawning) {
             mario_dead = false;  
         }
+        draw_scene(true);
+        return;
     }
-    draw_scene();
-
-    cam->miniMap(marioPos);
-        draw_scene();
+    if(cam->camMode == 2){
+        draw_scene(true);
+    
+        cam->miniMap(marioPos);
+        draw_scene(false);
+    }
+    else{
+        draw_scene(false);
+    }
 
 }
 
-void Game::draw_scene(){
-    if(!cam->camFlag){
-        mario->draw();
-    }else if (cam->camFlag){
-        mario->draw_pov();
-    }
-    
-    for(auto cur_plat: platVec){
-        cur_plat->draw();
-    }    
-    lastPlat->draw();
-    for(auto cur_lad: ladVec){
-        cur_lad->draw();
-    }
-    for(auto cur_lad: fakeLadVec){
-        cur_lad->draw_fake_lad();
-    }
-    for(auto cur_lad: ladHitBoxVec){
-        cur_lad->draw_hitbox();
-    }
-    for(auto curBar : barrelVec){
-        curBar->draw();
-    }
-    if(mario_dead){
-        for(auto curExplosion : explosion){
-            curExplosion->draw();
+void Game::draw_scene(bool pov){
+    glPushMatrix();
+        if(!pov){
+            mario->draw();
         }
-    }
-    
+        
+        for(auto cur_plat: platVec){
+            cur_plat->draw();
+        }    
+        lastPlat->draw();
+        for(auto cur_lad: ladVec){
+            cur_lad->draw();
+        }
+        for(auto cur_lad: fakeLadVec){
+            cur_lad->draw_fake_lad();
+        }
+        for(auto cur_lad: ladHitBoxVec){
+            cur_lad->draw_hitbox();
+        }
+        for(auto curBar : barrelVec){
+            if(curBar->is_active){
+                curBar->draw();
+            }
+            
+        }
+        if(mario_dead){
+            for(auto curExplosion : explosion){
+                curExplosion->draw();
+            }
+        }
+    glPopMatrix();
 }
 void Game::key_pressed(int key){
     if (key == 'T' || key == 't') {

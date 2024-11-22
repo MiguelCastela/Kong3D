@@ -7,15 +7,15 @@ using namespace std;
 
 
 Mario::Mario(ofVec3f dimensions, ofVec3f position) {
-    this->gravity = 0.01f;   
+    this->gravity = 0.015f * (60.0 / ofGetFrameRate());   
     this->isJumping = false;
     this->dimensions = dimensions;
     this->position = position;
-    this->speed = 0.5;
+    this->speed = 1.0 * (60.0 / ofGetFrameRate());
 
     this->on_ladder = false; 
     this->is_climbing = false;
-    this->jump_vel_const = 0.5f;
+    this->jump_vel_const = 0.5f * (60.0 / ofGetFrameRate());
     this->jumpVelocity = jump_vel_const;
     this->pre_jump_y = 0;
 
@@ -47,6 +47,7 @@ void Mario::draw_pov(){
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
+        cube_unit(0.5);
         cube_unit_outline(0.5);
     glPopMatrix();
 }
