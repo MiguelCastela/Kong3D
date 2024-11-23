@@ -40,6 +40,9 @@ class Mario {
         GLfloat next_position_y;
 
 
+        bool going_up;
+
+
 
 };  
 #endif // MARIO_H

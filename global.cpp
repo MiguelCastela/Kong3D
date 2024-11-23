@@ -12,8 +12,11 @@ Global::Global(){
     barrelDim = ofVec3f(marioDim.x, marioDim.y, marioDim.z);
     ladHitBoxDim = ofVec3f(ladDim.x, ladDim.y-barrelDim.y+1 , ladDim.z*2);
     fakeLadDim = ofVec3f(ladDim.x, ladDim.y, ladDim.z);
+    ladMarioHitBoxDim = ofVec3f(ladDim.x, 0.1 , ladDim.z);
     marioPos = ofVec3f(0, 0, 0);    
     barrelPos = ofVec3f(0, 0, 0);
+    kongPos = ofVec3f(0, 0, 0);
+    kongDim = ofVec3f(marioDim.x , marioDim.y , marioDim.z );
 
     left_limit = -platDim.x/2 + marioDim.x/2;
     right_limit = platDim.x/2 - marioDim.x/2;

@@ -71,37 +71,6 @@ void Barrel::move_down(){
         }else{
             target_x = position_x_on_impact + (global.ladDim.x*0.5) + (global.barrelDim.x*0.5);
         }
-        /*
-        if (moving_x && !moving_y && !moving_z){
-        if(is_moving_left){
-            if(position.x > target_x){
-                position.x -= speed;
-            }
-        }else{
-            if(position.x < target_x){
-                position.x += speed;
-        }
-        }
-        moving_z = true;
-        moving_x = false;
-        }
-        if (!moving_x && !moving_y && moving_z){
-        if (position.z < next_position_z){
-            position.z += speed;
-            //position.z = next_position_z;
-        }
-        moving_z = false;
-        moving_y = true;
-        }
-        if (!moving_x && moving_y && !moving_z){
-        if (position.y > next_position_y){
-            position.y -= speed;
-            //position.y = next_position_y;
-        }
-        moving_x = true;
-        moving_y = false;
-        }
-        */
          switch (currentState) {
         case MOVING_X: {
             // Move in X direction

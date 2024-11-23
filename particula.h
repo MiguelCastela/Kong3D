@@ -9,7 +9,6 @@ class Particle{
     public:
     Particle(ofVec3f position, ofVec3f dimensions, ofVec3f color);
     void draw();
-    void shoot(float speed);
     void update();
 
     ofVec3f position;

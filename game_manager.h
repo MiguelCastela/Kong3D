@@ -8,6 +8,7 @@
 #include "global.h"
 
 
+
 #include <vector>   
 
 class Camera;
@@ -16,6 +17,7 @@ class Platform;
 class Ladder;
 class Barrel;
 class Particle;
+class Kong;
 class Game{
     public:
         Game();
@@ -24,6 +26,7 @@ class Game{
         void draw_scene(bool pov);
         void key_pressed(int key);
         void key_released(int key);
+        void barrelsAfterRespawn();
         void update_movement();
         bool check_collision(
             ofVec3f dim1, ofVec3f pos1,
@@ -36,6 +39,7 @@ class Game{
         ofVec3f marioLookAt;        
 
         // Scene
+        ofVec3f ladMarioHitBoxDim;
         ofVec3f ladHitBoxDim;
         ofVec3f ladDim;
         ofVec3f platDim;
@@ -49,6 +53,7 @@ class Game{
         std::vector<Ladder*> ladVec;
         std::vector<Ladder*> ladHitBoxVec;
         std::vector<Ladder*> fakeLadVec;
+        std::vector<Ladder*> fakeLadHitBoxVec;
 
 
 
@@ -61,17 +66,24 @@ class Game{
         int barrelsSpawned;       
         float barrelSpawnDelay;
 
+        //kong
+        ofVec3f kongPos;
+        ofVec3f kongDim;
+
 
         //particles 
         vector<Particle*> explosion;
 
 
         //state
+        bool flag_down = false;
         bool mario_dead = false;
- 
+        bool barrels_reset = false;
+        bool explosion_created = false; 
     private:
         Camera* cam;
         Mario* mario;
         Barrel *barrel;
         Particle *marioParticle;
+        Kong *kong;
 };

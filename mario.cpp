@@ -23,6 +23,9 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
     this->next_position_y = 0;
 
     this->isRespawning = false;
+
+    this->going_up = false;
+
     
 
     this->marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
@@ -62,7 +65,7 @@ void Mario::spawn_back() {
         return;
     }
 
-    if (currentTime - respawnStartTime >= 5.0f && position != global.marioPos) {
+    if (currentTime - respawnStartTime >= 1.0f && position != global.marioPos) {
         // Move Mario to the respawn position after 5 seconds
         position = global.marioPos;
         is_climbing = false;
@@ -76,7 +79,7 @@ void Mario::spawn_back() {
         respawnStartTime = currentTime;
     }
 
-    if (currentTime - respawnStartTime >= 1.0f && position == global.marioPos) {
+    if (currentTime - respawnStartTime >= 0.1f && position == global.marioPos) {
         // Exit the respawning state after 1 second at the respawn position
         isRespawning = false;
     }
@@ -95,7 +98,7 @@ void Mario::jump() {
     if (isJumping && !is_climbing) {
         position.y += jumpVelocity;     
         jumpVelocity -= gravity;        
-
+    
         if (position.y <= pre_jump_y) { 
             position.y = pre_jump_y;    
             isJumping = false;         
@@ -131,12 +134,12 @@ void Mario::climb_up(){
 
 
     position.y += speed;
-    if(position.y >= next_position_y){
-        base_position_y = next_position_y;
-        is_climbing = false;
-        position.z -= global.platDim.z;
-    }
 
+        if(position.y >= next_position_y){
+            base_position_y = next_position_y;
+            is_climbing = false;
+            position.z -= global.platDim.z;
+        }
 }
 void Mario::climb_down(){
     is_climbing = true;
@@ -144,16 +147,20 @@ void Mario::climb_down(){
     marioLookAt.x = position.x;
     marioLookAt.z = position.z + 2;
     
-    
-    position.y -= 0.5;
-    if(position.y <= base_position_y){
-        position.y = base_position_y;
-        is_climbing = false;
-    }
+    position.y -= speed;
+
+        if(position.y <= base_position_y){
+            position.y = base_position_y;
+            is_climbing = false;
+        }
 }
+    
+    
 
 void Mario::go_down(){
-    //cout << "going down" << endl;
-    position.y = base_position_y;
+    cout << "Mario can't go down levels" << endl;
+
 }
+
+
 

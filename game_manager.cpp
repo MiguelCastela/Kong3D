@@ -4,6 +4,7 @@
 #include "escadas.h"
 #include "barril.h"
 #include "particula.h"
+#include "donkey_kong.h"
 
 
 
@@ -19,12 +20,15 @@ Game::Game(){
     fakeLadDim = global.fakeLadDim;
     barrelDim = global.barrelDim;
     barrelPos = global.barrelPos;
+    kongPos = global.kongPos;
+    kongDim = global.kongDim;
 
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
     barrel = new Barrel(barrelDim, barrelPos);
+    kong = new Kong(kongDim, kongPos);
     
-
+    
 
 
     //barrel
@@ -38,7 +42,7 @@ Game::Game(){
     base_plat_pos.y -= platDim.y;
     base_plat_pos.y += marioDim.y*0.5; 
 
-    int s=1;
+
 
 
     for(int i = 0; i < plat_ct; i++){        
@@ -104,7 +108,6 @@ Game::Game(){
             );
         }
         lastPlatPos = cur_plat_pos;
-        s++;
         
     }
 
@@ -115,53 +118,70 @@ Game::Game(){
 
     initBarrelPos = lastPlatPos;
     initBarrelPos.y += platDim.y/2 + barrelDim.y/2;
+    initBarrelPos.x = global.right_limit - 2*kongDim.x;
     barrelPos = initBarrelPos;
+    
+    
 
-
-    barrelVec.push_back(
-        new Barrel(
-            barrelDim,
-            ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
-        )
-    );
     //cout << "first barrel spawned" << endl;
     barrelsSpawned = 1;
 
 
-
-
+    for(int i=0; i<plat_ct -2; i++){
+        barrelVec.push_back(
+            new Barrel(
+                barrelDim,
+                ofVec3f(barrelPos.x + 2*kongDim.x, barrelPos.y - (i* ladDim.y), barrelPos.z + (i*platDim.z))
+            )   
+        );
     }
+
+
+    kongPos = barrelPos;
+    //kong = new Kong(kongDim, ofVec3f(kongPos.x + kongDim.x, kongPos.y, kongPos.z));
+    kong = new Kong(kongDim, ofVec3f(0 , 0, 0));
+
+
+}
 
 void Game::update(){
     update_movement();
     float curTime = ofGetElapsedTimef();
     barrelSpawnDelay = ofRandom(1.0f, 8.0f);
-        if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
+    if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
         barrelVec.push_back(
-            new Barrel(
-                barrelDim,
-                ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
+        new Barrel(
+            barrelDim,
+            ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
             )
         );
 
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
-
-        //cout << barrelsSpawned << " barrels spawned." << endl;
-
-        //cout << "Barrel spawned at: " << curTime << " seconds." << endl;
+    }
+    // se quiser barris a dar clean up dps de cada morte
+    /*
+    if(mario_dead && !barrels_reset){
+        barrelVec.clear();
+           for(int i=0; i<plat_ct - 2; i++){
+        barrelVec.push_back(
+            new Barrel(
+                barrelDim,
+                ofVec3f(barrelPos.x, barrelPos.y - (i* ladDim.y), barrelPos.z + (i*platDim.z))
+            )   
+        );
+    }
+    barrels_reset = true;
     }
 
- 
+    if(barrels_reset && !mario_dead){
+        barrels_reset = false;
+    }
+    */
 
     for(auto curExplosion : explosion){
         curExplosion->update();
     }
-    
-    
-    
-    
-    
     
     marioPos = mario->position;
 
@@ -171,90 +191,107 @@ void Game::update(){
     }
 
     bool flag = false;
+    flag_down = false;
     mario->on_ladder = false;
     for(auto curLad : ladVec){
         if (check_collision(marioDim, marioPos, curLad->dimension, curLad->position)) { 
-            std::cout << "Collision with ladder detected after respawn!" << std::endl;
+            //std::cout << "Collision with ladder detected after respawn!" << std::endl;
             mario->next_position_y = mario->base_position_y + ladDim.y;
             flag = true;
         }
     }
     if(!flag){
+        mario->going_up = true;
         mario->on_ladder = true;
         mario->is_climbing = false;
     }
+    
+    for(auto curLad: ladHitBoxVec){
+        if (check_collision(marioDim, marioPos, curLad->dimension, curLad->position)) {
+            flag_down = true;
+        }
+    }
+    
     for(auto curBar : barrelVec){
-    if (check_collision(marioDim, marioPos, curBar->dimensions, curBar->position)) {
-        cout << "Collision detected" << endl;
-        mario_dead = true;
-            explosion.push_back(
-        new Particle(
-            marioPos,
-            ofVec3f(1, 1, 1),
-            ofVec3f(1, 0, 0)
-        )
-        );
-
-
-
-  
+        if (check_collision(marioDim, marioPos, curBar->dimensions, curBar->position)) {
+            if(!explosion_created){
+            //cout << "Collision detected" << endl;
+                mario_dead = true;
+                for (int i = 0; i < 150; i++) {
+                explosion.push_back(
+                    new Particle(
+                        marioPos,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(1, 0, 0)
+                    )
+                );
+                }
+                explosion_created = true;
+            }
         }
         
         bool ladder_collision = false;
         //curBar->next_position_z = curBar->position.z + barrelDim.z*0.5;
         //curBar->next_position_y = curBar->position.y - ladDim.y;
-    for(auto curLad : ladHitBoxVec){
-        if (check_collision(curBar->dimensions, curBar->position, curLad->dimension, curLad->position)) {
+        for(auto curLad : ladHitBoxVec){
+            if (check_collision(curBar->dimensions, curBar->position, curLad->dimension, curLad->position)) {
             //cout << "collision from barrel with ladder" << endl;
             ladder_collision = true;
             curBar->on_ladder = true;
+            }
         }
-    }
-if (ladder_collision && curBar->on_ladder) {
-    //cout << "Calling move_down()" << endl;
-    curBar->move_down();
-} else if (!curBar->on_ladder) {
-        if (curBar->is_moving_left) {
+        if (ladder_collision && curBar->on_ladder) {
+        //cout << "Calling move_down()" << endl;
+        curBar->move_down();
+        } else if (!curBar->on_ladder) {
+            if (curBar->is_moving_left) {
             curBar->move_back();
-        } else {
+            } else {
             curBar->move_front();
+            }
+        }
+        if (curBar->leave_ladder) {
+            //cout << "Leaving ladder, resetting state." << endl;
+            curBar->on_ladder = false;
+            curBar->leave_ladder = false;
         }
     }
-if (curBar->leave_ladder) {
-    //cout << "Leaving ladder, resetting state." << endl;
-    curBar->on_ladder = false;
-    curBar->leave_ladder = false;
-    }
-}
 }
 
+void Game::barrelsAfterRespawn(){
+    if (mario_dead){
+
+
+ 
+}
+}
 void Game::draw(){
 
     cam->apply(marioPos, mario->marioLookAt);
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
     if (mario_dead) {
-
         mario->spawn_back(); 
-        if (!mario->isRespawning) {
+        if (mario_dead && !mario->isRespawning) {
             mario_dead = false;  
+            explosion_created = false;
         }
         draw_scene(true);
         return;
     }
     if(cam->camMode == 2){
         draw_scene(true);
-    
         cam->miniMap(marioPos);
         draw_scene(false);
     }
     else{
         draw_scene(false);
+        cam->miniMap(marioPos);
+        draw_scene(false);
     }
-
 }
 
 void Game::draw_scene(bool pov){
-    glPushMatrix();
+glPushMatrix();
         if(!pov){
             mario->draw();
         }
@@ -272,18 +309,22 @@ void Game::draw_scene(bool pov){
         for(auto cur_lad: ladHitBoxVec){
             cur_lad->draw_hitbox();
         }
+        for (auto cur_lad: fakeLadHitBoxVec){
+            cur_lad->draw_hitbox();
+        }
         for(auto curBar : barrelVec){
             if(curBar->is_active){
                 curBar->draw();
-            }
-            
+            }    
         }
+        kong->draw();
+
         if(mario_dead){
             for(auto curExplosion : explosion){
                 curExplosion->draw();
             }
         }
-    glPopMatrix();
+glPopMatrix();
 }
 void Game::key_pressed(int key){
     if (key == 'T' || key == 't') {
@@ -303,6 +344,9 @@ void Game::update_movement(){
     }
     if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
         mario->climb_down();
+    }
+    if (ofGetKeyPressed(OF_KEY_DOWN) && flag_down) {
+        mario->go_down();
     }
     if(ofGetKeyPressed(' ') && !mario->isRespawning){
         if(!mario->is_climbing){
