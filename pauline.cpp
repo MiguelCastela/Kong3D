@@ -1,64 +1,60 @@
-#include "donkey_kong.h"
+#include "pauline.h"
 #include <bits/stdc++.h>
 #include "global.h"
 #include "ofApp.h"
 
 using namespace std;
 
-Kong::Kong(ofVec3f dimensions, ofVec3f position) {
+Pauline::Pauline(ofVec3f dimensions, ofVec3f position) {
     this->dimensions = dimensions;
     this->position = position;
 }
 
-void Kong::draw() {
-    glPushMatrix();  // Save the global transformation state
-
-    // Rotate Donkey Kong 90 degrees to the left
-    glTranslatef(position.x, position.y, position.z);  // Move to Kong's position
-    glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);  // Rotate 90 degrees around the y-axis
-
-    glTranslatef(-position.x, -position.y, -position.z);  // Return to origin after rotation
-    
-    // Draw body
+void Pauline::draw() {
+ // Set color to lighter pink
+    glColor3f(1.0, 0.6, 0.8);
     glPushMatrix();
-        glColor3f(0.5, 0.35, 0.05);
-        glTranslatef(position.x, position.y, position.z);  // Position the body
-        glScalef(dimensions.x, dimensions.y, dimensions.z);  // Scale the body
-        cube_unit(0.5);  // Draw the body
-        //black outline
-        glColor3f(0.0, 0.0, 0.0);
-        cube_unit_outline(0.5);  // Outline the body
-    glPopMatrix();  // Reset transformations for the body
+        glTranslatef(position.x, position.y, position.z);
+        glScalef(dimensions.x, dimensions.y, dimensions.z);
+        cube_unit(0.5);
+        cube_unit_outline(0.5);
+    glPopMatrix();
 
     //draw arms
     glPushMatrix();
-        glTranslatef(position.x - dimensions.x * 0.5, position.y , position.z + dimensions.z *0.5);  // Position the left arm
-        glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-        glScalef(dimensions.x * 0.5, dimensions.y , dimensions.z * 0.25);  // Scale the left arm
-
-        glColor3f(0.5, 0.35, 0.05); 
+        glTranslatef(position.x - dimensions.x * 0.5, position.y, position.z);  // Position the left arm
+        glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25);  // Scale the left arm
+    glColor3f(1.0, 0.6, 0.8);
         cube_unit(0.5);  // Draw the left arm
+        //black outline
         glColor3f(0.0, 0.0, 0.0);
         cube_unit_outline(0.5);  // Outline the left arm
     glPopMatrix();  // Reset transformations for the left arm
 
-    glPushMatrix();
-        glTranslatef(position.x + dimensions.x * 0.5, position.y  , position.z + dimensions.z*0.5);  // Position the right arm
-        glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-        glScalef(dimensions.x * 0.5, dimensions.y, dimensions.z * 0.25);  // Scale the right arm
-        glColor3f(0.5, 0.35, 0.05); 
+        glPushMatrix();
+        glTranslatef(position.x + dimensions.x * 0.5, position.y, position.z);  // Position the right arm
+        glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25);  // Scale the right arm
+    glColor3f(1.0, 0.6, 0.8);
+            glColor3f(0.0, 0.0, 0.0);
         cube_unit(0.5);  // Draw the right arm
-        glColor3f(0.0, 0.0, 0.0);
+
         cube_unit_outline(0.5);  // Outline the right arm
     glPopMatrix();  // Reset transformations for the right arm
-
-    // Draw head
-    glPushMatrix();
+    // Draw the head
+   glPushMatrix();
         glTranslatef(position.x, position.y + dimensions.y * 0.5, position.z);  // Position the head above the body
         glScalef(dimensions.x * 0.75, dimensions.y, dimensions.z * 0.75);  // Scale the head
-        glColor3f(0.5, 0.35, 0.05); 
+        //beije skin color
+        glColor3f(1.0, 0.8, 0.6);  
         cube_unit(0.5);  // Draw the head
-        glColor3f(0.0, 0.0, 0.0);
+        cube_unit_outline(0.5);  // Outline the head
+    glPopMatrix();  // Reset transformations for the head
+    //draw blonde hair 
+    glPushMatrix();
+        glTranslatef(position.x , position.y + 0.2 + dimensions.y * 0.5, position.z);  // Position the head above the body
+        glScalef(dimensions.x *0.95 , dimensions.y * 1.2, dimensions.z *0.74);  // Scale the head
+        glColor3f(1.0, 1.0, 0.0);
+        cube_unit(0.5);  // Draw the head
         cube_unit_outline(0.5);  // Outline the head
     glPopMatrix();  // Reset transformations for the head
         // Draw left eye
@@ -93,12 +89,9 @@ void Kong::draw() {
         glPopMatrix();  // Reset transformations for the right pupil
 
 
-        //draw belly
-        glPushMatrix();
-            glTranslatef(position.x, position.y, position.z + dimensions.z*0.05);  // Position the belly
-            glScalef(dimensions.x*0.6 , dimensions.y*0.6 , dimensions.z);  // Scale the belly
-            glColor3f(0.75, 0.5, 0.1);  // Brown color for the belly
-            cube_unit(0.5);  // Draw the belly
-        glPopMatrix();  // Reset transformations for the belly
-        glPopMatrix();  // Reset transformations for Donkey Kong
+
+
+
+
+
 }

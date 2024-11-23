@@ -8,7 +8,8 @@ class Global{
 
         ofVec3f platDim;
         ofVec3f ladDim;
-        ofVec3f ladHitBoxDim;
+        ofVec3f ladHitBoxDim_barrel;
+        ofVec3f ladHitBoxDim_mario;
         ofVec3f marioDim;
         ofVec3f barrelDim;
         ofVec3f fakeLadDim;
@@ -24,6 +25,10 @@ class Global{
         ofVec3f kongPos;
         ofVec3f kongDim;
 
+
+        ofVec3f paulinePos;
+        ofVec3f paulineDim;
+        
         GLfloat empty_space;
 };
 

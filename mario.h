@@ -15,6 +15,8 @@ class Mario {
         void climb_down();
         void draw_pov();
         void spawn_back();
+        void jump_down();
+        void win_state();
 
 
         float respawnStartTime;  // Tracks the time when respawn was triggered.
@@ -31,6 +33,7 @@ class Mario {
         bool isJumping;      // Is Mario currently jumping
         GLfloat jumpVelocity; // Initial velocity for the jump
         GLfloat gravity;     // Gravity factor to pull Mario down
+        bool isJumping_down;
 
         //movement
         GLfloat speed;
@@ -38,6 +41,11 @@ class Mario {
         bool is_climbing;
         GLfloat base_position_y;
         GLfloat next_position_y;
+
+        int times_dead;
+
+        GLfloat target_y;
+        GLfloat target_z;
 
 
         bool going_up;

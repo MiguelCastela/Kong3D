@@ -38,3 +38,13 @@ void Ladder::draw_fake_lad(){
     glPopMatrix();//ladder pop
 }
 
+void Ladder::draw_golden(){
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glPushMatrix();
+        glTranslatef(position.x, position.y, position.z+1);
+        glScalef(dimension.x, dimension.y, dimension.z);
+        cube_unit(0.5);
+        cube_unit_outline(0.5);
+    glPopMatrix();//ladder pop
+}
+

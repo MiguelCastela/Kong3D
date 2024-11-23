@@ -18,6 +18,7 @@ class Ladder;
 class Barrel;
 class Particle;
 class Kong;
+class Pauline;
 class Game{
     public:
         Game();
@@ -39,26 +40,31 @@ class Game{
         ofVec3f marioLookAt;        
 
         // Scene
-        ofVec3f ladMarioHitBoxDim;
         ofVec3f ladHitBoxDim;
         ofVec3f ladDim;
         ofVec3f platDim;
         ofVec3f barrelDim;
         ofVec3f fakeLadDim;
+        ofVec3f ladHitBoxDim_mario;
         GLint plat_ct;
-        Platform* lastPlat;
+
         ofVec3f lastPlatPos;
+        ofVec3f paulinePlatPos;
+        ofVec3f lastLadderPos;
+
+
 
         std::vector<Platform*> platVec;
         std::vector<Ladder*> ladVec;
         std::vector<Ladder*> ladHitBoxVec;
         std::vector<Ladder*> fakeLadVec;
-        std::vector<Ladder*> fakeLadHitBoxVec;
+        std::vector<Ladder*> ladHitBoxVec_mario;
+        std::vector<Barrel*> barrelVec;
 
 
 
         //barrel
-        std::vector<Barrel*> barrelVec;
+ 
         ofVec3f barrelPos;
         ofVec3f initBarrelPos;
         bool barrel_flag = false;
@@ -70,6 +76,9 @@ class Game{
         ofVec3f kongPos;
         ofVec3f kongDim;
 
+        //pauline
+        ofVec3f paulinePos;
+        ofVec3f paulineDim;
 
         //particles 
         vector<Particle*> explosion;
@@ -78,12 +87,20 @@ class Game{
         //state
         bool flag_down = false;
         bool mario_dead = false;
+        bool mario_wins = false;
         bool barrels_reset = false;
         bool explosion_created = false; 
+        int times_dead = 0; 
     private:
         Camera* cam;
         Mario* mario;
         Barrel *barrel;
         Particle *marioParticle;
         Kong *kong;
+        Platform* lastPlat;
+        Platform * paulinePlat;
+        Ladder* lastLad;
+        Pauline* pauline;
+        Ladder* lastLadderHitBox_mario;
+        Barrel* staticBarrel;
 };

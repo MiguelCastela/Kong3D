@@ -26,6 +26,13 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
 
     this->going_up = false;
 
+    this->times_dead = 0;
+
+    this->target_y = 0;
+    this->target_z = 0;
+
+    
+
     
 
     this->marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
@@ -42,6 +49,13 @@ void Mario::draw() {
         //}
         cube_unit_outline(0.5);
     glPopMatrix();
+// Draw Mario's hat
+glColor3f(0, 0, 1); // Blue color for the hat
+glPushMatrix();
+    glTranslatef(0, 0.6, 0); // Position the hat on top of Mario's head
+    glScalef(0.6, 0.2, 0.6); // Scale the hat to fit Mario's head
+    cube_unit(0.5); // Draw the hat
+glPopMatrix();
 }
 
 void Mario::draw_pov(){
@@ -82,7 +96,13 @@ void Mario::spawn_back() {
     if (currentTime - respawnStartTime >= 0.1f && position == global.marioPos) {
         // Exit the respawning state after 1 second at the respawn position
         isRespawning = false;
+        times_dead++;
+        cout << "Mario has died " << times_dead << " times." << endl;
     }
+}
+
+void Mario::win_state(){
+    
 }
 
 
@@ -162,5 +182,6 @@ void Mario::go_down(){
 
 }
 
-
-
+void Mario::jump_down() {
+    cout << "Mario can't jump down levels" << endl;
+}

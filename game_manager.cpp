@@ -5,39 +5,40 @@
 #include "barril.h"
 #include "particula.h"
 #include "donkey_kong.h"
+#include "pauline.h"
 
 
 
 Game::Game(){
     glEnable(GL_DEPTH_TEST);
     
-    // TODO: MUDAR PARA STARTING POSITION DO MARIO/BARRIL
     marioPos = global.marioPos;
     marioDim = global.marioDim;
     platDim = global.platDim;
     ladDim = global.ladDim;
-    ladHitBoxDim = global.ladHitBoxDim;
+    ladHitBoxDim = global.ladHitBoxDim_barrel;
+    ladHitBoxDim_mario = global.ladHitBoxDim_mario;
     fakeLadDim = global.fakeLadDim;
     barrelDim = global.barrelDim;
     barrelPos = global.barrelPos;
     kongPos = global.kongPos;
     kongDim = global.kongDim;
+    paulinePos = global.paulinePos;
+    paulineDim = global.paulineDim;
 
     cam = new Camera();
     mario = new Mario(marioDim, marioPos);
     barrel = new Barrel(barrelDim, barrelPos);
     kong = new Kong(kongDim, kongPos);
+    pauline = new Pauline(paulineDim, paulinePos);
     
     
 
 
-    //barrel
     lastBarrelSpawnTime = 0;
-    // Number of platforms
     plat_ct = 10;
 
 
-    // First platform's position
     ofVec3f base_plat_pos = marioPos;
     base_plat_pos.y -= platDim.y;
     base_plat_pos.y += marioDim.y*0.5; 
@@ -46,7 +47,6 @@ Game::Game(){
 
 
     for(int i = 0; i < plat_ct; i++){        
-        // Determine in which half the ladder can be drawn
         GLfloat ladder_right_lim;
         GLfloat ladder_left_lim;
         if(i % 2 == 0){
@@ -58,7 +58,6 @@ Game::Game(){
             ladder_right_lim = global.left_limit + (ladDim.x*0.5);
         }
 
-        // Add the ladders and stairs
         ofVec3f cur_plat_pos = base_plat_pos; 
         cur_plat_pos.y += (i*global.empty_space) + (i*platDim.y);
         cur_plat_pos.z -= i*platDim.z;
@@ -71,6 +70,12 @@ Game::Game(){
             new Ladder(
                 ladDim,
                 cur_lad_pos
+            )
+        );
+        ladHitBoxVec_mario.push_back(
+            new Ladder(
+                ladHitBoxDim_mario,
+                ofVec3f(cur_lad_pos.x, cur_lad_pos.y, cur_lad_pos.z)
             )
         );
         if (i!=0){
@@ -113,13 +118,44 @@ Game::Game(){
 
     lastPlatPos.y += global.empty_space + platDim.y;
     lastPlatPos.z -= platDim.z;
-    lastPlat = new Platform(platDim , lastPlatPos, ofVec3f(0,0,0));
+    lastPlat = new Platform(ofVec3f(platDim.x, platDim.y, platDim.z) , lastPlatPos, ofVec3f(0,0,0));
+
+
+
+    paulinePlatPos = lastPlatPos;
+
+    paulinePlatPos.y += global.empty_space + platDim.y;
+    paulinePlatPos.z -= platDim.z;
+    paulinePlatPos.x += platDim.x*0.25 - ladDim.x;
+
+    paulinePos = paulinePlatPos;
+    paulinePos.y += platDim.y*0.5 + paulineDim.y*0.5;
+    paulinePos.x += platDim.x*0.25 - paulineDim.x;
+
+    paulinePlat = new Platform(ofVec3f(platDim.x * 0.5, platDim.y, platDim.z) , paulinePlatPos, ofVec3f(0,0,0));
+
+    pauline = new Pauline(paulineDim, paulinePos);
+
+
+    lastLadderPos = lastPlatPos;
+    lastLadderPos.y += platDim.y/2 + ladDim.y/2;
+    lastLadderPos.z -= platDim.z/2 + ladDim.z/2;
+    lastLad = new Ladder(ladDim, lastLadderPos);
+    lastLadderHitBox_mario = new Ladder(ladHitBoxDim_mario, ofVec3f(lastLadderPos.x, lastLadderPos.y, lastLadderPos.z)); 
+    ladHitBoxVec_mario.push_back(
+        lastLadderHitBox_mario
+    );
+
+
 
 
     initBarrelPos = lastPlatPos;
     initBarrelPos.y += platDim.y/2 + barrelDim.y/2;
     initBarrelPos.x = global.right_limit - 2*kongDim.x;
     barrelPos = initBarrelPos;
+
+
+    staticBarrel = new Barrel(barrelDim, ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z));
     
     
 
@@ -137,17 +173,22 @@ Game::Game(){
     }
 
 
+
+
     kongPos = barrelPos;
-    //kong = new Kong(kongDim, ofVec3f(kongPos.x + kongDim.x, kongPos.y, kongPos.z));
-    kong = new Kong(kongDim, ofVec3f(0 , 0, 0));
+    kong = new Kong(kongDim, ofVec3f(kongPos.x + kongDim.x, kongPos.y, kongPos.z));
+    //kong = new Kong(kongDim, ofVec3f(0 , 0, 0));
 
 
 }
 
 void Game::update(){
+
+
+
     update_movement();
     float curTime = ofGetElapsedTimef();
-    barrelSpawnDelay = ofRandom(1.0f, 8.0f);
+    barrelSpawnDelay = ofRandom(1.0f, 800.0f);
     if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
         barrelVec.push_back(
         new Barrel(
@@ -158,6 +199,26 @@ void Game::update(){
 
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
+    }
+
+    if (marioPos.y == paulinePos.y) {
+    cout << "Mario wins!" << endl;
+    mario_wins = true;
+            if (!explosion_created) {
+            // Create victory particles
+            for (int i = 0; i < 150; i++) {
+                explosion.push_back(
+                    new Particle(
+                        marioPos,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(0, 1, 0) // Green particles for victory
+                    )
+                );
+            }
+            explosion_created = true;
+        }
+
+        //mario_dead = true;  // Trigger respawn behavior
     }
     // se quiser barris a dar clean up dps de cada morte
     /*
@@ -193,7 +254,7 @@ void Game::update(){
     bool flag = false;
     flag_down = false;
     mario->on_ladder = false;
-    for(auto curLad : ladVec){
+    for(auto curLad : ladHitBoxVec_mario){
         if (check_collision(marioDim, marioPos, curLad->dimension, curLad->position)) { 
             //std::cout << "Collision with ladder detected after respawn!" << std::endl;
             mario->next_position_y = mario->base_position_y + ladDim.y;
@@ -231,8 +292,6 @@ void Game::update(){
         }
         
         bool ladder_collision = false;
-        //curBar->next_position_z = curBar->position.z + barrelDim.z*0.5;
-        //curBar->next_position_y = curBar->position.y - ladDim.y;
         for(auto curLad : ladHitBoxVec){
             if (check_collision(curBar->dimensions, curBar->position, curLad->dimension, curLad->position)) {
             //cout << "collision from barrel with ladder" << endl;
@@ -258,13 +317,6 @@ void Game::update(){
     }
 }
 
-void Game::barrelsAfterRespawn(){
-    if (mario_dead){
-
-
- 
-}
-}
 void Game::draw(){
 
     cam->apply(marioPos, mario->marioLookAt);
@@ -273,6 +325,21 @@ void Game::draw(){
         mario->spawn_back(); 
         if (mario_dead && !mario->isRespawning) {
             mario_dead = false;  
+            explosion_created = false;
+            /*
+            if (mario_wins) {
+            cout << "Mario has won! Resetting state..." << endl;
+            }
+            mario_wins = false;
+            */
+        }
+        draw_scene(true);
+        return;
+    }
+    if (mario_wins) {
+      mario->win_state(); 
+        if (mario_wins && !mario->isRespawning) {
+            mario_wins = false;  
             explosion_created = false;
         }
         draw_scene(true);
@@ -292,7 +359,7 @@ void Game::draw(){
 
 void Game::draw_scene(bool pov){
 glPushMatrix();
-        if(!pov){
+        if(!pov || mario_wins){
             mario->draw();
         }
         
@@ -300,6 +367,7 @@ glPushMatrix();
             cur_plat->draw();
         }    
         lastPlat->draw();
+        paulinePlat->draw();
         for(auto cur_lad: ladVec){
             cur_lad->draw();
         }
@@ -309,7 +377,7 @@ glPushMatrix();
         for(auto cur_lad: ladHitBoxVec){
             cur_lad->draw_hitbox();
         }
-        for (auto cur_lad: fakeLadHitBoxVec){
+        for(auto cur_lad: ladHitBoxVec_mario){
             cur_lad->draw_hitbox();
         }
         for(auto curBar : barrelVec){
@@ -318,6 +386,10 @@ glPushMatrix();
             }    
         }
         kong->draw();
+        pauline->draw();
+        lastLad->draw_golden();
+        staticBarrel->draw();
+        lastLadderHitBox_mario->draw_hitbox();
 
         if(mario_dead){
             for(auto curExplosion : explosion){
@@ -348,7 +420,15 @@ void Game::update_movement(){
     if (ofGetKeyPressed(OF_KEY_DOWN) && flag_down) {
         mario->go_down();
     }
-    if(ofGetKeyPressed(' ') && !mario->isRespawning){
+    
+    if (ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
+        if(!mario->is_climbing){
+            mario->start_jump();
+            mario->jump_down();
+    }
+    }
+    
+    if(!ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !mario->isRespawning){
         if(!mario->is_climbing){
             mario->start_jump();
         }
@@ -358,7 +438,7 @@ void Game::update_movement(){
 bool Game::check_collision(ofVec3f dim1, ofVec3f pos1, ofVec3f dim2, ofVec3f pos2){
     return (
         fabs(pos1.x - pos2.x) * 2 < (dim1.x + dim2.x)&&
-        fabs(pos1.y - pos2.y) * 2 < (dim1.y + dim2.y)
+        fabs(pos1.y - pos2.y) * 2 < (dim1.y + dim2.y)   
     );
 }
 

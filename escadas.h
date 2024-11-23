@@ -9,6 +9,7 @@ class Ladder{
         void draw();
         void draw_hitbox();
         void draw_fake_lad();
+        void draw_golden();
         ofVec3f dimension;
         ofVec3f position;
 };
