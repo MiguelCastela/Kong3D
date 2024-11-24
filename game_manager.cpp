@@ -96,7 +96,7 @@ Game::Game(){
             )
         );
         }
-        float blueIntensity = 0.4f + (i / float(plat_ct)) * 0.6f;        
+        float blueIntensity = 0.4f + (i / float(plat_ct)) * 0.5f;        
         platVec.push_back(
             new Platform(
                 platDim,
@@ -184,7 +184,8 @@ void Game::update(){
 
     cam->meters = marioPos.y;
     float curTime = ofGetElapsedTimef();
-    barrelSpawnDelay = ofRandom(1.0f, 800.0f);
+    barrelSpawnDelay = ofRandom(1.0f, 55.0f);
+    if(!mario->isRespawning){
     if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
         barrelVec.push_back(
         new Barrel(
@@ -195,6 +196,7 @@ void Game::update(){
 
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
+    }
     }
     pauline->winState = false;
     mario->winState = false;
@@ -424,14 +426,17 @@ void Game::draw(){
         draw_scene(true);
         return;
     }
-    if(cam->camMode == 2){
+    if(cam->camMode == 0){
         draw_scene(true);
         cam->miniMap(marioPos);
         draw_scene(false);
     }
-    else{
+    if(cam->camMode == 2){
         draw_scene(false);
         cam->miniMap(marioPos);
+        draw_scene(false);
+    }else{
+        draw_scene(false);
         draw_scene(false);
     }
 }
@@ -476,7 +481,8 @@ glPushMatrix();
         if(!mario_wins){
             staticBarrel->draw();
         }
-            lastLadderHitBox_mario->draw_hitbox();
+        //debug
+        //lastLadderHitBox_mario->draw_hitbox();
 
         if(mario_dead){
             for(auto curExplosion : explosion){

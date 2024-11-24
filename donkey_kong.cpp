@@ -1,5 +1,7 @@
 #include "donkey_kong.h"
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 #include "global.h"
 #include "ofApp.h"
 

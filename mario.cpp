@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 #include "ofApp.h"
 #include "mario.h"
 #include "global.h"
@@ -218,8 +220,8 @@ void Mario::draw() {
             }else if (currentDirection == DOWN) {
                 glRotatef(45, 1, 0, 0); 
             }
-            glScalef(dimensions.x * 0.3, dimensions.y * 0.05, dimensions.z * 0.1);  
-            glColor3f(0.5, 0.35, 0.05);
+            glScalef(dimensions.x * 0.3, dimensions.y * 0.08, dimensions.z * 0.2);  
+            glColor3f(0.369, 0.251, 0.02);
             cube_unit(0.5);
         glPopMatrix();  // Reset transformations for the moustache
     glPopMatrix();  // Reset the global transformation state
@@ -257,9 +259,12 @@ void Mario::spawn_back() {
 
             respawnStartTime = currentTime;
             currentDirection = FRONT;
+            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
+            
         }
     }else{
         currentDirection = RIGHT;
+        marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
         if (currentTime - respawnStartTime >= 5.0f && position != global.marioPos) {
         position = global.marioPos;
         is_climbing = false;
@@ -277,6 +282,8 @@ void Mario::spawn_back() {
             isRespawning = false;
             times_dead++;
             cout << "Mario has died " << times_dead << " times." << endl;
+            currentDirection = FRONT;
+            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
         }
     }else{
         if (currentTime - respawnStartTime >= 0.1f && position == global.marioPos) {
@@ -284,6 +291,7 @@ void Mario::spawn_back() {
 
             cout << "Mario has died " << times_dead << " times." << endl;
             currentDirection = FRONT;
+            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
         }
     }
 }

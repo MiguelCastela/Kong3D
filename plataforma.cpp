@@ -1,5 +1,7 @@
 
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 #include "ofApp.h"
 #include "plataforma.h"
 using namespace std;

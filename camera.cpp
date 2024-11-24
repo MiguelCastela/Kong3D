@@ -3,7 +3,7 @@
 
 
 Camera::Camera(GLfloat fov, GLfloat distance, ofVec3f position){
-    camMode = 0;
+    camMode = 1;
     this -> fov = fov;
     this -> distance = distance;
     this -> position = position;
@@ -18,18 +18,16 @@ void Camera::update(){}
 
 void Camera::apply(ofVec3f marioPos, ofVec3f marioLookAt){
     switch(camMode){
-        case(0) : applyp1(marioPos);
+        case(0) : applyp3(marioPos, marioLookAt);
             break;
         case(1) : applyp2(marioPos);
             break;
-        case(2) : applyp3(marioPos, marioLookAt);
+        case(2) : applyp1(marioPos);
             break;
     }
 }
 
 void Camera::applyp1(ofVec3f marioPos){
-    ofSetColor(255, 255, 255); // Set text to white
-    ofDrawBitmapString("Avoid the barrels and save Pauline from Donkey Kong! \n  Mario controls: \n   jump: Space \n   move left/right: Left/Right arrow keys \n   climb ladders: Up/Down arrow keys \n  times dead: " + std::to_string(num_lives) + "\n  current height/Pauline height: " +std::to_string(meters)+"/"+ std::to_string(2*(num_platforms*10)+20)+ " meters", gw() - gw()/4.6, gh() - gh()/9.5);
 
     camFlag = false;
     perspective(fov, alpha, beta);
@@ -42,7 +40,7 @@ void Camera::applyp1(ofVec3f marioPos){
 
 void Camera::applyp2(ofVec3f marioPos){
     ofSetColor(255, 255, 255); // Set text to white
-    ofDrawBitmapString("Avoid the barrels and save Pauline from Donkey Kong! \n  Mario controls: \n   jump: Space \n   move left/right: Left/Right arrow keys \n   climb ladders: Up/Down arrow keys \n  times dead: " + std::to_string(num_lives) + "\n  current height/Pauline height: " +std::to_string(meters)+"/"+ std::to_string(2*(num_platforms*10)+20)+ " meters", gw() - gw()/4.6, gh() - gh()/9.5);
+    ofDrawBitmapString("Avoid the barrels and save Pauline from Donkey Kong! \n  click 't' to change from first/third person and ortographiv viewn\n  Mario controls: \n   jump: Space \n   move left/right: Left/Right arrow keys \n   climb ladders: Up/Down arrow keys\n  times dead: " + std::to_string(num_lives) + "\n  current height/Pauline height: " +std::to_string(meters)+"/"+ std::to_string(2*(num_platforms*10)+20)+ " meters",gw()*0.70, gh()*0.9);
 
     camFlag = false;
     glMatrixMode(GL_PROJECTION);

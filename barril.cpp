@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <cmath>
+#include <vector>
 #include "ofApp.h"
 #include "barril.h"
 #include "global.h"
@@ -12,7 +14,7 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
     this -> on_ladder = false;
     this -> is_moving_left = true;
     this -> position_x_on_impact = 0;
-    this -> speed = 0.4 * (60.0 / ofGetFrameRate());
+    this -> speed = 0.5 * (60.0 / ofGetFrameRate());
     this -> next_position_z = 0;
     this -> next_position_y = 0;
     this->moving_x = true;
