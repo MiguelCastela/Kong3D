@@ -11,8 +11,7 @@
 
 Game::Game(){
     glEnable(GL_DEPTH_TEST);
-
-    ofSetFrameRate(60);
+    ofSetVerticalSync(true);
     ofBackground(0, 0, 0);
     
     marioPos = global.marioPos;
@@ -449,6 +448,7 @@ void Game::draw(){
 
 void Game::draw_scene(bool pov){
 glPushMatrix();
+
         if(!pov || mario_wins){
             mario->draw();
         }

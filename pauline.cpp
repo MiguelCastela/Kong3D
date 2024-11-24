@@ -14,9 +14,9 @@ Pauline::Pauline(ofVec3f dimensions, ofVec3f position) {
         // Add jump-specific variables
     this->isJumping = false;
     this->jumpStartY = position.y;  // Store the initial Y position for jump start
-    this->jumpVelocity = 0.0f;      // Jump velocity (starts at 0)
-    this->gravity = -0.9f;          // Gravity effect (negative value)
-    this->jumpHeight = 1.0f;        // Maximum jump height (adjust as needed)
+    this->jumpVelocity = 0.0f * (60.0 / ofGetFrameRate());      // Jump velocity (starts at 0)
+    this->gravity = -0.9f * (60.0 / ofGetFrameRate());          // Gravity effect (negative value)
+    this->jumpHeight = 1.5f;        // Maximum jump height (adjust as needed)
 }
 
 
@@ -176,7 +176,7 @@ void Pauline::update() {
     if (winState && !isJumping) {
         // Start the jump when winState is true and Pauline isn't already jumping
         isJumping = true;
-        jumpVelocity = 3.0f;  // Initial upward velocity, adjust for jump height
+        jumpVelocity = 1.5f * (60.0 / ofGetFrameRate());  // Initial upward velocity, adjust for jump height
     }
 
     // Handle jumping logic
@@ -191,7 +191,7 @@ void Pauline::update() {
         if (position.y <= jumpStartY) {
             position.y = jumpStartY;  // Reset position to the ground level
             isJumping = false;         // End the jump
-            jumpVelocity = 0.0f;       // Reset jump velocity
+            jumpVelocity = 0.0f * (60.0 / ofGetFrameRate());       // Reset jump velocity
         }
     }
 }
