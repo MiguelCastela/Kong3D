@@ -16,7 +16,7 @@ class Mario {
         void draw_pov();
         void spawn_back();
         void jump_down();
-        void win_state();
+        void look_front();
 
 
         float respawnStartTime;  // Tracks the time when respawn was triggered.
@@ -49,6 +49,14 @@ class Mario {
 
 
         bool going_up;
+        bool dead;
+        bool winState;
+
+        enum Direction { FRONT, LEFT, RIGHT, UP, DOWN, BACK };
+        Direction currentDirection;
+
+
+
 
 
 

@@ -15,6 +15,8 @@ class Particle{
     ofVec3f dimensions;
     ofVec3f color;
     ofVec3f velocity;
+    float lifetime;
+    bool isAlive;
 
 
 

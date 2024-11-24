@@ -27,7 +27,6 @@ class Game{
         void draw_scene(bool pov);
         void key_pressed(int key);
         void key_released(int key);
-        void barrelsAfterRespawn();
         void update_movement();
         bool check_collision(
             ofVec3f dim1, ofVec3f pos1,
@@ -47,6 +46,7 @@ class Game{
         ofVec3f fakeLadDim;
         ofVec3f ladHitBoxDim_mario;
         GLint plat_ct;
+
 
         ofVec3f lastPlatPos;
         ofVec3f paulinePlatPos;
@@ -89,7 +89,14 @@ class Game{
         bool mario_dead = false;
         bool mario_wins = false;
         bool barrels_reset = false;
-        bool explosion_created = false; 
+        bool  explosion_created = false; 
+        bool explosion_kong = false;
+        bool explosion_barrel = false;
+        int remainingParticles;  // Total particles left to release
+        float lastParticleBurstTime; // Last time a burst was released
+        const int particlesPerBurst = 10;  // Number of particles to release per burst
+
+
         int times_dead = 0; 
     private:
         Camera* cam;

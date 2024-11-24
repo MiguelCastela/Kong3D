@@ -24,16 +24,14 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
 }
 
 void Barrel::draw(){
-    if (position.y < 0) {
+    if (position.y < -global.platDim.y) {
         is_active = false;
     }
-    glColor3f(0, 0, 1);
+    glColor3f(1.0f, 0.5f, 0.0f);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
         sphere_unit(0.5, 32, 16);
-        //cube_unit(0.5);
-        //cube_unit_outline(0.5);
     glPopMatrix();
 }
 

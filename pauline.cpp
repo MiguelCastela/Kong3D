@@ -8,10 +8,31 @@ using namespace std;
 Pauline::Pauline(ofVec3f dimensions, ofVec3f position) {
     this->dimensions = dimensions;
     this->position = position;
+    this->winState = false;
+
+
+        // Add jump-specific variables
+    this->isJumping = false;
+    this->jumpStartY = position.y;  // Store the initial Y position for jump start
+    this->jumpVelocity = 0.0f;      // Jump velocity (starts at 0)
+    this->gravity = -0.9f;          // Gravity effect (negative value)
+    this->jumpHeight = 1.0f;        // Maximum jump height (adjust as needed)
 }
+
 
 void Pauline::draw() {
  // Set color to lighter pink
+    update();
+     glPushMatrix();  // Save the global transformation state
+    if(winState){
+    // Rotate Donkey Kong 90 degrees to the left
+    glTranslatef(position.x, position.y, position.z);  // Move to Kong's position
+    glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);  // Rotate 90 degrees around the y-axis
+
+    glTranslatef(-position.x, -position.y, -position.z);  // Return to origin after rotation
+    }
+
+    
     glColor3f(1.0, 0.6, 0.8);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
@@ -24,22 +45,81 @@ void Pauline::draw() {
     glPushMatrix();
         glTranslatef(position.x - dimensions.x * 0.5, position.y, position.z);  // Position the left arm
         glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25);  // Scale the left arm
+        if (winState) {
+            glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+        }
     glColor3f(1.0, 0.6, 0.8);
         cube_unit(0.5);  // Draw the left arm
         //black outline
         glColor3f(0.0, 0.0, 0.0);
         cube_unit_outline(0.5);  // Outline the left arm
     glPopMatrix();  // Reset transformations for the left arm
+    //draw right arm
+     //draw left hand
+    glPushMatrix(); 
+    // Position the arm first
+    glTranslatef(position.x - dimensions.x * 0.5, position.y, position.z);  // Position the left arm
+
+            if (winState) {
+            glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+        }
+
+    // Apply rotation only after positioning the arm
+
+
+    // Now apply the second translation to position the arm's hand part
+    glTranslatef(0, -dimensions.y * 0.30, 0);  // Offset for hand position (relative to arm)
+
+    // Scale the arm after the rotation and second translation
+    glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15);  // Scale the left arm
+
+    // Draw the left arm
+    glColor3f(1.0, 0.8, 0.6);  
+    cube_unit(0.5);  // Draw the left arm
+
+    // Black outline for the left arm
+    glColor3f(0.0, 0.0, 0.0);
+    cube_unit_outline(0.5);  // Outline the left arm
+glPopMatrix();  // Reset transformations for the left arm
 
         glPushMatrix();
         glTranslatef(position.x + dimensions.x * 0.5, position.y, position.z);  // Position the right arm
+                if (winState) {
+            glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+        }
         glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25);  // Scale the right arm
     glColor3f(1.0, 0.6, 0.8);
-            glColor3f(0.0, 0.0, 0.0);
         cube_unit(0.5);  // Draw the right arm
-
+            glColor3f(0.0, 0.0, 0.0);
         cube_unit_outline(0.5);  // Outline the right arm
     glPopMatrix();  // Reset transformations for the right arm
+
+    //draw left hand
+    glPushMatrix(); 
+    // Position the arm first
+    glTranslatef(position.x + dimensions.x * 0.5, position.y, position.z);  // Position the left arm
+            if (winState) {
+            glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+        }
+
+    // Apply rotation only after positioning the arm
+
+    // Now apply the second translation to position the arm's hand part
+    glTranslatef(0, -dimensions.y * 0.30, 0);  // Offset for hand position (relative to arm)
+
+    // Scale the arm after the rotation and second translation
+    glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15);  // Scale the left arm
+
+    // Draw the left arm
+    glColor3f(1.0, 0.8, 0.6);  
+    cube_unit(0.5);  // Draw the left arm
+
+    // Black outline for the left arm
+    glColor3f(0.0, 0.0, 0.0);
+    cube_unit_outline(0.5);  // Outline the left arm
+    glPopMatrix();  // Reset transformations for the left arm
+
+
     // Draw the head
    glPushMatrix();
         glTranslatef(position.x, position.y + dimensions.y * 0.5, position.z);  // Position the head above the body
@@ -87,11 +167,31 @@ void Pauline::draw() {
             glColor3f(0.0, 0.0, 0.0);  // Black color for the pupil
             cube_unit(0.5);  // Draw the right pupil
         glPopMatrix();  // Reset transformations for the right pupil
+    glPopMatrix();  // Reset the global transformation state
 
 
+}
 
+void Pauline::update() {
+    if (winState && !isJumping) {
+        // Start the jump when winState is true and Pauline isn't already jumping
+        isJumping = true;
+        jumpVelocity = 3.0f;  // Initial upward velocity, adjust for jump height
+    }
 
-
-
-
+    // Handle jumping logic
+    if (isJumping) {
+        // Update the position while jumping
+        position.y += jumpVelocity;  // Move Pauline vertically based on velocity
+        
+        // Apply gravity to slow down the jump and bring Pauline down
+        jumpVelocity += gravity;  // Decrease jump velocity over time due to gravity
+        
+        // Check if Pauline has landed (reached the starting position or lower)
+        if (position.y <= jumpStartY) {
+            position.y = jumpStartY;  // Reset position to the ground level
+            isJumping = false;         // End the jump
+            jumpVelocity = 0.0f;       // Reset jump velocity
+        }
+    }
 }

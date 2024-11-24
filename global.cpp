@@ -6,14 +6,14 @@ Global::Global(){
     marioDim = ofVec3f(5,5,5);
 
     // Space between platforms
-    platDim = ofVec3f(marioDim.x*30, marioDim.x*2, marioDim.z*1.4);
+    platDim = ofVec3f(marioDim.x*30, marioDim.x*2, marioDim.z*1.8);
 
 
     empty_space = platDim.y;
 
 
 
-    ladDim = ofVec3f(2*marioDim.x, empty_space + platDim.y, marioDim.z/4);
+    ladDim = ofVec3f(2*marioDim.x, empty_space + platDim.y, marioDim.z/5);
 
 
 

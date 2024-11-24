@@ -40,7 +40,16 @@ void Kong::draw() {
         cube_unit(0.5);  // Draw the left arm
         glColor3f(0.0, 0.0, 0.0);
         cube_unit_outline(0.5);  // Outline the left arm
+                glPushMatrix();
+            glTranslatef(0.0f, 0.05f, 0.0f);  // Move to the end of the arm
+            glScalef(0.7f, 1.05f, 0.7f);  // Scale to make it smaller
+            glColor3f(0.55, 0.35, 0.05);  // Bright color for the end cap
+            cube_unit(0.5);  // Draw the cap
+            glColor3f(0.0, 0.0, 0.0);  // Black color for the cap
+            cube_unit_outline(0.5);  // Outline the cap
+    glPopMatrix();
     glPopMatrix();  // Reset transformations for the left arm
+
 
     glPushMatrix();
         glTranslatef(position.x + dimensions.x * 0.5, position.y  , position.z + dimensions.z*0.5);  // Position the right arm
@@ -50,7 +59,18 @@ void Kong::draw() {
         cube_unit(0.5);  // Draw the right arm
         glColor3f(0.0, 0.0, 0.0);
         cube_unit_outline(0.5);  // Outline the right arm
+        glPushMatrix();
+            glTranslatef(0.0f, 0.05f, 0.0f);  // Move to the end of the arm
+            glScalef(0.7f, 1.05f, 0.7f);  // Scale to make it smaller
+            glColor3f(0.55, 0.35, 0.05);  // Bright color for the end cap
+            cube_unit(0.5);  // Draw the cap
+            glColor3f(0.0, 0.0, 0.0);  // Black color for the cap
+            cube_unit_outline(0.5);  // Outline the cap
+    glPopMatrix();
     glPopMatrix();  // Reset transformations for the right arm
+
+
+
 
     // Draw head
     glPushMatrix();

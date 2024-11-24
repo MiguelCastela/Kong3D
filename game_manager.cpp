@@ -11,6 +11,9 @@
 
 Game::Game(){
     glEnable(GL_DEPTH_TEST);
+
+    ofSetFrameRate(60);
+    ofBackground(0, 0, 0);
     
     marioPos = global.marioPos;
     marioDim = global.marioDim;
@@ -31,6 +34,9 @@ Game::Game(){
     barrel = new Barrel(barrelDim, barrelPos);
     kong = new Kong(kongDim, kongPos);
     pauline = new Pauline(paulineDim, paulinePos);
+
+    remainingParticles = 500;
+    lastParticleBurstTime = 0.0f;
     
     
 
@@ -86,11 +92,12 @@ Game::Game(){
             )
         );
         }
+        float blueIntensity = 0.4f + (i / float(plat_ct)) * 0.6f;        
         platVec.push_back(
             new Platform(
                 platDim,
                 cur_plat_pos,
-                ofVec3f(ofRandom(0, 1), ofRandom(0, 1), ofRandom(0, 1))
+                ofVec3f(0.0f, 0.0f, blueIntensity)
             )
         );
 
@@ -118,7 +125,7 @@ Game::Game(){
 
     lastPlatPos.y += global.empty_space + platDim.y;
     lastPlatPos.z -= platDim.z;
-    lastPlat = new Platform(ofVec3f(platDim.x, platDim.y, platDim.z) , lastPlatPos, ofVec3f(0,0,0));
+    lastPlat = new Platform(ofVec3f(platDim.x, platDim.y, platDim.z) , lastPlatPos, ofVec3f(1,0,0));
 
 
 
@@ -132,7 +139,7 @@ Game::Game(){
     paulinePos.y += platDim.y*0.5 + paulineDim.y*0.5;
     paulinePos.x += platDim.x*0.25 - paulineDim.x;
 
-    paulinePlat = new Platform(ofVec3f(platDim.x * 0.5, platDim.y, platDim.z) , paulinePlatPos, ofVec3f(0,0,0));
+    paulinePlat = new Platform(ofVec3f(platDim.x * 0.5, platDim.y, platDim.z) , paulinePlatPos, ofVec3f(1,0,0));
 
     pauline = new Pauline(paulineDim, paulinePos);
 
@@ -200,26 +207,95 @@ void Game::update(){
         lastBarrelSpawnTime = curTime;
         barrelsSpawned++;
     }
-
+    pauline->winState = false;
+    mario->winState = false;
     if (marioPos.y == paulinePos.y) {
+    pauline->winState = true;
+    mario->winState = true;
     cout << "Mario wins!" << endl;
     mario_wins = true;
             if (!explosion_created) {
             // Create victory particles
-            for (int i = 0; i < 150; i++) {
+            for (int i = 0; i < 100; i++) {
                 explosion.push_back(
                     new Particle(
                         marioPos,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(0, 1, 0) // Green particles for victory
+                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) // Green particles for victory
+                    )
+                );
+            }
+            for (int i = 0; i < 100; i++) {
+                explosion.push_back(
+                    new Particle(
+                        paulinePos,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) // Green particles for victory
                     )
                 );
             }
             explosion_created = true;
+            remainingParticles = 500;
         }
-
-        //mario_dead = true;  // Trigger respawn behavior
+        mario->times_dead = 0;
+        mario->dead = false;
+        mario_dead = true;  // Trigger respawn behavior
     }
+
+    if (mario_wins && remainingParticles > 0) {
+        float currentTime = ofGetElapsedTimef();
+        if(currentTime - lastParticleBurstTime >= 0.1f){
+            int burstCount = std::min(particlesPerBurst, remainingParticles);
+            for(int i =0; i<burstCount; i++){
+                explosion.push_back(
+                    new Particle(
+                        ofVec3f(ofRandom(marioPos.x, paulinePos.x), marioPos.y + marioDim.y*5, marioPos.z),
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) // Green particles for victory
+                    )
+                );
+            }
+            remainingParticles -= burstCount;
+            lastParticleBurstTime = currentTime;
+        }
+    }
+
+    if (mario_wins){
+            if (!explosion_kong) {
+            for (int i = 0; i < 100; i++) {
+                explosion.push_back(
+                    new Particle(
+                        kongPos,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(0.5, 0.35, 0.05)
+                    )
+                );
+            }
+            explosion_kong = true;
+        }
+   
+
+        // Create particles for the last barrel's explosion
+        if (!explosion_barrel) {
+            for (int i = 0; i < 100; i++) {
+                explosion.push_back(
+                    new Particle(
+                        ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z),
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(1.0f, 0.5f, 0.0f) // Random colors
+                    )
+                );
+            }
+            explosion_barrel = true;
+        }
+        }
+                if (mario_dead && !mario->isRespawning) {
+        // Reset the explosion flags when Mario respawns
+        explosion_kong = false;
+        explosion_barrel = false;
+        }    
+
+    
     // se quiser barris a dar clean up dps de cada morte
     /*
     if(mario_dead && !barrels_reset){
@@ -239,6 +315,7 @@ void Game::update(){
         barrels_reset = false;
     }
     */
+    
 
     for(auto curExplosion : explosion){
         curExplosion->update();
@@ -278,12 +355,31 @@ void Game::update(){
             if(!explosion_created){
             //cout << "Collision detected" << endl;
                 mario_dead = true;
-                for (int i = 0; i < 150; i++) {
+                mario->dead = true;
+                for (int i = 0; i < 75; i++) {
                 explosion.push_back(
                     new Particle(
                         marioPos,
                         ofVec3f(1, 1, 1),
                         ofVec3f(1, 0, 0)
+                    )
+                );
+                }
+                for (int i = 0; i < 25; i++) {
+                explosion.push_back(
+                    new Particle(
+                        curBar->position,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(0, 0, 1)
+                    )
+                );
+                }
+                for(int i=0; i < 50 ; i++){
+                explosion.push_back(
+                    new Particle(
+                        curBar->position,
+                        ofVec3f(1, 1, 1),
+                        ofVec3f(1.0, 0.8, 0.6)
                     )
                 );
                 }
@@ -326,21 +422,15 @@ void Game::draw(){
         if (mario_dead && !mario->isRespawning) {
             mario_dead = false;  
             explosion_created = false;
-            /*
+            explosion_kong = false;
+            explosion_barrel = false;
+
+            
             if (mario_wins) {
             cout << "Mario has won! Resetting state..." << endl;
             }
             mario_wins = false;
-            */
-        }
-        draw_scene(true);
-        return;
-    }
-    if (mario_wins) {
-      mario->win_state(); 
-        if (mario_wins && !mario->isRespawning) {
-            mario_wins = false;  
-            explosion_created = false;
+            
         }
         draw_scene(true);
         return;
@@ -374,21 +464,28 @@ glPushMatrix();
         for(auto cur_lad: fakeLadVec){
             cur_lad->draw_fake_lad();
         }
+        //debug
+        /*
         for(auto cur_lad: ladHitBoxVec){
             cur_lad->draw_hitbox();
         }
         for(auto cur_lad: ladHitBoxVec_mario){
             cur_lad->draw_hitbox();
         }
+        */
         for(auto curBar : barrelVec){
             if(curBar->is_active){
                 curBar->draw();
             }    
         }
+        if(!mario_wins){
         kong->draw();
+        }
         pauline->draw();
         lastLad->draw_golden();
+        if(!mario_wins){
         staticBarrel->draw();
+        }
         lastLadderHitBox_mario->draw_hitbox();
 
         if(mario_dead){
@@ -405,6 +502,20 @@ void Game::key_pressed(int key){
 }
 
 void Game::update_movement(){
+
+    
+    if (ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
+        if(!mario->is_climbing){
+            mario->start_jump();
+            mario->jump_down();
+    }
+    }
+    
+    if(!ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ')){
+        if(!mario->is_climbing){
+            mario->start_jump();
+        }
+    }
     if(ofGetKeyPressed(OF_KEY_RIGHT) && !mario->is_climbing && !mario->isRespawning){
         mario->move_right();
     }
@@ -417,22 +528,13 @@ void Game::update_movement(){
     if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
         mario->climb_down();
     }
-    if (ofGetKeyPressed(OF_KEY_DOWN) && flag_down) {
+    if (ofGetKeyPressed(OF_KEY_DOWN) && !ofGetKeyPressed(OF_KEY_LEFT) && !ofGetKeyPressed(OF_KEY_RIGHT) && !flag_down && !mario->isRespawning && !mario->is_climbing)  {
         mario->go_down();
     }
-    
-    if (ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
-        if(!mario->is_climbing){
-            mario->start_jump();
-            mario->jump_down();
+    if(ofGetKeyPressed(OF_KEY_UP) && !ofGetKeyPressed(OF_KEY_LEFT) && !ofGetKeyPressed(OF_KEY_RIGHT) && !mario->is_climbing && !mario->isJumping && !mario->isRespawning){
+        mario->look_front();
     }
-    }
-    
-    if(!ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !mario->isRespawning){
-        if(!mario->is_climbing){
-            mario->start_jump();
-        }
-    }
+
 }
 
 bool Game::check_collision(ofVec3f dim1, ofVec3f pos1, ofVec3f dim2, ofVec3f pos2){
