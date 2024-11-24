@@ -2,7 +2,6 @@
 #include "cg_cam_extras.h"
 
 
-
 Camera::Camera(GLfloat fov, GLfloat distance, ofVec3f position){
     camMode = 0;
     this -> fov = fov;
@@ -29,16 +28,22 @@ void Camera::apply(ofVec3f marioPos, ofVec3f marioLookAt){
 }
 
 void Camera::applyp1(ofVec3f marioPos){
+    ofSetColor(255, 255, 255); // Set text to white
+    ofDrawBitmapString("Avoid the barrels and save Pauline from Donkey Kong! \n  Mario controls: \n   jump: Space \n   move left/right: Left/Right arrow keys \n   climb ladders: Up/Down arrow keys \n  times dead: " + std::to_string(num_lives) + "\n  current height/Pauline height: " +std::to_string(meters)+"/"+ std::to_string(2*(num_platforms*10)+20)+ " meters", gw() - 415, gh() - 100);
+
     camFlag = false;
     perspective(fov, alpha, beta);
     lookat(
-        0, marioPos.y + 50, marioPos.z + distance,
+        0, marioPos.y + 50, marioPos.z + distance*1.2,
         0, marioPos.y, marioPos.z,
         0, 1, 0
     );
 }
 
 void Camera::applyp2(ofVec3f marioPos){
+    ofSetColor(255, 255, 255); // Set text to white
+    ofDrawBitmapString("Avoid the barrels and save Pauline from Donkey Kong! \n  Mario controls: \n   jump: Space \n   move left/right: Left/Right arrow keys \n   climb ladders: Up/Down arrow keys \n  times dead: " + std::to_string(num_lives) + "\n  current height/Pauline height: " +std::to_string(meters)+"/"+ std::to_string(2*(num_platforms*10)+20)+ " meters", gw() - 415, gh() - 100);
+
     camFlag = false;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -54,14 +59,14 @@ void Camera::applyp3(ofVec3f marioPos, ofVec3f marioLookAt){
     camFlag = true;
     perspective(fov, alpha*100, beta*100);
     lookat(
-        marioPos.x, marioPos.y , marioPos.z,
+        marioPos.x, marioPos.y + 5 , marioPos.z,
         marioLookAt.x, marioLookAt.y, marioLookAt.z,
         0, 1, 0
     );
 }
 
 void Camera::miniMap(ofVec3f marioPos){
-    glViewport(gw()-gw()/4, gh()-gw()/4, gw()/4, gh()/4);
+    glViewport(gw()-gw()/5, gh()-gw()/5, gw()/4, gh()/4);;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-gw()/8, gw()/8, -gh()/8, gh()/8, 10, 10000);

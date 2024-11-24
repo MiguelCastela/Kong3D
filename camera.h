@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "cg_extras.h"
 
+
 class Camera{
     public:
         Camera(GLfloat fov = 60, GLfloat distance = 100, ofVec3f position = ofVec3f(0, 0, 0));
@@ -14,6 +15,11 @@ class Camera{
         void miniMap(ofVec3f marioPos);
         GLint camMode;
         bool camFlag;
+        GLint num_lives =0;
+        GLint high_score = INT_MAX;
+        bool isFirstPlaythrough = true;
+        GLint meters = 0;
+        GLint num_platforms = 0;
     private:
 
         GLfloat fov;
@@ -23,3 +29,4 @@ class Camera{
         GLint beta;
 
 };
+

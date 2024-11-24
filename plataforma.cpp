@@ -12,7 +12,7 @@ Platform::Platform(ofVec3f dimensions, ofVec3f position, ofVec3f color) {
 }
 
 void Platform::draw() {
-    glColor3f(color.x, color.y, color.z); // Set color to yellow for regular platforms
+    glColor3f(color.x, color.y, color.z);
 	glPushMatrix();//base push
         glTranslatef(position.x ,position.y,  position.z );
         glScalef(dimensions.x, dimensions.y , dimensions.z);

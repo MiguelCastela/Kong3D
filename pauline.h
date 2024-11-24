@@ -17,10 +17,6 @@ class Pauline {
         GLfloat gravity;
         GLfloat jumpHeight;
         GLfloat jumpStartY;
-        
-
-
-        
 };
 
 

@@ -41,13 +41,11 @@ class Mario {
         bool is_climbing;
         GLfloat base_position_y;
         GLfloat next_position_y;
-
-        int times_dead;
-
         GLfloat target_y;
         GLfloat target_z;
 
-
+        //state
+        int times_dead;
         bool going_up;
         bool dead;
         bool winState;

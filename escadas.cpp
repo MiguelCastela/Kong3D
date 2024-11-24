@@ -66,7 +66,7 @@ void Ladder::draw_hitbox(){
         glTranslatef(position.x, position.y, position.z+1);
         glScalef(dimension.x, dimension.y, dimension.z);
         cube_unit_outline(0.5);
-    glPopMatrix();//ladder pop
+    glPopMatrix();
 }
 
 void Ladder::draw_fake_lad(){

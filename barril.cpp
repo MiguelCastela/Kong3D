@@ -12,7 +12,7 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
     this -> on_ladder = false;
     this -> is_moving_left = true;
     this -> position_x_on_impact = 0;
-    this -> speed = 0.4;
+    this -> speed = 0.4 * (60.0 / ofGetFrameRate());
     this -> next_position_z = 0;
     this -> next_position_y = 0;
     this->moving_x = true;
@@ -38,40 +38,40 @@ void Barrel::draw(){
 void Barrel::move_front(){
     if (position.x < global.right_limit + global.barrelDim.x) {
         //cout << "Moving front" << endl;
-    is_moving_left = false;
-    position.x += speed;
+        is_moving_left = false;
+        position.x += speed;
     }else{
         position.y -= speed;
     }
 }
 void Barrel::move_back(){
     if (position.x > global.left_limit - global.barrelDim.x) {
-    //cout << "Moving back" << endl;
-    is_moving_left = true;
-    position.x -= speed;   
+        //cout << "Moving back" << endl;
+        is_moving_left = true;
+        position.x -= speed;   
     }else{
         position.y -= speed;
     }   
 }
 void Barrel::move_down(){
-        if(next_position_z == 0){
-            next_position_z = position.z + global.platDim.z;
-        }
-        if(next_position_y == 0){
-            next_position_y = position.y - global.ladDim.y + 1;
-        }
-        if (position_x_on_impact == 0){
-            position_x_on_impact = position.x;
-        }
-        float target_x;
-        if(is_moving_left){
-            target_x= position_x_on_impact - (global.ladDim.x*0.5) - (global.barrelDim.x*0.5);
-        }else{
-            target_x = position_x_on_impact + (global.ladDim.x*0.5) + (global.barrelDim.x*0.5);
-        }
-         switch (currentState) {
+    if(next_position_z == 0){
+        next_position_z = position.z + global.platDim.z;
+    }
+    if(next_position_y == 0){
+        next_position_y = position.y - global.ladDim.y + 1;
+    }
+    if (position_x_on_impact == 0){
+        position_x_on_impact = position.x;
+    }
+    float target_x;
+    if(is_moving_left){
+        target_x= position_x_on_impact - (global.ladDim.x*0.5) - (global.barrelDim.x*0.5);
+    }else{
+        target_x = position_x_on_impact + (global.ladDim.x*0.5) + (global.barrelDim.x*0.5);
+    }
+    switch (currentState) {
         case MOVING_X: {
-            // Move in X direction
+        // Move in X direction
             if (is_moving_left) {
                 if (position.x > target_x) {
                     //position.x -= speed;
@@ -89,7 +89,6 @@ void Barrel::move_down(){
             }
             break;
         }
-
         case MOVING_Z: {
             // Move in Z direction
             if (position.z < next_position_z) {
@@ -108,32 +107,29 @@ void Barrel::move_down(){
                 position.y = std::max(position.y - speed, next_position_y);
             }
         }
-         }
-
-        if ((position.x == target_x) && (position.y == next_position_y)){
-            position.y -= 1;
-            
-            if (rand() % 100 < 75) {
-                is_moving_left = !is_moving_left;
-
-            }
-
-            //cout << "Direction switched. Now moving " << (is_moving_left ? "left" : "right") << endl;
-
-
-            // The barrel is no longer on the ladder
-            leave_ladder = true;
-            moving_x = true;
-            moving_y = false;
-            moving_z = false;
-            currentState = MOVING_X;
-
-            // Reset the impact position for the next ladder
-            position_x_on_impact = 0;
-            next_position_z = 0;
-            next_position_y = 0;
-
-            
-        }
     }
+
+    if ((position.x == target_x) && (position.y == next_position_y)){
+        position.y -= 1;
+        
+        if (rand() % 100 < 75) {
+            is_moving_left = !is_moving_left;
+        }
+
+        //cout << "Direction switched. Now moving " << (is_moving_left ? "left" : "right") << endl;
+
+        // The barrel is no longer on the ladder
+        leave_ladder = true;
+        moving_x = true;
+        moving_y = false;
+        moving_z = false;
+        currentState = MOVING_X;
+
+        // Reset the impact position for the next ladder
+        position_x_on_impact = 0;
+        next_position_z = 0;
+        next_position_y = 0;
+         
+    }
+}
 
