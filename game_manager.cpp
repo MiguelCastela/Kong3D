@@ -174,6 +174,10 @@ Game::Game(){
     kongPos = barrelPos;
     kongPos.x += kongDim.x;
     kong = new Kong(kongDim, ofVec3f(kongPos.x, kongPos.y, kongPos.z));
+
+
+
+
 }
 
 void Game::update(){
@@ -399,6 +403,11 @@ void Game::update(){
             curBar->leave_ladder = false;
         }
     }
+
+    dirVec3f = marioPos;
+    spotPosVec = marioPos;
+    spotDirVec = mario->marioLookAt;
+
 }
 
 void Game::draw(){
@@ -444,11 +453,86 @@ void Game::draw(){
 void Game::draw_scene(bool pov){
 glPushMatrix();
 
+        
         glEnable(GL_LIGHTING);
         glEnable(GL_NORMALIZE);
 
-        GLfloat ambientLight[] = {3, 3, 3, 1.0}; 
+
+    if (Ambient) {
+        GLfloat ambientLight[] = {0.2, 0.2, 0.2, 1.0}; // Moderate ambient light
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+    } else {
+        GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // No ambient light
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+    }
+
+        dirVec[0] = dirVec3f.x;//x
+	    dirVec[1] = dirVec3f.y;//y
+        dirVec[2] = dirVec3f.z;//z
+        dirVec[3] = 1;//vetor - dire��o!
+
+        dirAmb[0] = 1;//R
+        dirAmb[1] = 1;//G
+        dirAmb[2] = 1;//B
+        dirAmb[3] = 1.;//constante
+
+        dirDif[0] = 1.;//R
+        dirDif[1] = 1.;//G
+        dirDif[2] = 1.;//B
+        dirDif[3] = 1.;//constante
+
+        dirSpec[0] = 1.;//R
+        dirSpec[1] = 1.;//G
+        dirSpec[2] = 1.;//B
+        dirSpec[3] = 1.;//constante
+
+        glLightfv(GL_LIGHT0, GL_POSITION, dirVec);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, dirAmb);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, dirDif);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, dirSpec);
+
+        glEnable(GL_LIGHT0);
+
+        
+        spotPos[0] = spotPosVec.x;
+        spotPos[1] = spotPosVec.y; 
+        spotPos[2] = spotPosVec.z;
+        spotPos[3] = 1.;
+
+
+        //direcao
+        spotDir[0] = spotDirVec.x;
+        spotDir[1] = -1;
+        spotDir[2] = spotDirVec.z;
+        //spotDir[3] = 0.;N�o tem a 4 coordenada, � sempre vetor
+
+        //ambiente
+        spotAmb[0] = 0.;//R
+        spotAmb[1] = 0.;//G
+        spotAmb[2] = 0.;//B
+        spotAmb[3] = 1.;//constante
+
+        //difusa
+        spotDif[0] = 1.;//R
+        spotDif[1] = 1.;//G
+        spotDif[2] = 1.;//B
+        spotDif[3] = 1.;//constante
+
+        //specular
+        spotSpecular[0] = 1.;//R
+        spotSpecular[1] = 1.;//G
+        spotSpecular[2] = 1.;//B
+        spotSpecular[3] = 1.;//constante
+
+        glLightfv(GL_LIGHT1, GL_POSITION, spotPos);
+        glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
+        glLightfv(GL_LIGHT1, GL_AMBIENT, spotAmb);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, spotDif);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, spotSpecular);
+        glEnable(GL_LIGHT1);
+
+
+
 
         
 
@@ -541,6 +625,19 @@ void Game::update_movement(){
     if(ofGetKeyPressed(OF_KEY_UP) && !ofGetKeyPressed(OF_KEY_LEFT) && !ofGetKeyPressed(OF_KEY_RIGHT) && !mario->is_climbing && !mario->isJumping && !mario->isRespawning){
         mario->look_front();
     }
+
+if ((ofGetKeyPressed('a') || ofGetKeyPressed('A')) && !mario->isRespawning) {
+    if (!isKeyAPressed) { // Key was not pressed in the previous frame
+        Ambient = !Ambient; // Toggle ambient light
+        cout << "Ambient light: " << (Ambient ? "ON" : "OFF") << endl;
+        isKeyAPressed = true; // Mark key as pressed
+    }
+} else {
+    if (isKeyAPressed) {
+        cout << "Key 'a' is now released." << endl;
+        isKeyAPressed = false; // Reset when key is released
+    }
+}
 
 }
 

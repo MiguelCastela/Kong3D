@@ -61,7 +61,26 @@ class Game{
         std::vector<Ladder*> ladHitBoxVec_mario;
         std::vector<Barrel*> barrelVec;
 
+        //ambient light
+        GLfloat ambientLight[4];
+        bool Ambient = false;
+        bool isKeyAPressed = false;
 
+        //directional light
+        GLfloat dirVec[4];
+        GLfloat dirAmb[4];
+        GLfloat dirDif[4];
+        GLfloat dirSpec[4];
+        ofVec3f dirVec3f;
+
+        //focus light
+        GLfloat spotPos[4];
+	    GLfloat spotDir[3];
+	    ofVec3f spotDirVec;
+        GLfloat spotAmb[4];
+	    GLfloat spotDif[4];
+	    GLfloat spotSpecular[4];
+        ofVec3f spotPosVec;
 
         //barrel
  
