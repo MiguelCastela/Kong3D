@@ -444,6 +444,19 @@ void Game::draw(){
 void Game::draw_scene(bool pov){
 glPushMatrix();
 
+        glEnable(GL_LIGHTING);
+        glEnable(GL_NORMALIZE);
+
+        GLfloat ambientLight[] = {3, 3, 3, 1.0}; 
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+
+        
+
+        
+
+
+
+
         if(!pov || mario_wins){
             mario->draw();
         }

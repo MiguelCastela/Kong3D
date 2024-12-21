@@ -4,6 +4,7 @@
 #include "ofApp.h"
 #include "mario.h"
 #include "global.h"
+#include "materials.h"
 
 using namespace std;
 
@@ -63,7 +64,7 @@ void Mario::draw() {
         glPushMatrix();
             glTranslatef(position.x, position.y, position.z);
             glScalef(dimensions.x, dimensions.y, dimensions.z);
-            glColor3f(1, 0, 0);
+            loadMaterial(22);
             cube_unit(0.5);
             cube_unit_outline(0.5);
         glPopMatrix();
@@ -74,9 +75,9 @@ void Mario::draw() {
                 glRotatef(90, 1, 0, 0);  
             }
             glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25); 
-            glColor3f(0, 0, 1);
+            loadMaterial(21);
             cube_unit(0.5); 
-            glColor3f(0.0, 0.0, 0.0);
+            loadMaterial(2);
             cube_unit_outline(0.5);  
         glPopMatrix();  
         //draw left hand
@@ -88,9 +89,9 @@ void Mario::draw() {
             glTranslatef(0, -dimensions.y * 0.30, 0);  
 
             glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15); 
-            glColor3f(1.0, 0.8, 0.6);  
+            loadMaterial(18);  
             cube_unit(0.5); 
-            glColor3f(0.0, 0.0, 0.0);
+            loadMaterial(2);
             cube_unit_outline(0.5); 
         glPopMatrix(); 
         //draw right arm
@@ -100,7 +101,7 @@ void Mario::draw() {
                 glRotatef(90, 1, 0, 0); 
             }
             glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25);  
-            glColor3f(0,0,1);
+            loadMaterial(21);
             cube_unit(0.5);  
             cube_unit_outline(0.5);  
         glPopMatrix();  
@@ -112,9 +113,9 @@ void Mario::draw() {
             }
             glTranslatef(0, -dimensions.y * 0.30, 0);  
             glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15);  
-            glColor3f(1.0, 0.8, 0.6);  
+            loadMaterial(18);  
             cube_unit(0.5);  
-            glColor3f(0.0, 0.0, 0.0);
+            loadMaterial(2);
             cube_unit_outline(0.5); 
         glPopMatrix();  
         // Draw the head
@@ -126,7 +127,7 @@ void Mario::draw() {
                 glRotatef(45, 1, 0, 0); 
             }
             glScalef(dimensions.x * 0.75, dimensions.y, dimensions.z * 0.75); 
-            glColor3f(1.0, 0.8, 0.6);  
+            loadMaterial(18);  
             cube_unit(0.5);  
             cube_unit_outline(0.5);  
         glPopMatrix();  
@@ -141,9 +142,9 @@ void Mario::draw() {
             glTranslatef(0, dimensions.y * 0.55, dimensions.z * 0.25); 
 
             glScalef(dimensions.x * 0.75, dimensions.y * 0.1, dimensions.z * 1.25);
-            glColor3f(0, 0, 1);
+            loadMaterial(21);
             cube_unit(0.5); 
-            glColor3f(0, 0, 0);
+            loadMaterial(2);
             cube_unit_outline(0.5); 
         glPopMatrix(); 
         //hat part 2
@@ -158,9 +159,9 @@ void Mario::draw() {
             glTranslatef(0, dimensions.y * 0.7, 0); 
 
             glScalef(dimensions.x * 0.75, dimensions.y * 0.2, dimensions.z * 0.75);
-            glColor3f(0, 0, 1);
+            loadMaterial(21);
             cube_unit(0.5); 
-            glColor3f(0.0, 0.0, 0.0);
+            loadMaterial(2);
             cube_unit_outline(0.5); 
         glPopMatrix(); 
         // Draw left eye
@@ -173,7 +174,7 @@ void Mario::draw() {
             }
 
             glScalef(dimensions.x * 0.2, dimensions.y * 0.2, dimensions.z * 0.2);  
-            glColor3f(1.0, 1.0, 1.0);  
+            loadMaterial(16);  
             cube_unit(0.5);  
             glPopMatrix(); 
         // Draw right eye
@@ -185,7 +186,7 @@ void Mario::draw() {
                 glRotatef(45, 1, 0, 0);
             }
             glScalef(dimensions.x * 0.2, dimensions.y * 0.2, dimensions.z * 0.2);  
-            glColor3f(1.0, 1.0, 1.0);  
+            loadMaterial(16);  
             cube_unit(0.5);  
         glPopMatrix(); 
         // Draw left pupil 
@@ -197,7 +198,7 @@ void Mario::draw() {
                 glRotatef(45, 1, 0, 0);
             }
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1);  
-            glColor3f(0.0, 0.0, 0.0);  
+            loadMaterial(2);  
             cube_unit(0.5); 
         glPopMatrix();  
         // Draw right pupil
@@ -209,7 +210,7 @@ void Mario::draw() {
                 glRotatef(45, 1, 0, 0);
             }
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1);  
-            glColor3f(0.0, 0.0, 0.0); 
+            loadMaterial(2); 
             cube_unit(0.5); 
         glPopMatrix();  
         //draw the moustache
@@ -221,7 +222,7 @@ void Mario::draw() {
                 glRotatef(45, 1, 0, 0); 
             }
             glScalef(dimensions.x * 0.3, dimensions.y * 0.08, dimensions.z * 0.2);  
-            glColor3f(0.369, 0.251, 0.02);
+            loadMaterial(20);
             cube_unit(0.5);
         glPopMatrix();  // Reset transformations for the moustache
     glPopMatrix();  // Reset the global transformation state
@@ -230,12 +231,9 @@ void Mario::draw() {
 
 void Mario::draw_pov(){
     jump();
-    glColor3f(1, 0, 0);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
-        cube_unit(0.5);
-        cube_unit_outline(0.5);
     glPopMatrix();
 }
 

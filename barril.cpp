@@ -4,6 +4,7 @@
 #include "ofApp.h"
 #include "barril.h"
 #include "global.h"
+#include "materials.h"
 
 using namespace std;
 
@@ -29,10 +30,10 @@ void Barrel::draw(){
     if (position.y < -global.platDim.y) {
         is_active = false;
     }
-    glColor3f(1.0f, 0.5f, 0.0f);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
+        loadMaterial(9);
         sphere_unit(0.5, 32, 16);
     glPopMatrix();
 }

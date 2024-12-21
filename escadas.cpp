@@ -3,6 +3,7 @@
 #include <vector>
 #include "ofApp.h"
 #include "escadas.h"
+#include "materials.h"
 using namespace std;
 
 Ladder::Ladder(ofVec3f dimension, ofVec3f position) {
@@ -12,7 +13,7 @@ Ladder::Ladder(ofVec3f dimension, ofVec3f position) {
 
 
 void Ladder::draw(){
-    glColor3f(0.6f, 0.3f, 0.0f);
+    loadMaterial(20);
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y, position.z + 1 );
         glScalef(dimension.x, dimension.y, dimension.z);
@@ -20,50 +21,50 @@ void Ladder::draw(){
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z *1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y + dimension.y*0.2, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y + dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y - dimension.y*0.2, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y - dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
 
 }
 
 void Ladder::draw_hitbox(){
-    glColor3f(0.6f, 0.3f, 0.0f);
+    loadMaterial(7);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z+1);
         glScalef(dimension.x, dimension.y, dimension.z);
@@ -72,7 +73,7 @@ void Ladder::draw_hitbox(){
 }
 
 void Ladder::draw_fake_lad(){
-   glColor3f(0.6f, 0.3f, 0.0f);
+   loadMaterial(7);
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y, position.z + 1 );
         glScalef(dimension.x, dimension.y, dimension.z);
@@ -80,50 +81,50 @@ void Ladder::draw_fake_lad(){
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z *1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y + dimension.y*0.2, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y + dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0,0,0);
+        loadMaterial(2);
         glTranslatef(position.x, position.y - dimension.y*0.2, position.z + 1);
         glScalef(dimension.x*1.05, dimension.y*0.2, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
-        glColor3f(0.7f, 0.3f, 0.0f);
+        loadMaterial(7);
         glTranslatef(position.x, position.y - dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
 
 }
 
 void Ladder::draw_golden(){
-    glColor3f(0.9f, 0.9f, 0.0f);
+    loadMaterial(23);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z+1);
         glScalef(dimension.x, dimension.y, dimension.z);
@@ -133,41 +134,41 @@ void Ladder::draw_golden(){
         glPushMatrix();//ladder push
         glTranslatef(position.x, position.y, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z *1.1);
-        glColor3f(1.0f, 1.0f, 0.0f);
+        loadMaterial(10);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y + dimension.y*0.2, position.z + 1 + dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
-        glColor3f(1.0f, 1.0f, 0.0f);
+        loadMaterial(10);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y + dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
-        glColor3f(1.0f, 1.0f, 0.0f);
+        loadMaterial(10);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y - dimension.y*0.2, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
-        glColor3f(1.0f, 1.0f, 0.0f);
+        loadMaterial(10);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
     glPushMatrix();//ladder push
         glTranslatef(position.x, position.y - dimension.y*0.4, position.z + 1+ dimension.z*0.5);
         glScalef(dimension.x, dimension.y*0.1, dimension.z*1.1);
-        glColor3f(1.0f, 1.0f, 0.0f);
+        loadMaterial(10);
         cube_unit(0.5);
-        glColor3f(0.0, 0.0, 0.0);
+        loadMaterial(2);
         cube_unit_outline(0.5);
     glPopMatrix();//ladder pop
 
