@@ -33,3 +33,12 @@ Global::Global(){
     left_limit = -platDim.x/2 + marioDim.x/2;
     right_limit = platDim.x/2 - marioDim.x/2;
 }
+
+void Global::load_textures(){
+    platform_texture.load("platform_texture.png");
+    platform_texture.setImageType(OF_IMAGE_COLOR_ALPHA);
+}
+
+
+
+

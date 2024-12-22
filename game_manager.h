@@ -63,10 +63,13 @@ class Game{
 
         //ambient light
         GLfloat ambientLight[4];
-        bool Ambient = false;
+        bool Ambient = true;
         bool isKeyAPressed = false;
 
         //directional light
+        ofVec3f lightDirection;
+        bool Directional = false;
+        bool isKeySPressed = false;
         GLfloat dirVec[4];
         GLfloat dirAmb[4];
         GLfloat dirDif[4];
@@ -74,6 +77,8 @@ class Game{
         ofVec3f dirVec3f;
 
         //focus light
+        bool Focus = false;
+        bool isKeyCPressed = false;
         GLfloat spotPos[4];
 	    GLfloat spotDir[3];
 	    ofVec3f spotDirVec;
@@ -81,6 +86,16 @@ class Game{
 	    GLfloat spotDif[4];
 	    GLfloat spotSpecular[4];
         ofVec3f spotPosVec;
+
+        //point light
+        bool Point = false;
+        bool isKeyVPressed = false;
+        GLfloat pointPos[4];
+        GLfloat pointAmb[4];
+        GLfloat pointDif[4];
+        GLfloat pointSpec[4];
+        ofVec3f pointPosVec;
+
 
         //barrel
  

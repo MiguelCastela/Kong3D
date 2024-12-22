@@ -30,6 +30,11 @@ class Global{
         ofVec3f paulineDim;
         
         GLfloat empty_space;
+
+
+        void load_textures();
+        ofImage platform_texture;
+
 };
 
 extern Global global;

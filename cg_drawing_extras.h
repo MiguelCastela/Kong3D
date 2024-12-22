@@ -68,36 +68,42 @@ inline void cube_unit(GLfloat p) {
     glBegin(GL_QUADS);
 
     // Front face
+    glNormal3f(0.0f, 0.0f, 1.0f);
     glVertex3f(-p, -p, p);
     glVertex3f(-p, p, p);
     glVertex3f(p, p, p);
     glVertex3f(p, -p, p);
 
     // Back face
+    glNormal3f(0.0f, 0.0f, -1.0f);
     glVertex3f(-p, -p, -p);
     glVertex3f(p, -p, -p);
     glVertex3f(p, p, -p);
     glVertex3f(-p, p, -p);
 
     // Bottom face
+    glNormal3f(0.0f, -1.0f, 0.0f);
     glVertex3f(-p, -p, -p);
     glVertex3f(-p, -p, p);
     glVertex3f(p, -p, p);
     glVertex3f(p, -p, -p);
 
     // Top face
+    glNormal3f(0.0f, 1.0f, 0.0f);
     glVertex3f(-p, p, p);
     glVertex3f(-p, p, -p);
     glVertex3f(p, p, -p);
     glVertex3f(p, p, p);
 
     // Left face
+    glNormal3f(-1.0f, 0.0f, 0.0f);
     glVertex3f(-p, -p, p);
     glVertex3f(-p, -p, -p);
     glVertex3f(-p, p, -p);
     glVertex3f(-p, p, p);
 
     // Right face
+    glNormal3f(1.0f, 0.0f, 0.0f);
     glVertex3f(p, -p, p);
     glVertex3f(p, p, p);
     glVertex3f(p, p, -p);
@@ -123,23 +129,40 @@ inline void sphere_unit(GLfloat radius, GLint slices, GLint stacks) {
             GLfloat v3[3] = {radius * cosf(theta2) * cosf(phi2), radius * sinf(theta2), radius * cosf(theta2) * sinf(phi2)};
             GLfloat v4[3] = {radius * cosf(theta1) * cosf(phi2), radius * sinf(theta1), radius * cosf(theta1) * sinf(phi2)};
 
+            // Normalize the normals (for a unit sphere, divide each vertex by radius to get the normal)
+            GLfloat n1[3] = {v1[0] / radius, v1[1] / radius, v1[2] / radius};
+            GLfloat n2[3] = {v2[0] / radius, v2[1] / radius, v2[2] / radius};
+            GLfloat n3[3] = {v3[0] / radius, v3[1] / radius, v3[2] / radius};
+            GLfloat n4[3] = {v4[0] / radius, v4[1] / radius, v4[2] / radius};
+
             // Draw the two triangles forming the quad
             glBegin(GL_TRIANGLES);
 
             // Triangle 1
+            glNormal3fv(n1);
             glVertex3fv(v1);
+
+            glNormal3fv(n2);
             glVertex3fv(v2);
+
+            glNormal3fv(n3);
             glVertex3fv(v3);
 
             // Triangle 2
+            glNormal3fv(n1);
             glVertex3fv(v1);
+
+            glNormal3fv(n3);
             glVertex3fv(v3);
+
+            glNormal3fv(n4);
             glVertex3fv(v4);
 
             glEnd();
         }
     }
 }
+
 
 inline void cube_unit_outline(GLfloat p) {
     glColor3f(0, 0, 0); // Set color to black for the outline

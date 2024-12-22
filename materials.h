@@ -9,7 +9,7 @@ inline extern string Materiais[] = {
 	"Turquoise", "Brass", "Bronze",      "Chrome",       "Copper",
 	"Gold",      "Silver","blackPlastic","cyankPlastic", "greenPlastic",
 	"redPlastic", "whitePlastic","yellowPlastic", "skin", "darkBrownSkin", 
-    "lightBrownSkin" , "blueFabric", "redFabric", "lightGold"};
+    "lightBrownSkin" , "blueFabric", "redFabric", "lightGold", "black", "shinyBlue", "wood"};
 
 
 inline void loadMaterial(int material) {
@@ -104,9 +104,9 @@ inline void loadMaterial(int material) {
 	GLfloat whitePlasticSpec[] = { 0.870 ,0.870 ,0.870, 1. };
 	GLint whitePlasticCoef = 0.25 * 128;
 
-	GLfloat yellowPlasticAmb[] = { 0.2 ,0.2 ,0.0, 1. };
-	GLfloat yellowPlasticDif[] = { 0.5 ,0.5 ,0.0, 1. };
-	GLfloat yellowPlasticSpec[] = { 0.60 ,0.60 ,0.00, 1. };
+	GLfloat yellowPlasticAmb[] = { 0.3 ,0.3 ,0.0, 1. };
+	GLfloat yellowPlasticDif[] = { 0.9 ,0.9 ,0.0, 1. };
+	GLfloat yellowPlasticSpec[] = { 0.9 ,0.9 ,0.0, 1. };
 	GLint yellowPlasticCoef = 0.25 * 128;
 
     GLfloat skinAmb[] = { 0.435, 0.2225, 0.1575, 1.0 };
@@ -137,6 +137,27 @@ inline void loadMaterial(int material) {
     GLfloat redFabricDif[] = { 0.5, 0.0, 0.0, 1.0 };
     GLfloat redFabricSpec[] = { 0.6, 0.0, 0.0, 1.0 };
     GLint redFabricCoef = 0.25 * 128;
+
+	//pitch black
+	GLfloat blackAmb[] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat blackDif[] = { 0.0, 0.0, 0.0, 1.0 };
+	GLfloat blackSpec[] = { 0.0, 0.0, 0.0, 1.0 };
+	GLint blackCoef = 0.0 * 128;
+
+	//make specular shiny blue material
+	GLfloat shinyBlueAmb[] = { 0.02, 0.04, 0.2, 1.0 };
+	GLfloat shinyBlueDif[] = { 0.0, 0.16, 0.9, 1.0 };
+	GLfloat shinyBlueSpec[] = { 0.14, 0.2, 0.8, 1.0 };
+	GLint shinyBlueCoef = 0.25 * 128;
+
+	//wood material
+	GLfloat woodAmb[] = { 0.3, 0.2, 0.0, 1.0 };
+	GLfloat woodDif[] = { 0.6, 0.4, 0.0, 1.0 };
+	GLfloat woodSpec[] = { 0.3, 0.2, 0.0, 1.0 };
+	GLint woodCoef = 0.1 * 128;
+
+
+
 
 
 
@@ -294,8 +315,27 @@ inline void loadMaterial(int material) {
         glMaterialf(GL_FRONT, GL_SHININESS, lightGoldCoef);
         break;
 
-    
-    }
+	case 24: //black
+		glMaterialfv(GL_FRONT, GL_AMBIENT, blackAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, blackDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, blackSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, blackCoef);
+		break;
+
+	case 25: //shinyBlue
+		glMaterialfv(GL_FRONT, GL_AMBIENT, shinyBlueAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, shinyBlueDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, shinyBlueSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, shinyBlueCoef);
+		break;
+
+	case 26: //wood
+		glMaterialfv(GL_FRONT, GL_AMBIENT, woodAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, woodDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, woodSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, woodCoef);
+		break;
+	}
 
     
 
