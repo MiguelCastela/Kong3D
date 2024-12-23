@@ -36,7 +36,7 @@ Global::Global(){
 
 void Global::load_textures(){
     platform_texture.load("platform_texture.png");
-    platform_texture.setImageType(OF_IMAGE_COLOR_ALPHA);
+
 }
 
 

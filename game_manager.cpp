@@ -408,8 +408,10 @@ void Game::update(){
 
 
     pointPosVec[0] = marioPos.x;
-    pointPosVec[1] = marioPos.y - marioDim.y*0.5;
-    pointPosVec[2] = marioPos.z + marioDim.z*0.5; ;
+    pointPosVec[1] = marioPos.y + 0.5 *marioDim.y;
+    pointPosVec[2] = marioPos.z ;
+
+    global.load_textures();
 
 
 }
@@ -531,9 +533,10 @@ glPushMatrix();
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, pointDif);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, pointSpec);
 
-    glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0); // Constant attenuation
-    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.1);   // Linear atten  uation
-    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.01); // Quadratic attenuation
+glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0); // Keep constant attenuation
+glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.02);  // Lower linear attenuation
+glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002); // Lower quadratic attenuation
+
 
 
     
