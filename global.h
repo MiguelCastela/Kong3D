@@ -14,6 +14,7 @@ class Global{
         ofVec3f barrelDim;
         ofVec3f fakeLadDim;
         ofVec3f ladMarioHitBoxDim;
+        ofVec3f marioHitBoxDim;
 
         GLfloat left_limit;
         GLfloat right_limit;
@@ -34,6 +35,9 @@ class Global{
 
         void load_textures();
         ofImage platform_texture;
+        ofImage wood_texture;
+        ofImage wood_texture2;
+        ofImage wood_texture3;
 
 };
 

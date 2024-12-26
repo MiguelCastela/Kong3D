@@ -6,10 +6,11 @@
 
 class Platform {
 public:
-    Platform(ofVec3f position,ofVec3f dimensions);
+    Platform(ofVec3f position,ofVec3f dimensions, int materialIndex);
     void draw();
     ofVec3f position;
     ofVec3f dimensions;
+    int materialIndex;
 
 };
 

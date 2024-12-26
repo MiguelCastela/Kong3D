@@ -25,7 +25,7 @@ void Kong::draw() {
             glTranslatef(position.x, position.y, position.z);  
             glScalef(dimensions.x, dimensions.y, dimensions.z);  
             cube_unit(0.5); 
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);
         glPopMatrix();  
         //draw left arm
@@ -35,7 +35,7 @@ void Kong::draw() {
             glScalef(dimensions.x * 0.5, dimensions.y , dimensions.z * 0.25); 
             loadMaterial(19); 
             cube_unit(0.5);  
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
             //left hand
             glPushMatrix();
@@ -43,7 +43,7 @@ void Kong::draw() {
                 glScalef(0.7f, 1.05f, 0.7f);  
                 loadMaterial(20); 
                 cube_unit(0.5);  
-                loadMaterial(2);  
+                loadMaterial(24);  
                 cube_unit_outline(0.5);  
             glPopMatrix();
         glPopMatrix(); 
@@ -54,7 +54,7 @@ void Kong::draw() {
             glScalef(dimensions.x * 0.5, dimensions.y, dimensions.z * 0.25); 
             loadMaterial(19); 
             cube_unit(0.5);  
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5); 
             //right hand 
             glPushMatrix();
@@ -62,7 +62,7 @@ void Kong::draw() {
                 glScalef(0.7f, 1.05f, 0.7f);  
                 loadMaterial(20);  
                 cube_unit(0.5);  
-                loadMaterial(2);  
+                loadMaterial(24);  
                 cube_unit_outline(0.5);  
             glPopMatrix();
         glPopMatrix();  
@@ -72,9 +72,38 @@ void Kong::draw() {
             glScalef(dimensions.x * 0.75, dimensions.y, dimensions.z * 0.75);  
             loadMaterial(19); 
             cube_unit(0.5);  
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
         glPopMatrix(); 
+
+        //draw flashlight handle
+        glPushMatrix();
+            glTranslatef(position.x, position.y + dimensions.y + dimensions.y*0.15, position.z);  
+            glScalef(dimensions.x * 0.2, dimensions.y * 0.3, dimensions.z * 0.2);  
+            loadMaterial(11);  
+            cube_unit(0.5);
+            loadMaterial(24);
+            cube_unit_outline(0.5); 
+        glPopMatrix();
+        //draw a flashlight body
+        glPushMatrix();
+            glTranslatef(position.x, position.y + dimensions.y + dimensions.y*0.45, position.z);  
+            glScalef(dimensions.x * 0.4, dimensions.y * 0.3, dimensions.z * 0.6);  
+            loadMaterial(11);  
+            cube_unit(0.5);
+            loadMaterial(24);
+            cube_unit_outline(0.5); 
+        glPopMatrix();
+        //draw flashlight light
+        glPushMatrix();
+            glTranslatef(position.x, position.y + dimensions.y + dimensions.y*0.45, position.z + dimensions.z * 0.35);  
+            glScalef(dimensions.x * 0.3, dimensions.y * 0.2, dimensions.z * 0.1);  
+            loadMaterial(16);  
+            cube_unit(0.5);
+            loadMaterial(24);
+            cube_unit_outline(0.5);
+        glPopMatrix();
+
         // Draw left eye
         glPushMatrix();
             glTranslatef(position.x - dimensions.x * 0.2, position.y + dimensions.y * 0.75, position.z + dimensions.z * 0.4);  
@@ -94,14 +123,14 @@ void Kong::draw() {
         glPushMatrix();
             glTranslatef(position.x - dimensions.x * 0.2, position.y + dimensions.y * 0.75, position.z + dimensions.z * 0.5);
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1); 
-            loadMaterial(2);  
+            loadMaterial(24);  
             cube_unit(0.5);  
         glPopMatrix();  
         // Draw right pupil
         glPushMatrix();
             glTranslatef(position.x + dimensions.x * 0.2, position.y + dimensions.y * 0.75, position.z + dimensions.z * 0.5);
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1);  
-            loadMaterial(2);  
+            loadMaterial(24);  
             cube_unit(0.5);  
         glPopMatrix();  
 

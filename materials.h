@@ -9,7 +9,8 @@ inline extern string Materiais[] = {
 	"Turquoise", "Brass", "Bronze",      "Chrome",       "Copper",
 	"Gold",      "Silver","blackPlastic","cyankPlastic", "greenPlastic",
 	"redPlastic", "whitePlastic","yellowPlastic", "skin", "darkBrownSkin", 
-    "lightBrownSkin" , "blueFabric", "redFabric", "lightGold", "black", "shinyBlue", "wood"};
+    "lightBrownSkin" , "blueFabric", "redFabric", "lightGold", "black", 
+	"shinyBlue", "wood", "pinkPlastic"};
 
 
 inline void loadMaterial(int material) {
@@ -62,7 +63,7 @@ inline void loadMaterial(int material) {
 	GLfloat  copperAmb[] = { 0.19125 ,0.0735 ,0.0225, 1. };
 	GLfloat  copperDif[] = { 0.7038 ,0.27048 ,0.0828, 1. };
 	GLfloat  copperSpec[] = { 0.256777 ,0.137622 ,0.086014, 1. };
-	GLint  copperCoef = 0.1 * 128;
+	GLint  copperCoef = 0.4 * 128;
 
 	GLfloat  goldAmb[] = { 0.24725 ,0.1995 ,0.0745, 1. };
 	GLfloat  goldDif[] = { 0.75164 ,0.60648 ,0.22648, 1. };
@@ -94,10 +95,15 @@ inline void loadMaterial(int material) {
 	GLfloat greenPlasticSpec[] = { 0.0 ,0.55 ,0.0, 1. };
 	GLint greenPlasticCoef = 0.25 * 128;
 
-	GLfloat  redPlasticAmb[] = { 0.2 ,0.0 ,0.0, 1. };
-	GLfloat  redPlasticDif[] = { 0.5 ,0.0 ,0.0, 1. };
-	GLfloat  redPlasticSpec[] = { 0.7 ,0.0 ,0.0, 1. };
-	GLint  redPlasticCoef = 0.25 * 128;
+	GLfloat redPlasticAmb[] = { 0.4 ,0.0 ,0.0, 1. };
+	GLfloat redPlasticDif[] = { 0.8 ,0.0 ,0.0, 1. };
+	GLfloat redPlasticSpec[] = { 1.0 ,0.0 ,0.0, 1. };
+	GLint redPlasticCoef = 0.25 * 128;
+
+	GLfloat pinkPlasticAmb[] = { 0.3 ,0.0 ,0.15, 1. };
+	GLfloat pinkPlasticDif[] = { 0.4 ,0.1 ,0.2, 1. };
+	GLfloat pinkPlasticSpec[] = { 0.35 ,0.15 ,0.25, 1. };
+	GLint pinkPlasticCoef = 0.25 * 128;
 
 	GLfloat whitePlasticAmb[] = { 0.8 ,0.8 ,0.8, 1. };
 	GLfloat whitePlasticDif[] = { 0.55 ,0.55 ,0.55, 1. };
@@ -335,7 +341,18 @@ inline void loadMaterial(int material) {
 		glMaterialfv(GL_FRONT, GL_SPECULAR, woodSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, woodCoef);
 		break;
+
+	case 27: //pinkPlastic
+		glMaterialfv(GL_FRONT, GL_AMBIENT, pinkPlasticAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, pinkPlasticDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, pinkPlasticSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, pinkPlasticCoef);
+		break;
+	
+
+
 	}
+
 
     
 

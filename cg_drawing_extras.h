@@ -111,6 +111,7 @@ inline void cube_unit(GLfloat p) {
 
     glEnd();
 }
+/*
 
 inline void sphere_unit(GLfloat radius, GLint slices, GLint stacks) {
     for (int i = 0; i < stacks; ++i) {
@@ -162,6 +163,54 @@ inline void sphere_unit(GLfloat radius, GLint slices, GLint stacks) {
         }
     }
 }
+*/
+inline void sphere_unit(GLfloat radius, GLint slices, GLint stacks) {
+    for (int i = 0; i < stacks; ++i) {
+        // Latitude bounds for this stack
+        float theta1 = i * M_PI / stacks - M_PI / 2.0f;        // Bottom of stack
+        float theta2 = (i + 1) * M_PI / stacks - M_PI / 2.0f;  // Top of stack
+
+        for (int j = 0; j < slices; ++j) {
+            // Longitude bounds for this slice
+            float phi1 = j * 2.0f * M_PI / slices;            // Left of slice
+            float phi2 = (j + 1) * 2.0f * M_PI / slices;      // Right of slice
+
+            // Compute vertices for the current quad
+            GLfloat v1[3] = {radius * cosf(theta1) * cosf(phi1), radius * sinf(theta1), radius * cosf(theta1) * sinf(phi1)};
+            GLfloat v2[3] = {radius * cosf(theta2) * cosf(phi1), radius * sinf(theta2), radius * cosf(theta2) * sinf(phi1)};
+            GLfloat v3[3] = {radius * cosf(theta2) * cosf(phi2), radius * sinf(theta2), radius * cosf(theta2) * sinf(phi2)};
+            GLfloat v4[3] = {radius * cosf(theta1) * cosf(phi2), radius * sinf(theta1), radius * cosf(theta1) * sinf(phi2)};
+
+            // Normalize the normals (for a unit sphere, divide each vertex by radius to get the normal)
+            GLfloat n1[3] = {v1[0] / radius, v1[1] / radius, v1[2] / radius};
+            GLfloat n2[3] = {v2[0] / radius, v2[1] / radius, v2[2] / radius};
+            GLfloat n3[3] = {v3[0] / radius, v3[1] / radius, v3[2] / radius};
+            GLfloat n4[3] = {v4[0] / radius, v4[1] / radius, v4[2] / radius};
+
+            // Texture coordinates (U, V) for each vertex
+            GLfloat t1[2] = {j / (float)slices, i / (float)stacks};           // Bottom-left
+            GLfloat t2[2] = {j / (float)slices, (i + 1) / (float)stacks};     // Top-left
+            GLfloat t3[2] = {(j + 1) / (float)slices, (i + 1) / (float)stacks}; // Top-right
+            GLfloat t4[2] = {(j + 1) / (float)slices, i / (float)stacks};     // Bottom-right
+
+            // Draw the two triangles forming the quad
+            glBegin(GL_TRIANGLES);
+
+            // Triangle 1
+            glTexCoord2fv(t1); glNormal3fv(n1); glVertex3fv(v1);
+            glTexCoord2fv(t2); glNormal3fv(n2); glVertex3fv(v2);
+            glTexCoord2fv(t3); glNormal3fv(n3); glVertex3fv(v3);
+
+            // Triangle 2
+            glTexCoord2fv(t1); glNormal3fv(n1); glVertex3fv(v1);
+            glTexCoord2fv(t3); glNormal3fv(n3); glVertex3fv(v3);
+            glTexCoord2fv(t4); glNormal3fv(n4); glVertex3fv(v4);
+
+            glEnd();
+        }
+    }
+}
+
 inline void rect_texture_unit_aux(int N){
 	// Bottom left - start of tiling
 	glTexCoord2f(0, N);

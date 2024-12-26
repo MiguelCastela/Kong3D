@@ -10,6 +10,7 @@ class Barrel{
         void move_front();
         void move_back();
         void move_down();
+        ~Barrel();
         ofVec3f dimensions;
         ofVec3f position;
         bool on_ladder;

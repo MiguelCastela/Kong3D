@@ -9,7 +9,7 @@ Global::Global(){
 
     empty_space = platDim.y;
 
-    ladDim = ofVec3f(2*marioDim.x, empty_space + platDim.y, marioDim.z/5);
+    ladDim = ofVec3f(marioDim.x * 1.70, empty_space + platDim.y, marioDim.z/5);
 
     barrelDim = ofVec3f(marioDim.x, marioDim.y, marioDim.z);
 
@@ -25,10 +25,11 @@ Global::Global(){
 
     kongDim = ofVec3f(marioDim.x , marioDim.y , marioDim.z );
 
-    ladHitBoxDim_mario = ofVec3f(0.1, ladDim.y, ladDim.z);
+    ladHitBoxDim_mario = ofVec3f(0.000000001, ladDim.y, ladDim.z);
 
     paulinePos = ofVec3f(0, 0, 0);
     paulineDim = ofVec3f(marioDim.x, marioDim.y, marioDim.z);
+    
     
     left_limit = -platDim.x/2 + marioDim.x/2;
     right_limit = platDim.x/2 - marioDim.x/2;
@@ -36,6 +37,14 @@ Global::Global(){
 
 void Global::load_textures(){
     platform_texture.load("platform_texture.png");
+
+    wood_texture.load("wood.png");
+
+    wood_texture2.load("wood_side.png");
+
+    wood_texture3.load("wood_fake.png");
+
+    
 
 }
 

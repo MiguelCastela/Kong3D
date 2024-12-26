@@ -27,13 +27,14 @@ Barrel::Barrel(ofVec3f dimensions, ofVec3f position) {
 }
 
 void Barrel::draw(){
-    if (position.y < -global.platDim.y) {
+    if (position.y < -5*global.platDim.y) {
         is_active = false;
+    return;
     }
+    loadMaterial(9);
     glPushMatrix();
         glTranslatef(position.x, position.y, position.z);
         glScalef(dimensions.x, dimensions.y, dimensions.z);
-        loadMaterial(9);
         sphere_unit(0.5, 32, 16);
     glPopMatrix();
 }
@@ -100,7 +101,7 @@ void Barrel::move_down(){
             } else {
                 currentState = MOVING_Y; // Transition to Y movement
             }
-            break;
+            break; 
         }
 
         case MOVING_Y: {
@@ -134,5 +135,9 @@ void Barrel::move_down(){
         next_position_y = 0;
          
     }
+}
+
+Barrel::~Barrel() {
+    //cout << "Barrel at position (" << position.x << ", " << position.y << ", " << position.z << ") destroyed." << endl;
 }
 

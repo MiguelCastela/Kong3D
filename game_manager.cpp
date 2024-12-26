@@ -10,6 +10,9 @@
 
 
 Game::Game(){
+
+
+    ofDisableArbTex();
     glEnable(GL_DEPTH_TEST);
     ofSetFrameRate(60);
     ofBackground(0, 0, 0);
@@ -17,6 +20,7 @@ Game::Game(){
     
     marioPos = global.marioPos;
     marioDim = global.marioDim;
+
 
     platDim = global.platDim;
 
@@ -100,7 +104,8 @@ Game::Game(){
         platVec.push_back(
             new Platform(
                 platDim,
-                cur_plat_pos
+                cur_plat_pos,
+                21
             )
         );
         if(i == 2 || (i % 2 == 0 && ((i / 2) % 2 == 0 && i !=0 ) )){
@@ -126,7 +131,7 @@ Game::Game(){
 
     lastPlatPos.y += global.empty_space + platDim.y;
     lastPlatPos.z -= platDim.z;
-    lastPlat = new Platform(ofVec3f(platDim.x, platDim.y, platDim.z) , lastPlatPos);
+    lastPlat = new Platform(ofVec3f(platDim.x, platDim.y, platDim.z) , lastPlatPos, 15);
 
     paulinePlatPos = lastPlatPos;
 
@@ -138,7 +143,7 @@ Game::Game(){
     paulinePos.y += platDim.y*0.5 + paulineDim.y*0.5;
     paulinePos.x += platDim.x*0.25 - paulineDim.x;
 
-    paulinePlat = new Platform(ofVec3f(platDim.x * 0.5, platDim.y, platDim.z) , paulinePlatPos);
+    paulinePlat = new Platform(ofVec3f(platDim.x * 0.5, platDim.y, platDim.z) , paulinePlatPos, 27);
 
     pauline = new Pauline(paulineDim, paulinePos);
 
@@ -173,6 +178,7 @@ Game::Game(){
     kongPos = barrelPos;
     kongPos.x += kongDim.x;
     kong = new Kong(kongDim, ofVec3f(kongPos.x, kongPos.y, kongPos.z));
+    //kong = new Kong(kongDim, ofVec3f(0, 0, 0));
 
 
 
@@ -185,21 +191,27 @@ void Game::update(){
 
     update_movement();
 
+
+
+
+
+
     cam->meters = marioPos.y;
     float curTime = ofGetElapsedTimef();
     barrelSpawnDelay = ofRandom(1.0f, 55.0f);
+    
     if(!mario->isRespawning){
-    if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
-        barrelVec.push_back(
-        new Barrel(
-            barrelDim,
-            ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
-            )
-        );
+        if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
+            barrelVec.push_back(
+            new Barrel(
+                barrelDim,
+                ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z)
+                )
+            );
 
-        lastBarrelSpawnTime = curTime;
-        barrelsSpawned++;
-    }
+            lastBarrelSpawnTime = curTime;
+            barrelsSpawned++;
+        }
     }
     pauline->winState = false;
     mario->winState = false;
@@ -215,7 +227,7 @@ void Game::update(){
                     new Particle(
                         marioPos,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) 
+                        ofRandom(1, 23)
                     )
                 );
             }
@@ -224,7 +236,8 @@ void Game::update(){
                     new Particle(
                         paulinePos,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) 
+                        ofRandom(1, 23)
+
                     )
                 );
             }
@@ -245,7 +258,7 @@ void Game::update(){
                     new Particle(
                         ofVec3f(ofRandom(marioPos.x, paulinePos.x), marioPos.y + marioDim.y*5, marioPos.z),
                         ofVec3f(1, 1, 1),
-                        ofVec3f(ofRandom(0,1),ofRandom(0,1),ofRandom(0,1) ) 
+                        ofRandom(1, 23)
                     )
                 );
             }
@@ -261,7 +274,8 @@ void Game::update(){
                     new Particle(
                         kongPos,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(0.5, 0.35, 0.05)
+                        19
+
                     )
                 );
             }
@@ -273,7 +287,8 @@ void Game::update(){
                     new Particle(
                         ofVec3f(barrelPos.x, barrelPos.y, barrelPos.z),
                         ofVec3f(1, 1, 1),
-                        ofVec3f(1.0f, 0.5f, 0.0f) 
+                        9
+
                     )
                 );
             }
@@ -352,7 +367,8 @@ void Game::update(){
                     new Particle(
                         marioPos,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(1, 0, 0)
+                        22
+
                     )
                 );
                 }
@@ -361,7 +377,7 @@ void Game::update(){
                     new Particle(
                         curBar->position,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(0, 0, 1)
+                        18
                     )
                 );
                 }
@@ -370,7 +386,7 @@ void Game::update(){
                     new Particle(
                         curBar->position,
                         ofVec3f(1, 1, 1),
-                        ofVec3f(1.0, 0.8, 0.6)
+                        21
                     )
                 );
                 }
@@ -403,8 +419,13 @@ void Game::update(){
         }
     }
 
-    spotPosVec = marioPos;
-    spotDirVec = mario->marioLookAt;
+
+    //lights update 
+
+    spotPosVec = ofVec3f(kongPos.x - kongDim.x*0.1, kongPos.y + kongDim.y + kongDim.y*0.30, kongPos.z);
+    spotDirVec = ofVec3f(global.left_limit*100, kongPos.y - kongDim.y*2, kongPos.z);
+
+
 
 
     pointPosVec[0] = marioPos.x;
@@ -445,162 +466,252 @@ void Game::draw(){
         draw_scene(true);
         return;
     }
-    if(cam->camMode == 0){
-        draw_scene(true);
-        cam->miniMap(marioPos);
-        draw_scene(false);
+
+
+if (cam->camMode == 0) {
+    draw_scene(true);
+
+    if (statsActive) {
+        cam->draw_stats();
+    } else if (objActive) {
+        cam->draw_objective();
+    } else if (keysActive) {
+        cam->draw_keys();
     }
-    if(cam->camMode == 2){
-        draw_scene(false);
-        cam->miniMap(marioPos);
-        draw_scene(false);
-    }else{
-        draw_scene(false);
-        draw_scene(false);
+
+    cam->miniMap(marioPos);
+    draw_scene(false);
+} else if (cam->camMode == 2) {
+    draw_scene(false);
+
+    if (statsActive) {
+        cam->draw_stats();
+    } else if (objActive) {
+        cam->draw_objective();
+    } else if (keysActive) {
+        cam->draw_keys();
     }
+
+    cam->miniMap(marioPos);
+    draw_scene(false);
+} else {
+    draw_scene(false);
+
+    if (statsActive) {
+        cam->draw_stats();
+    } else if (objActive) {
+        cam->draw_objective();
+    } else if (keysActive) {
+        cam->draw_keys();
+    }
+
+    draw_scene(false);
+}
+
 }
 
 void Game::draw_scene(bool pov){
-glPushMatrix();
+    glPushMatrix();
 
+        //lights
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_NORMALIZE);
+        glShadeModel(GL_SMOOTH);
+
+
+        glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
+
+        ambientOff[0] = 0.0;
+        ambientOff[1] = 0.0;
+        ambientOff[2] = 0.0;
+        ambientOff[3] = 1.0;
+
+        diffuseOff[0] = 0.0;
+        diffuseOff[1] = 0.0;
+        diffuseOff[2] = 0.0;
+        diffuseOff[3] = 1.0;
+
+        specularOff[0] = 0.0;
+        specularOff[1] = 0.0;
+        specularOff[2] = 0.0;
+        specularOff[3] = 1.0;
+
+
+
+        if (Ambient) {
+            GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+        } else {
+            GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // No ambient light
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+        }
         
-    glEnable(GL_LIGHTING);
-    glEnable(GL_NORMALIZE);
+
+        dirVec[0] = 0.;
+        dirVec[1] = 1.;
+        dirVec[2] = 1.;
+        dirVec[3] = 0;
+
+        dirAmb[0] = 1.;//R
+        dirAmb[1] = 1.;//G
+        dirAmb[2] = 1.;//B
+        dirAmb[3] = 1.;//constante
+
+        dirDif[0] = 1.;//R
+        dirDif[1] = 1.;//G
+        dirDif[2] = 1.;//B
+        dirDif[3] = 1.;//constante
+
+        dirSpec[0] = 1.;//R
+        dirSpec[1] = 1.;//G
+        dirSpec[2] = 1.;//B
+        dirSpec[3] = 1.;//constante
+
+        glLightfv(GL_LIGHT0, GL_POSITION, dirVec);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, dirAmb);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, dirDif);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, dirSpec);
 
 
-    if (Ambient) {
-        GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
-        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-    } else {
-        GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // No ambient light
-        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-    }
+        if(Directional){   
+            if(!prevDirectional){
+                dirAmbOff = false;
+                dirDiffOff = false;
+                dirSpecOff = false;
+            }
+            glEnable(GL_LIGHT0);
 
-    dirVec[0] = 0.;
-    dirVec[1] = 1.;
-    dirVec[2] = 1;
-    dirVec[3] = 0;//vetor - dire��o!
-
-    dirAmb[0] = 1.;//R
-    dirAmb[1] = 1.;//G
-    dirAmb[2] = 1.;//B
-    dirAmb[3] = 1.;//constante
-
-    dirDif[0] = 1.;//R
-    dirDif[1] = 1.;//G
-    dirDif[2] = 1.;//B
-    dirDif[3] = 1.;//constante
-
-    dirSpec[0] = 1.;//R
-    dirSpec[1] = 1.;//G
-    dirSpec[2] = 1.;//B
-    dirSpec[3] = 1.;//constante
-
-    glLightfv(GL_LIGHT0, GL_POSITION, dirVec);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, dirAmb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, dirDif);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, dirSpec);
-
-    if(Directional){
-        glEnable(GL_LIGHT0);
-    }else{
-        glDisable(GL_LIGHT0);
-    }
+            if(dirAmbOff)
+                glLightfv(GL_LIGHT0, GL_AMBIENT, ambientOff);
+            if(dirDiffOff)
+                glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseOff);
+            if(dirSpecOff)
+                glLightfv(GL_LIGHT0, GL_SPECULAR, specularOff);
+        }else{
+            glDisable(GL_LIGHT0);
+        }
+        prevDirectional = Directional;
 
 
-    pointPos[0] = pointPosVec.x;
-    pointPos[1] = pointPosVec.y;
-    pointPos[2] = pointPosVec.z;
-    pointPos[3] = 1.;//ponto - posi��o!
+        pointPos[0] = pointPosVec.x;
+        pointPos[1] = pointPosVec.y;
+        pointPos[2] = pointPosVec.z;
+        pointPos[3] = 1.;//ponto - posi��o!
 
-    pointAmb[0] = 1.; // R
-    pointAmb[1] = 1.; // G
-    pointAmb[2] = 1.; // B
-    pointAmb[3] = 1.0; // Constant
+        pointAmb[0] = 1.; // R
+        pointAmb[1] = 1.; // G
+        pointAmb[2] = 1.; // B
+        pointAmb[3] = 1.0; // Constant
 
-    pointDif[0] = 1.; // R
-    pointDif[1] = 1.; // G
-    pointDif[2] = 1.; // B
-    pointDif[3] = 1.0; // Constant
+        pointDif[0] = 1.; // R
+        pointDif[1] = 1.; // G
+        pointDif[2] = 1.; // B
+        pointDif[3] = 1.0; // Constant
 
-    pointSpec[0] = 1.; // R
-    pointSpec[1] = 1.; // G
-    pointSpec[2] = 1.; // B
-    pointSpec[3] = 1.0; // Constant
+        pointSpec[0] = 1.; // R
+        pointSpec[1] = 1.; // G
+        pointSpec[2] = 1.; // B
+        pointSpec[3] = 1.0; // Constant
 
-	glLightfv(GL_LIGHT1, GL_POSITION, pointPos);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, pointAmb);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, pointDif);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, pointSpec);
+        glLightfv(GL_LIGHT1, GL_POSITION, pointPos);
+        glLightfv(GL_LIGHT1, GL_AMBIENT, pointAmb);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, pointDif);
+        glLightfv(GL_LIGHT1, GL_SPECULAR, pointSpec);
 
-glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0); // Keep constant attenuation
-glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.02);  // Lower linear attenuation
-glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002); // Lower quadratic attenuation
-
-
-
-    
-	if (Point) {
-		glEnable(GL_LIGHT1);
-	}
-	else {
-		glDisable(GL_LIGHT1);
-	}
-
-    /*
-    spotPos[0] = spotPosVec.x;
-    spotPos[1] = spotPosVec.y; 
-    spotPos[2] = spotPosVec.z;
-    spotPos[3] = 1.;
-
-
-    //direcao
-    spotDir[0] = spotDirVec.x;
-    spotDir[1] = spotDirVec.y;
-    spotDir[2] = spotDirVec.z;
-    //spotDir[3] = 0.;N�o tem a 4 coordenada, � sempre vetor
-
-    //ambiente
-    spotAmb[0] = 0.;//R
-    spotAmb[1] = 0.;//G
-    spotAmb[2] = 0.;//B
-    spotAmb[3] = 1.;//constante
-
-    //difusa
-    spotDif[0] = 1.;//R
-    spotDif[1] = 1.;//G
-    spotDif[2] = 1.;//B
-    spotDif[3] = 1.;//constante
-
-    //specular
-    spotSpecular[0] = 1.;//R
-    spotSpecular[1] = 1.;//G
-    spotSpecular[2] = 1.;//B
-    spotSpecular[3] = 1.;//constante
-
-    glLightfv(GL_LIGHT1, GL_POSITION, spotPos);
-    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, spotAmb);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, spotDif);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, spotSpecular);
-
-    if (Focus) {
-        glEnable(GL_LIGHT1);
-    } else {
-        glDisable(GL_LIGHT1);
-    }
-    */
-
+        glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0); // Keep constant attenuation
+        glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.02);  // Lower linear attenuation
+        glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002); // Lower quadratic attenuation
 
 
 
         
+        if (Point) {
+            if (!prevPoint) {
+                pointAmbOff = false;
+                pointDiffOff = false;
+                pointSpecOff = false;
+            }
+            glEnable(GL_LIGHT1);
 
+            if(pointAmbOff)
+                glLightfv(GL_LIGHT1, GL_AMBIENT, ambientOff);
+            if(pointDiffOff)
+                glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseOff);
+            if(pointSpecOff)
+                glLightfv(GL_LIGHT1, GL_SPECULAR, specularOff);
+        }
+        else {
+            glDisable(GL_LIGHT1);
+        }
+        prevPoint = Point;
+
+
+        spotPos[0] = spotPosVec.x;
+        spotPos[1] = spotPosVec.y; 
+        spotPos[2] = spotPosVec.z;
+        spotPos[3] = 1.;
+
+
+        //direcao
+        spotDir[0] = spotDirVec.x;
+        spotDir[1] = spotDirVec.y;
+        spotDir[2] = spotDirVec.z;
+        //spotDir[3] = 0.;N�o tem a 4 coordenada, � sempre vetor
+
+        //ambiente
+        spotAmb[0] = 1.;//R
+        spotAmb[1] = 1.;//G
+        spotAmb[2] = 1.;//B
+        spotAmb[3] = 1.;//constante
+
+        //difusa
+        spotDif[0] = 1.;//R
+        spotDif[1] = 1.;//G
+        spotDif[2] = 1.;//B
+        spotDif[3] = 1.;//constante
+
+        //specular
+        spotSpec[0] = 1.;//R
+        spotSpec[1] = 1.;//G
+        spotSpec[2] = 1.;//B
+        spotSpec[3] = 1.;//constante
+
+        glLightfv(GL_LIGHT2, GL_POSITION, spotPos);
+        glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, spotDir);
+        glLightfv(GL_LIGHT2, GL_AMBIENT, spotAmb);
+        glLightfv(GL_LIGHT2, GL_DIFFUSE, spotDif);
+        glLightfv(GL_LIGHT2, GL_SPECULAR, spotSpec);
+        glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.0);
+        glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.02);
+        glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.002);
+
+        spotCutOff = 80;  
+        spotExponent = 0.5;  
         
+        glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spotCutOff);
+        glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, spotExponent);
 
+        if (Focus) {
+            if (!prevFocus) {
+                spotAmbOff = false;
+                spotDiffOff = false;
+                spotSpecOff = false;
+            }
+            glEnable(GL_LIGHT2);
+            if(spotAmbOff)
+                glLightfv(GL_LIGHT2, GL_AMBIENT, ambientOff);
+            if(spotDiffOff)
+                glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseOff);
+            if(spotSpecOff)
+                glLightfv(GL_LIGHT2, GL_SPECULAR, specularOff);
+        } else {
+            glDisable(GL_LIGHT2);   
+        }
+        prevFocus = Focus;
 
-
-
+        //draw 
         if(!pov || mario_wins){
             mario->draw();
         }
@@ -621,14 +732,27 @@ glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002); // Lower quadratic attenua
         for(auto cur_lad: ladHitBoxVec){
             cur_lad->draw_hitbox();
         }
+        
         for(auto cur_lad: ladHitBoxVec_mario){
             cur_lad->draw_hitbox();
         }
         */
+        /*
         for(auto curBar : barrelVec){
             if(curBar->is_active){
                 curBar->draw();
             }    
+        }
+        */
+        for (auto it = barrelVec.begin(); it != barrelVec.end();) {
+            Barrel* curBar = *it;
+            if (!curBar->is_active) {
+                delete curBar; // Destroy the barrel
+                it = barrelVec.erase(it); // Remove from the vector
+            } else {
+                curBar->draw(); // Only draw active barrels
+                ++it;
+            }
         }
         if(!mario_wins){
             kong->draw();
@@ -641,12 +765,30 @@ glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002); // Lower quadratic attenua
         //debug
         //lastLadderHitBox_mario->draw_hitbox();
 
+        /*
         if(mario_dead){
             for(auto curExplosion : explosion){
                 curExplosion->draw();
             }
         }
-glPopMatrix();
+        */
+
+
+
+        if (mario_dead) {
+            for (auto it = explosion.begin(); it != explosion.end();) {
+                Particle* curExplosion = *it;
+                if (!curExplosion->isAlive) {
+                    delete curExplosion;          // Manually delete
+                    it = explosion.erase(it);     // Remove from container
+                } else {
+                    curExplosion->draw();         // Draw remaining particles
+                    ++it;
+                }
+            
+            }
+        }
+    glPopMatrix();
 }
 void Game::key_pressed(int key){
     
@@ -750,21 +892,7 @@ void Game::update_movement(){
             isKeySPressed = false;
         }
     }
-
     if((ofGetKeyPressed('c') || ofGetKeyPressed('C')) && !mario->isRespawning){
-        if(!isKeyCPressed){
-            Focus = !Focus;
-            cout << "Focus light: " << (Focus ? "ON" : "OFF") << endl;
-            isKeyCPressed = true;
-        }
-    }else{
-        if(isKeyCPressed){
-            cout << "Key 'c' is now released." << endl;
-            isKeyCPressed = false;
-        }
-
-    }
-    if((ofGetKeyPressed('v') || ofGetKeyPressed('V')) && !mario->isRespawning){
         if(!isKeyVPressed){
             Point = !Point;
             cout << "Point light: " << (Point ? "ON" : "OFF") << endl;
@@ -777,6 +905,176 @@ void Game::update_movement(){
         }
     }
 
+    if((ofGetKeyPressed('v') || ofGetKeyPressed('V')) && !mario->isRespawning){
+        if(!isKeyCPressed){
+            Focus = !Focus;
+            cout << "Focus light: " << (Focus ? "ON" : "OFF") << endl;
+            isKeyCPressed = true;
+        }
+    }else{
+        if(isKeyCPressed){
+            cout << "Key 'c' is now released." << endl;
+            isKeyCPressed = false;
+        }
+
+    }
+
+    if((ofGetKeyPressed('i') || ofGetKeyPressed('I')) && !mario->isRespawning){
+        if(!isKeyIPressed){
+            dirAmbOff = !dirAmbOff;
+            cout << "Directional ambient light: " << (dirAmbOff ? "OFF" : "ON") << endl;
+            isKeyIPressed = true;
+        }
+    }else{
+        if(isKeyIPressed){
+            cout << "Key 'i' is now released." << endl;
+            isKeyIPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('o') || ofGetKeyPressed('O')) && !mario->isRespawning){
+        if(!isKeyOPressed){
+            dirDiffOff = !dirDiffOff;
+            cout << "Directional diffuse light: " << (dirDiffOff ? "OFF" : "ON") << endl;
+            isKeyOPressed = true;
+        }
+    }else{
+        if(isKeyOPressed){
+            cout << "Key 'o' is now released." << endl;
+            isKeyOPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('p') || ofGetKeyPressed('P')) && !mario->isRespawning){
+        if(!isKeyPPressed){
+            dirSpecOff = !dirSpecOff;
+            cout << "Directional specular light: " << (dirSpecOff ? "OFF" : "ON") << endl;
+            isKeyPPressed = true;
+        }
+    }else{
+        if(isKeyPPressed){
+            cout << "Key 'p' is now released." << endl;
+            isKeyPPressed = false;
+        }
+    }
+
+    if((ofGetKeyPressed('j') || ofGetKeyPressed('J')) && !mario->isRespawning){
+        if(!isKeyJPressed){
+            pointAmbOff = !pointAmbOff;
+            cout << "Point ambient light: " << (pointAmbOff ? "OFF" : "ON") << endl;
+            isKeyJPressed = true;
+        }
+    }else{
+        if(isKeyJPressed){
+            cout << "Key 'k' is now released." << endl;
+            isKeyJPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('k') || ofGetKeyPressed('K')) && !mario->isRespawning){
+        if(!isKeyKPressed){
+            pointDiffOff = !pointDiffOff;
+            cout << "Point diffuse light: " << (pointDiffOff ? "OFF" : "ON") << endl;
+            isKeyKPressed = true;
+        }
+    }else{
+        if(isKeyKPressed){
+            cout << "Key 'l' is now released." << endl;
+            isKeyKPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('l') || ofGetKeyPressed('L')) && !mario->isRespawning){
+        if(!isKeyLPressed){
+            pointSpecOff = !pointSpecOff;
+            cout << "Point specular light: " << (pointSpecOff ? "OFF" : "ON") << endl;
+            isKeyLPressed = true;
+        }
+    }else{
+        if(isKeyLPressed){
+            cout << "Key 'ç' is now released." << endl;
+            isKeyLPressed = false;
+        }
+    }
+
+    if((ofGetKeyPressed('b') || ofGetKeyPressed('B')) && !mario->isRespawning){
+        if(!isKeyBPressed){
+            spotAmbOff = !spotAmbOff;
+            cout << "Spot ambient light: " << (spotAmbOff ? "OFF" : "ON") << endl;
+            isKeyBPressed = true;
+        }
+    }else{
+        if(isKeyBPressed){
+            cout << "Key 'b' is now released." << endl;
+            isKeyBPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('n') || ofGetKeyPressed('N')) && !mario->isRespawning){
+        if(!isKeyNPressed){
+            spotDiffOff = !spotDiffOff;
+            cout << "Spot diffuse light: " << (spotDiffOff ? "OFF" : "ON") << endl;
+            isKeyNPressed = true;
+        }
+    }else{
+        if(isKeyNPressed){
+            cout << "Key 'n' is now released." << endl;
+            isKeyNPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('m') || ofGetKeyPressed('M')) && !mario->isRespawning){
+        if(!isKeyMPressed){
+            spotSpecOff = !spotSpecOff;
+            cout << "Spot specular light: " << (spotSpecOff ? "OFF" : "ON") << endl;
+            isKeyMPressed = true;
+        }
+    }else{
+        if(isKeyMPressed){
+            cout << "Key 'm' is now released." << endl;
+            isKeyMPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('g')|| ofGetKeyPressed('G'))){
+        if(!isKeyGPressed){
+            objActive = !objActive;
+            if (objActive) {
+                statsActive = false;
+                keysActive = false;
+            }            
+            cout << "Stats: " << (objActive ? "ON" : "OFF") << endl;
+            isKeyGPressed = true;
+        }
+    }else{
+        if(isKeyGPressed){
+            isKeyGPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('h')|| ofGetKeyPressed('H'))){
+        if(!isKeyHPressed){
+            statsActive = !statsActive;
+            if (statsActive) {
+                objActive = false;
+                keysActive = false;
+            }        
+            cout << "Stats: " << (statsActive ? "ON" : "OFF") << endl;
+            isKeyHPressed = true;
+        }
+    }else{
+        if(isKeyHPressed){
+            isKeyHPressed = false;
+        }
+    }
+    if((ofGetKeyPressed('f')|| ofGetKeyPressed('F'))){
+        if(!isKeyFPressed){
+            keysActive = !keysActive;
+            if (keysActive) {
+                statsActive = false;
+                objActive = false;
+            }        
+            cout << "Keys: " << (keysActive ? "ON" : "OFF") << endl;
+            isKeyFPressed = true;
+        }
+    }else{
+        if(isKeyFPressed){
+            isKeyFPressed = false;
+        }
+    }
+        
 }
 
 bool Game::check_collision(ofVec3f dim1, ofVec3f pos1, ofVec3f dim2, ofVec3f pos2){

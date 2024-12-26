@@ -48,10 +48,10 @@ class Game{
         GLint plat_ct;
 
 
+
         ofVec3f lastPlatPos;
         ofVec3f paulinePlatPos;
         ofVec3f lastLadderPos;
-
 
 
         std::vector<Platform*> platVec;
@@ -61,31 +61,37 @@ class Game{
         std::vector<Ladder*> ladHitBoxVec_mario;
         std::vector<Barrel*> barrelVec;
 
+        //turn off specific properties
+        GLfloat ambientOff[4];
+        GLfloat diffuseOff[4];
+        GLfloat specularOff[4];
+
+
+
+
         //ambient light
         GLfloat ambientLight[4];
         bool Ambient = true;
         bool isKeyAPressed = false;
 
+
         //directional light
         ofVec3f lightDirection;
-        bool Directional = false;
+        bool Directional = true;
         bool isKeySPressed = false;
         GLfloat dirVec[4];
         GLfloat dirAmb[4];
         GLfloat dirDif[4];
         GLfloat dirSpec[4];
         ofVec3f dirVec3f;
+        bool dirAmbOff = false;
+        bool dirDiffOff = false;
+        bool dirSpecOff = false;
+        bool isKeyIPressed = false;
+        bool isKeyOPressed = false;
+        bool isKeyPPressed = false;
+        bool prevDirectional = false;
 
-        //focus light
-        bool Focus = false;
-        bool isKeyCPressed = false;
-        GLfloat spotPos[4];
-	    GLfloat spotDir[3];
-	    ofVec3f spotDirVec;
-        GLfloat spotAmb[4];
-	    GLfloat spotDif[4];
-	    GLfloat spotSpecular[4];
-        ofVec3f spotPosVec;
 
         //point light
         bool Point = false;
@@ -95,6 +101,53 @@ class Game{
         GLfloat pointDif[4];
         GLfloat pointSpec[4];
         ofVec3f pointPosVec;
+        bool pointAmbOff = false;
+        bool pointDiffOff = false;
+        bool pointSpecOff = false;
+        bool isKeyJPressed = false;
+        bool isKeyKPressed = false;
+        bool isKeyLPressed = false;
+        bool prevPoint = false;
+
+
+        //focus light
+        bool Focus = false;
+        bool isKeyCPressed = false;
+        GLfloat spotPos[4];
+	    GLfloat spotDir[3];
+	    ofVec3f spotDirVec;
+        GLfloat spotAmb[4];
+	    GLfloat spotDif[4];
+	    GLfloat spotSpec[4];
+        ofVec3f spotPosVec;
+        GLfloat spotCutOff;
+        GLfloat spotExponent;
+        bool spotAmbOff = false;
+        bool spotDiffOff = false;
+        bool spotSpecOff = false;
+        bool isKeyBPressed = false;
+        bool isKeyNPressed = false;
+        bool isKeyMPressed = false;
+        bool prevFocus = false;
+
+
+
+
+ 
+
+
+        //stats
+        bool statsActive = false;
+        bool isKeyGPressed = true;
+        bool objActive = false;
+        bool keysActive = false;
+        bool isKeyFPressed = true;
+        bool isKeyHPressed = true;
+
+
+
+
+
 
 
         //barrel

@@ -13,6 +13,9 @@ class Camera{
         void applyp2(ofVec3f marioPos);
         void applyp3(ofVec3f marioPos, ofVec3f marioLookAt);
         void miniMap(ofVec3f marioPos);
+        void draw_stats();
+        void draw_keys();
+        void draw_objective();
         GLint camMode;
         bool camFlag;
         GLint num_lives =0;
@@ -27,6 +30,10 @@ class Camera{
         ofVec3f position;
         GLint alpha;
         GLint beta;
+        ofTrueTypeFont font;
+        std::string objText;
+        std::string statsText;
+        std::string keysText;
 
 };
 

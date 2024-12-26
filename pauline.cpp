@@ -30,7 +30,7 @@ void Pauline::draw() {
             glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);  
             glTranslatef(-position.x, -position.y, -position.z); 
             }
-            loadMaterial(5);
+            loadMaterial(27);
         glPushMatrix();
             glTranslatef(position.x, position.y, position.z);
             glScalef(dimensions.x, dimensions.y, dimensions.z);
@@ -44,9 +44,9 @@ void Pauline::draw() {
             if (winState) {
                 glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
             }
-            loadMaterial(5);
+            loadMaterial(27);
             cube_unit(0.5);  
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
         glPopMatrix();  
         //draw left hand
@@ -59,7 +59,7 @@ void Pauline::draw() {
             glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15);
             loadMaterial(18);  
             cube_unit(0.5);
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
         glPopMatrix(); 
         //draw right arm
@@ -69,9 +69,9 @@ void Pauline::draw() {
                 glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
             }
             glScalef(dimensions.x * 0.5, dimensions.y * 0.5, dimensions.z * 0.25); 
-            loadMaterial(5);
+            loadMaterial(27);
             cube_unit(0.5);  
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
         glPopMatrix(); 
         //right hand
@@ -84,7 +84,7 @@ void Pauline::draw() {
             glScalef(dimensions.x * 0.4, dimensions.y * 0.05, dimensions.z * 0.15);  
             loadMaterial(18);  
             cube_unit(0.5); 
-            loadMaterial(2);
+            loadMaterial(24);
             cube_unit_outline(0.5);  
         glPopMatrix();  
         // Draw the head
@@ -121,14 +121,14 @@ void Pauline::draw() {
         glPushMatrix();
             glTranslatef(position.x - dimensions.x * 0.2, position.y + dimensions.y * 0.75, position.z + dimensions.z * 0.5);
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1);  
-            loadMaterial(2);  
+            loadMaterial(24);  
             cube_unit(0.5); 
         glPopMatrix();  
         // Draw right pupil
         glPushMatrix();
             glTranslatef(position.x + dimensions.x * 0.2, position.y + dimensions.y * 0.75, position.z + dimensions.z * 0.5);
             glScalef(dimensions.x * 0.1, dimensions.y * 0.1, dimensions.z * 0.1);  
-            loadMaterial(2);  
+            loadMaterial(24);  
             cube_unit(0.5);  
         glPopMatrix();  // Reset transformations for the right pupil
     glPopMatrix();  // Reset the global transformation state
