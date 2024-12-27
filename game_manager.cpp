@@ -467,46 +467,68 @@ void Game::draw(){
         return;
     }
 
+    
 
-if (cam->camMode == 0) {
-    draw_scene(true);
+    if (game_mode != currentGameMode) {
+        cam->gameMode = game_mode;
+        static float modeChangeStartTime = -1.0f;
 
-    if (statsActive) {
-        cam->draw_stats();
-    } else if (objActive) {
-        cam->draw_objective();
-    } else if (keysActive) {
-        cam->draw_keys();
+        if (modeChangeStartTime < 0.0f) { // Set start time if not already set
+            modeChangeStartTime = ofGetElapsedTimef();
+        }
+
+        if (ofGetElapsedTimef() - modeChangeStartTime <= 1.0f) { // Call draw_mode for 1 second
+            cam->draw_mode();
+        } else {
+            modeChangeStartTime = -1.0f; // Reset static variable
+            currentGameMode = game_mode; // Update the current game mode
+        }
     }
 
-    cam->miniMap(marioPos);
-    draw_scene(false);
-} else if (cam->camMode == 2) {
-    draw_scene(false);
 
-    if (statsActive) {
-        cam->draw_stats();
-    } else if (objActive) {
-        cam->draw_objective();
-    } else if (keysActive) {
-        cam->draw_keys();
+
+
+
+
+    if (cam->camMode == 0) {
+        draw_scene(true);
+
+        if (statsActive) {
+            cam->draw_stats();
+        } else if (objActive) {
+            cam->draw_objective();
+        } else if (keysActive) {
+            cam->draw_keys();
+        }
+
+        cam->miniMap(marioPos);
+        draw_scene(false);
+    } else if (cam->camMode == 2) {
+        draw_scene(false);
+
+        if (statsActive) {
+            cam->draw_stats();
+        } else if (objActive) {
+            cam->draw_objective();
+        } else if (keysActive) {
+            cam->draw_keys();
+        }
+
+        cam->miniMap(marioPos);
+        draw_scene(false);
+    } else {
+        draw_scene(false);
+
+        if (statsActive) {
+            cam->draw_stats();
+        } else if (objActive) {
+            cam->draw_objective();
+        } else if (keysActive) {
+            cam->draw_keys();
+        }
+
+        draw_scene(false);
     }
-
-    cam->miniMap(marioPos);
-    draw_scene(false);
-} else {
-    draw_scene(false);
-
-    if (statsActive) {
-        cam->draw_stats();
-    } else if (objActive) {
-        cam->draw_objective();
-    } else if (keysActive) {
-        cam->draw_keys();
-    }
-
-    draw_scene(false);
-}
 
 }
 
@@ -540,13 +562,7 @@ void Game::draw_scene(bool pov){
 
 
 
-        if (Ambient) {
-            GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
-            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-        } else {
-            GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // No ambient light
-            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
-        }
+        
         
 
         dirVec[0] = 0.;
@@ -575,24 +591,7 @@ void Game::draw_scene(bool pov){
         glLightfv(GL_LIGHT0, GL_SPECULAR, dirSpec);
 
 
-        if(Directional){   
-            if(!prevDirectional){
-                dirAmbOff = false;
-                dirDiffOff = false;
-                dirSpecOff = false;
-            }
-            glEnable(GL_LIGHT0);
-
-            if(dirAmbOff)
-                glLightfv(GL_LIGHT0, GL_AMBIENT, ambientOff);
-            if(dirDiffOff)
-                glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseOff);
-            if(dirSpecOff)
-                glLightfv(GL_LIGHT0, GL_SPECULAR, specularOff);
-        }else{
-            glDisable(GL_LIGHT0);
-        }
-        prevDirectional = Directional;
+        
 
 
         pointPos[0] = pointPosVec.x;
@@ -627,26 +626,7 @@ void Game::draw_scene(bool pov){
 
 
         
-        if (Point) {
-            if (!prevPoint) {
-                pointAmbOff = false;
-                pointDiffOff = false;
-                pointSpecOff = false;
-            }
-            glEnable(GL_LIGHT1);
-
-            if(pointAmbOff)
-                glLightfv(GL_LIGHT1, GL_AMBIENT, ambientOff);
-            if(pointDiffOff)
-                glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseOff);
-            if(pointSpecOff)
-                glLightfv(GL_LIGHT1, GL_SPECULAR, specularOff);
-        }
-        else {
-            glDisable(GL_LIGHT1);
-        }
-        prevPoint = Point;
-
+        
 
         spotPos[0] = spotPosVec.x;
         spotPos[1] = spotPosVec.y; 
@@ -693,23 +673,94 @@ void Game::draw_scene(bool pov){
         glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spotCutOff);
         glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, spotExponent);
 
-        if (Focus) {
-            if (!prevFocus) {
-                spotAmbOff = false;
-                spotDiffOff = false;
-                spotSpecOff = false;
-            }
+
+
+        if(hardModeActive){
+            game_mode = 1;
+            glEnable(GL_LIGHT1);
             glEnable(GL_LIGHT2);
-            if(spotAmbOff)
-                glLightfv(GL_LIGHT2, GL_AMBIENT, ambientOff);
-            if(spotDiffOff)
-                glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseOff);
-            if(spotSpecOff)
-                glLightfv(GL_LIGHT2, GL_SPECULAR, specularOff);
-        } else {
-            glDisable(GL_LIGHT2);   
+            glDisable(GL_LIGHT0);
+            GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // Moderate ambient light
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+
         }
-        prevFocus = Focus;
+        if (easyModeActive){
+            game_mode = 2;
+            glDisable(GL_LIGHT1);
+            glDisable(GL_LIGHT2);
+            glEnable(GL_LIGHT0);
+            GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+
+
+        }
+
+        if(customModeActive){
+            game_mode = 3;
+            if (Ambient) {
+                GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
+                glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+            } else {
+                GLfloat ambientLight[] = {0.0, 0.0, 0.0, 1.0}; // No ambient light
+                glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+            }
+            if(Directional){   
+                if(!prevDirectional){
+                    dirAmbOff = false;
+                    dirDiffOff = false;
+                    dirSpecOff = false;
+                }
+                glEnable(GL_LIGHT0);
+
+                if(dirAmbOff)
+                    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientOff);
+                if(dirDiffOff)
+                    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseOff);
+                if(dirSpecOff)
+                    glLightfv(GL_LIGHT0, GL_SPECULAR, specularOff);
+            }else{
+                glDisable(GL_LIGHT0);
+            }
+            prevDirectional = Directional;
+            if (Point) {
+                if (!prevPoint) {
+                    pointAmbOff = false;
+                    pointDiffOff = false;
+                    pointSpecOff = false;
+                }
+                glEnable(GL_LIGHT1);
+
+                if(pointAmbOff)
+                    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientOff);
+                if(pointDiffOff)
+                    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseOff);
+                if(pointSpecOff)
+                    glLightfv(GL_LIGHT1, GL_SPECULAR, specularOff);
+            }
+            else {
+                glDisable(GL_LIGHT1);
+            }
+            prevPoint = Point;
+            if (Focus) {
+                if (!prevFocus) {
+                    spotAmbOff = false;
+                    spotDiffOff = false;
+                    spotSpecOff = false;
+                }
+                glEnable(GL_LIGHT2);
+                if(spotAmbOff)
+                    glLightfv(GL_LIGHT2, GL_AMBIENT, ambientOff);
+                if(spotDiffOff)
+                    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseOff);
+                if(spotSpecOff)
+                    glLightfv(GL_LIGHT2, GL_SPECULAR, specularOff);
+            } else {
+                glDisable(GL_LIGHT2);   
+            }
+            prevFocus = Focus;
+        }
+
+        
 
         //draw 
         if(!pov || mario_wins){
@@ -1029,7 +1080,7 @@ void Game::update_movement(){
             isKeyMPressed = false;
         }
     }
-    if((ofGetKeyPressed('g')|| ofGetKeyPressed('G'))){
+    if((ofGetKeyPressed('g')|| ofGetKeyPressed('G'))&& !mario->isRespawning){
         if(!isKeyGPressed){
             objActive = !objActive;
             if (objActive) {
@@ -1044,7 +1095,7 @@ void Game::update_movement(){
             isKeyGPressed = false;
         }
     }
-    if((ofGetKeyPressed('h')|| ofGetKeyPressed('H'))){
+    if((ofGetKeyPressed('h')|| ofGetKeyPressed('H'))&& !mario->isRespawning){
         if(!isKeyHPressed){
             statsActive = !statsActive;
             if (statsActive) {
@@ -1059,7 +1110,7 @@ void Game::update_movement(){
             isKeyHPressed = false;
         }
     }
-    if((ofGetKeyPressed('f')|| ofGetKeyPressed('F'))){
+    if((ofGetKeyPressed('f')|| ofGetKeyPressed('F'))&& !mario->isRespawning){
         if(!isKeyFPressed){
             keysActive = !keysActive;
             if (keysActive) {
@@ -1074,6 +1125,32 @@ void Game::update_movement(){
             isKeyFPressed = false;
         }
     }
+if ((ofGetKeyPressed('1')) && !mario->isRespawning) {
+    if (!hardModeActive) {
+        hardModeActive = true;
+        easyModeActive = false;
+        customModeActive = false;
+        cout << "Mode: Hard" << endl;
+    }
+}
+if ((ofGetKeyPressed('2')) && !mario->isRespawning) {
+    if (!easyModeActive) {
+        easyModeActive = true;
+        hardModeActive = false;
+        customModeActive = false;
+        cout << "Mode: Easy" << endl;
+    }
+}
+if ((ofGetKeyPressed('3')) && !mario->isRespawning) {
+    if (!customModeActive) {
+        customModeActive = true;
+        hardModeActive = false;
+        easyModeActive = false;
+        cout << "Mode: Custom" << endl;
+    }
+}
+
+
         
 }
 

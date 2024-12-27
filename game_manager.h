@@ -130,6 +130,15 @@ class Game{
         bool isKeyMPressed = false;
         bool prevFocus = false;
 
+        //gameModes
+        bool isKeyTWOPressed = false;
+        bool hardModeActive = false;
+        bool isKeyONEPressed = false;
+        bool easyModeActive = true;
+        bool customModeActive = false;
+        bool isKeyTHREEPressed = false;
+        int game_mode;
+        int currentGameMode = -1;
 
 
 

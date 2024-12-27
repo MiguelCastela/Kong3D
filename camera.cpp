@@ -213,3 +213,50 @@ void Camera::draw_keys(){
     glPopMatrix();
 }
 
+void Camera::draw_mode(){
+    std::string keys_text = "Current Game Mode:" + std::to_string(gameMode);
+
+    float textWidth = font.stringWidth(keys_text);
+    float textHeight = font.stringHeight(keys_text);
+
+    float x = (gw() - textHeight) / 2 ;
+    float y = (gh() - textHeight) / 2;
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, gw(), gh(), 0, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat mat_ambient[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_diffuse[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_specular[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_shininess[] = { 50.0 };
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    ofSetColor(255, 255, 255); 
+    font.drawString(keys_text, x, y);
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+
+    glEnable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+

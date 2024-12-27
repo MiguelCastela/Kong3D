@@ -16,6 +16,7 @@ class Camera{
         void draw_stats();
         void draw_keys();
         void draw_objective();
+        void draw_mode();
         GLint camMode;
         bool camFlag;
         GLint num_lives =0;
@@ -23,6 +24,7 @@ class Camera{
         bool isFirstPlaythrough = true;
         GLint meters = 0;
         GLint num_platforms = 0;
+        GLint gameMode = 0;
     private:
 
         GLfloat fov;
