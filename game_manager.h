@@ -28,10 +28,12 @@ class Game{
         void key_pressed(int key);
         void key_released(int key);
         void update_movement();
+        void update_cam_mode();
         bool check_collision(
             ofVec3f dim1, ofVec3f pos1,
             ofVec3f dim2, ofVec3f pos2        
         );
+        void update_game_mode();
 
         // Player
         ofVec3f marioPos;
@@ -133,12 +135,15 @@ class Game{
         //gameModes
         bool isKeyTWOPressed = false;
         bool hardModeActive = false;
+        bool mediumModeActive = false;
         bool isKeyONEPressed = false;
         bool easyModeActive = true;
         bool customModeActive = false;
         bool isKeyTHREEPressed = false;
         int game_mode;
         int currentGameMode = -1;
+        int cam_mode = 1;
+        int currentCamMode = -1;
 
 
 

@@ -122,7 +122,8 @@ void Camera::draw_objective(){
 }
 
 void Camera::draw_stats(){
-    std::string statsText = " Times dead: " + std::to_string(num_lives) + "\n Current height/Pauline height: " + std::to_string(meters) + "/" + std::to_string(2 * (num_platforms * 10) + 20) + " meters \n Hide this window: 'H'";
+
+    std::string statsText = " Times dead: " + std::to_string(num_lives) + "\n Current height/Pauline height: " + std::to_string(meters) + "/" + std::to_string(2 * (num_platforms * 10) + 20) + " meters \n Hide this window: 'H' \n Current Game Mode: " + std::to_string(gameMode);
 
     float textWidth = font.stringWidth(statsText);
     float textHeight = font.stringHeight(statsText);
@@ -214,15 +215,27 @@ void Camera::draw_keys(){
 }
 
 void Camera::draw_mode(){
-    std::string keys_text = "Current Game Mode:" + std::to_string(gameMode);
+       std::string mode;
+    if(camMode == 0){
+        mode = "First Person";
+    }
+    if(camMode == 1){
+        mode = "2D third Person";
+    }
+    if(camMode == 2){
+        mode = "3D third Person";
+    }
 
-    float textWidth = font.stringWidth(keys_text);
-    float textHeight = font.stringHeight(keys_text);
+    
+    std::string mode_text = "Current Game Mode:" + std::to_string(gameMode)  + "\n Current Camera Mode:" + mode;
+
+    float textWidth = font.stringWidth(mode_text);
+    float textHeight = font.stringHeight(mode_text);
 
     float x = (gw() - textHeight) / 2 ;
     float y = (gh() - textHeight) / 2;
 
-    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_PROJECTION);    
     glPushMatrix();
     glLoadIdentity();
     glOrtho(0, gw(), gh(), 0, -1, 1);
@@ -246,7 +259,7 @@ void Camera::draw_mode(){
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
     ofSetColor(255, 255, 255); 
-    font.drawString(keys_text, x, y);
+    font.drawString(mode_text, x, y);
 
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
@@ -258,5 +271,4 @@ void Camera::draw_mode(){
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 }
-
 

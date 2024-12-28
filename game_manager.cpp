@@ -198,7 +198,16 @@ void Game::update(){
 
     cam->meters = marioPos.y;
     float curTime = ofGetElapsedTimef();
-    barrelSpawnDelay = ofRandom(1.0f, 55.0f);
+    if(game_mode == 1){
+        barrelSpawnDelay = ofRandom(5.0f, 30.0f);
+    }else if(game_mode == 2){
+        barrelSpawnDelay = ofRandom(10.0f, 100.0f);
+    }else if (game_mode == 3){
+        barrelSpawnDelay = ofRandom(1.0f, 1000000000000000000.0f);
+    }else if (game_mode == 4){
+        barrelSpawnDelay = ofRandom(5.0f, 50.0f);
+    }
+
     
     if(!mario->isRespawning){
         if (curTime - lastBarrelSpawnTime >= barrelSpawnDelay) {
@@ -436,6 +445,25 @@ void Game::update(){
 
 
 }
+void Game::update_game_mode(){
+
+        cam->gameMode = game_mode;
+        cam->camMode = cam_mode;
+        static float modeChangeStartTime = -1.0f;
+
+        if (modeChangeStartTime < 0.0f) { // Set start time if not already set
+            modeChangeStartTime = ofGetElapsedTimef();
+        }
+
+        if (ofGetElapsedTimef() - modeChangeStartTime <= 1.0f) { // Call draw_mode for 1 second
+            cam->draw_mode();
+        } else {
+            modeChangeStartTime = -1.0f; // Reset static variable
+            currentGameMode = game_mode; // Update the current game mode
+            currentCamMode = cam_mode;
+        }
+    }
+
 
 void Game::draw(){
 
@@ -469,21 +497,7 @@ void Game::draw(){
 
     
 
-    if (game_mode != currentGameMode) {
-        cam->gameMode = game_mode;
-        static float modeChangeStartTime = -1.0f;
 
-        if (modeChangeStartTime < 0.0f) { // Set start time if not already set
-            modeChangeStartTime = ofGetElapsedTimef();
-        }
-
-        if (ofGetElapsedTimef() - modeChangeStartTime <= 1.0f) { // Call draw_mode for 1 second
-            cam->draw_mode();
-        } else {
-            modeChangeStartTime = -1.0f; // Reset static variable
-            currentGameMode = game_mode; // Update the current game mode
-        }
-    }
 
 
 
@@ -493,7 +507,10 @@ void Game::draw(){
     if (cam->camMode == 0) {
         draw_scene(true);
 
-        if (statsActive) {
+        if ( game_mode != currentGameMode || cam_mode != currentCamMode) {
+            update_game_mode();
+        update_game_mode();
+        }else if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
@@ -505,8 +522,9 @@ void Game::draw(){
         draw_scene(false);
     } else if (cam->camMode == 2) {
         draw_scene(false);
-
-        if (statsActive) {
+        if (game_mode != currentGameMode || cam_mode != currentCamMode) {
+        update_game_mode();
+        }else if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
@@ -519,7 +537,9 @@ void Game::draw(){
     } else {
         draw_scene(false);
 
-        if (statsActive) {
+        if (game_mode != currentGameMode || cam_mode != currentCamMode) {
+        update_game_mode();
+        }else if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
@@ -684,6 +704,14 @@ void Game::draw_scene(bool pov){
             glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
         }
+        if (mediumModeActive){
+            game_mode = 4;
+            glDisable(GL_LIGHT1);
+            glDisable(GL_LIGHT2);
+            glEnable(GL_LIGHT0);
+            GLfloat ambientLight[] = {1, 1, 1, 1.0}; // Moderate ambient light
+            glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+        }
         if (easyModeActive){
             game_mode = 2;
             glDisable(GL_LIGHT1);
@@ -845,6 +873,7 @@ void Game::key_pressed(int key){
     
     if (key == 'T' || key == 't') {
         cam->camMode = ((cam->camMode)+1)%3;
+        cam_mode = cam->camMode;
     } 
 }
 
@@ -1126,26 +1155,42 @@ void Game::update_movement(){
         }
     }
 if ((ofGetKeyPressed('1')) && !mario->isRespawning) {
-    if (!hardModeActive) {
-        hardModeActive = true;
-        easyModeActive = false;
-        customModeActive = false;
-        cout << "Mode: Hard" << endl;
-    }
-}
-if ((ofGetKeyPressed('2')) && !mario->isRespawning) {
+
     if (!easyModeActive) {
         easyModeActive = true;
         hardModeActive = false;
         customModeActive = false;
+        mediumModeActive = false;
         cout << "Mode: Easy" << endl;
     }
 }
+if ((ofGetKeyPressed('2')) && !mario->isRespawning) {
+    if (!mediumModeActive) {
+        mediumModeActive = true;
+        easyModeActive = false;
+        hardModeActive = false;
+        customModeActive = false;
+        cout << "Mode: medium" << endl;
+    }
+}
+
 if ((ofGetKeyPressed('3')) && !mario->isRespawning) {
+            if (!hardModeActive) {
+        hardModeActive = true;
+        easyModeActive = false;
+        customModeActive = false;
+        mediumModeActive = false;
+        cout << "Mode: Hard" << endl;
+    }
+}
+
+
+if ((ofGetKeyPressed('4')) && !mario->isRespawning) {
     if (!customModeActive) {
         customModeActive = true;
         hardModeActive = false;
         easyModeActive = false;
+        mediumModeActive = false;
         cout << "Mode: Custom" << endl;
     }
 }
