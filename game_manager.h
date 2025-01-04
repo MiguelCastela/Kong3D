@@ -19,6 +19,7 @@ class Barrel;
 class Particle;
 class Kong;
 class Pauline;
+class Background;
 class Game{
     public:
         Game();
@@ -211,4 +212,5 @@ class Game{
         Pauline* pauline;
         Ladder* lastLadderHitBox_mario;
         Barrel* staticBarrel;
+        Background* background;
 };

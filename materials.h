@@ -2,7 +2,7 @@
 #define MATERIALS_H
 #include "ofMain.h"
 
-#define NUM_MAT 18
+#define NUM_MAT 27
 
 inline extern string Materiais[] = {
 	"Esmerald",  "Jade",  "obsidian",    "Pearl",        "Ruby",
@@ -120,19 +120,19 @@ inline void loadMaterial(int material) {
     GLfloat skinSpec[] = { 0.316228, 0.316228, 0.316228, 1.0 };
     GLint skinCoef = 0.1 * 128;
 
-    //make darkbrownskin for the monkey
+    //darkbrownskin for donkey kong
     GLfloat darkBrownSkinAmb[] = { 0.1, 0.05, 0.02, 1.0 };
     GLfloat darkBrownSkinDif[] = { 0.2, 0.1, 0.05, 1.0 };
     GLfloat darkBrownSkinSpec[] = { 0.1, 0.05, 0.02, 1.0 };
     GLint darkBrownSkinCoef = 0.1 * 128;
 
-    //make lightbrownskin for the monkey
+    //lightbrownskin for donkey kong
     GLfloat lightBrownSkinAmb[] = { 0.3, 0.15, 0.1, 1.0 };
     GLfloat lightBrownSkinDif[] = { 0.6, 0.3, 0.2, 1.0 };
     GLfloat lightBrownSkinSpec[] = { 0.3, 0.15, 0.1, 1.0 };
     GLint lightBrownSkinCoef = 0.1 * 128;
 
-    //make blue fabric for mario
+    //blue fabric for mario
     GLfloat blueFabricAmb[] = { 0.0, 0.0, 0.2, 1.0 };
     GLfloat blueFabricDif[] = { 0.0, 0.0, 0.5, 1.0 };
     GLfloat blueFabricSpec[] = { 0.0, 0.0, 0.6, 1.0 };
@@ -150,7 +150,7 @@ inline void loadMaterial(int material) {
 	GLfloat blackSpec[] = { 0.0, 0.0, 0.0, 1.0 };
 	GLint blackCoef = 0.0 * 128;
 
-	//make specular shiny blue material
+	//shiny blue material
 	GLfloat shinyBlueAmb[] = { 0.02, 0.04, 0.2, 1.0 };
 	GLfloat shinyBlueDif[] = { 0.0, 0.16, 0.9, 1.0 };
 	GLfloat shinyBlueSpec[] = { 0.14, 0.2, 0.8, 1.0 };
@@ -162,43 +162,12 @@ inline void loadMaterial(int material) {
 	GLfloat woodSpec[] = { 0.3, 0.2, 0.0, 1.0 };
 	GLint woodCoef = 0.1 * 128;
 
-
-
-
-
-
-
-
 	switch (material) {
-	case 0: //esmerald
-		glMaterialfv(GL_FRONT, GL_AMBIENT, esmeraldAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, esmeraldDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, esmeraldSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, esmeraldCoef);
-		break;
-	case 1: //jade
-		glMaterialfv(GL_FRONT, GL_AMBIENT, jadeAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, jadeDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, jadeSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, jadeCoef);
-		break;
 	case 2: //obsidian
 		glMaterialfv(GL_FRONT, GL_AMBIENT, obsidianAmb);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, obsidianDif);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, obsidianSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, obsidianCoef);
-		break;
-	case 3: //pearl
-		glMaterialfv(GL_FRONT, GL_AMBIENT, pearlAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, pearlDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, pearlSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, pearlCoef);
-		break;
-	case 4: //ruby
-		glMaterialfv(GL_FRONT, GL_AMBIENT, rubyAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, rubyDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, rubySpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, rubyCoef);
 		break;
 	case 5: //turquoise
 		glMaterialfv(GL_FRONT, GL_AMBIENT, turquoiseAmb);
@@ -206,59 +175,17 @@ inline void loadMaterial(int material) {
 		glMaterialfv(GL_FRONT, GL_SPECULAR, turquoiseSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, turquoiseCoef);
 		break;
-	case 6: //glColor3f(1, 0, 0)brass
-		glMaterialfv(GL_FRONT, GL_AMBIENT, brassAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, brassDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, brassSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, brassCoef);
-		break;
-	case 7: //bronze
-		glMaterialfv(GL_FRONT, GL_AMBIENT, bronzeAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, bronzeDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, bronzeSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, bronzeCoef);
-		break;
-	case 8: //chrome
-		glMaterialfv(GL_FRONT, GL_AMBIENT, chromeAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, chromeDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, chromeSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, chromeCoef);
-		break;
 	case 9: //glColor3f(1, 0, 0)copper
 		glMaterialfv(GL_FRONT, GL_AMBIENT, copperAmb);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, copperDif);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, copperSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, copperCoef);
 		break;
-	case 10: //gold
-		glMaterialfv(GL_FRONT, GL_AMBIENT, goldAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, goldDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, goldSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, goldCoef);
-		break;
 	case 11: //silver
 		glMaterialfv(GL_FRONT, GL_AMBIENT, silverAmb);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, silverDif);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, silverSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, silverCoef);
-		break;
-	case 12: //blackPlastic
-		glMaterialfv(GL_FRONT, GL_AMBIENT, blackPlasticAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, blackPlasticDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, blackPlasticSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, blackPlasticCoef);
-		break;
-	case 13: //cyankPlastic
-		glMaterialfv(GL_FRONT, GL_AMBIENT, cyanPlasticAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, cyanPlasticDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, cyanPlasticSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, cyanPlasticCoef);
-		break;
-	case 14: //greenPlastic
-		glMaterialfv(GL_FRONT, GL_AMBIENT, greenPlasticAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, greenPlasticDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, greenPlasticSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, greenPlasticCoef);
 		break;
 	case 15: //redPlastic
 		glMaterialfv(GL_FRONT, GL_AMBIENT, redPlasticAmb);
@@ -314,25 +241,11 @@ inline void loadMaterial(int material) {
         glMaterialf(GL_FRONT, GL_SHININESS, redFabricCoef);
         break;
 
-    case 23: //lightGold
-        glMaterialfv(GL_FRONT, GL_AMBIENT, lightGoldAmb);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, lightGoldDif);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, lightGoldSpec);
-        glMaterialf(GL_FRONT, GL_SHININESS, lightGoldCoef);
-        break;
-
 	case 24: //black
 		glMaterialfv(GL_FRONT, GL_AMBIENT, blackAmb);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, blackDif);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, blackSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, blackCoef);
-		break;
-
-	case 25: //shinyBlue
-		glMaterialfv(GL_FRONT, GL_AMBIENT, shinyBlueAmb);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, shinyBlueDif);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, shinyBlueSpec);
-		glMaterialf(GL_FRONT, GL_SHININESS, shinyBlueCoef);
 		break;
 
 	case 26: //wood

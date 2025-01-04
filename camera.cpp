@@ -12,6 +12,8 @@ Camera::Camera(GLfloat fov, GLfloat distance, ofVec3f position){
     font.load("font_stats.ttf", 12);
 
     distance = gw()*0.5*tan((fov*0.5)*(PI / 180));
+
+
 }
 
 
@@ -169,7 +171,7 @@ void Camera::draw_stats(){
 }
 
 void Camera::draw_keys(){
-    std::string keys_text = " Change camera mode: 'T' \n Move in third person: 'leftArrow', 'rightArrow', 'upArrow', 'downArrow' \n Move in first person: 'leftArrow', 'rightArrow', 'W', 'S' \n Jump: 'space'\n Ambient light on/off: 'z'\n Directional light on/off: 'X' Properties: 'I', 'O' , 'P'\n Point light (Mario) on/off: 'C' Properties: 'J', 'K' , 'L' \n Spot light (donkeyKong) on/off: 'V' Properties: 'B', 'N', 'M' \n NORMAL MODE: '1'\n HARD MODE: '2'\n Hide this window: 'F' ";
+    std::string keys_text = " Change camera mode: 'T' \n Move in third person: 'leftArrow', 'rightArrow', 'upArrow', 'downArrow' \n Move in first person: 'leftArrow', 'rightArrow', 'W', 'S' \n Jump: 'space'\n Ambient light on/off: 'z'\n Directional light on/off: 'X' Properties: 'I', 'O' , 'P'\n Point light (Mario) on/off: 'C' Properties: 'J', 'K' , 'L' \n Spot light (donkeyKong) on/off: 'V' Properties: 'B', 'N', 'M' \n EASY MODE: '1'\n MEDIUM MODE: '2'\n HARD/NIGHT MODE: '3' \n SANDBOX MODE: '4' \n Hide this window: 'F' ";
 
     float textWidth = font.stringWidth(keys_text);
     float textHeight = font.stringHeight(keys_text);
@@ -216,6 +218,7 @@ void Camera::draw_keys(){
 
 void Camera::draw_mode(){
        std::string mode;
+       std::string mode1;
     if(camMode == 0){
         mode = "First Person";
     }
@@ -226,8 +229,21 @@ void Camera::draw_mode(){
         mode = "3D third Person";
     }
 
+    if(gameMode == 1){
+        mode1 = "HARD/NIGHT MODE";
+    }
+    if(gameMode == 2){
+        mode1 = "EASY MODE";
+    }
+    if(gameMode == 3){
+        mode1 = "SANDBOX MODE";
+    }
+    if(gameMode == 4){
+        mode1 = "MEDIUM MODE";
+    }
+
     
-    std::string mode_text = "Current Game Mode:" + std::to_string(gameMode)  + "\n Current Camera Mode:" + mode;
+    std::string mode_text = "Current Game Mode:" + mode1 + "\n Current Camera Mode:" + mode;
 
     float textWidth = font.stringWidth(mode_text);
     float textHeight = font.stringHeight(mode_text);
@@ -271,4 +287,6 @@ void Camera::draw_mode(){
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 }
+
+
 

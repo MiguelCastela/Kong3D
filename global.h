@@ -38,6 +38,7 @@ class Global{
         ofImage wood_texture;
         ofImage wood_texture2;
         ofImage wood_texture3;
+        ofImage background_texture;
 
 };
 

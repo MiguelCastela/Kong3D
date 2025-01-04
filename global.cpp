@@ -42,7 +42,9 @@ void Global::load_textures(){
 
     wood_texture2.load("wood_side.png");
 
-    wood_texture3.load("wood_fake.png");
+    wood_texture3.load("wood_fake1.png");
+
+    background_texture.load("background.png");
 
     
 

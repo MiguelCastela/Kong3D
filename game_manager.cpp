@@ -6,16 +6,13 @@
 #include "particula.h"
 #include "donkey_kong.h"
 #include "pauline.h"
-
+#include "background.h"
 
 
 Game::Game(){
-
-
+    ofSetFrameRate(60);
     ofDisableArbTex();
     glEnable(GL_DEPTH_TEST);
-    ofSetFrameRate(60);
-    ofBackground(0, 0, 0);
     
     
     marioPos = global.marioPos;
@@ -180,6 +177,8 @@ Game::Game(){
     kong = new Kong(kongDim, ofVec3f(kongPos.x, kongPos.y, kongPos.z));
     //kong = new Kong(kongDim, ofVec3f(0, 0, 0));
 
+    global.load_textures();
+
 
 
 
@@ -187,7 +186,7 @@ Game::Game(){
 
 void Game::update(){
 
-
+    
 
     update_movement();
 
@@ -441,31 +440,38 @@ void Game::update(){
     pointPosVec[1] = marioPos.y + 0.5 *marioDim.y;
     pointPosVec[2] = marioPos.z ;
 
-    global.load_textures();
+
+
+    
 
 
 }
 void Game::update_game_mode(){
 
-        cam->gameMode = game_mode;
-        cam->camMode = cam_mode;
-        static float modeChangeStartTime = -1.0f;
+    cam->gameMode = game_mode;
+    cam->camMode = cam_mode;
+    
+    static float modeChangeStartTime = -1.0f;
+    static int lastGameMode = -1;
+    static int lastCamMode = -1;
 
-        if (modeChangeStartTime < 0.0f) { // Set start time if not already set
-            modeChangeStartTime = ofGetElapsedTimef();
-        }
+    if (game_mode != lastGameMode || cam_mode != lastCamMode) {
+        modeChangeStartTime = ofGetElapsedTimef(); 
+        lastGameMode = game_mode;  
+        lastCamMode = cam_mode;
+    }
 
-        if (ofGetElapsedTimef() - modeChangeStartTime <= 1.0f) { // Call draw_mode for 1 second
-            cam->draw_mode();
-        } else {
-            modeChangeStartTime = -1.0f; // Reset static variable
-            currentGameMode = game_mode; // Update the current game mode
-            currentCamMode = cam_mode;
-        }
+    if (ofGetElapsedTimef() - modeChangeStartTime <= 1.0f) { 
+        cam->draw_mode();
+    } else {
+        modeChangeStartTime = -1.0f;  
+    }
     }
 
 
 void Game::draw(){
+    background->draw();
+    
 
     cam->apply(marioPos, mario->marioLookAt);
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
@@ -508,7 +514,6 @@ void Game::draw(){
         draw_scene(true);
 
         if ( game_mode != currentGameMode || cam_mode != currentCamMode) {
-            update_game_mode();
         update_game_mode();
         }else if (statsActive) {
             cam->draw_stats();
@@ -933,7 +938,7 @@ void Game::update_movement(){
         if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->is_climbing && !mario->isRespawning){
             mario->move_left();
         }
-        if(ofGetKeyPressed('w') && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
+        if((ofGetKeyPressed('w') || ofGetKeyPressed('W')) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
             mario->climb_up();
         }
         if((ofGetKeyPressed('s') || ofGetKeyPressed('S')) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){

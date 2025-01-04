@@ -25,6 +25,9 @@ class Camera{
         GLint meters = 0;
         GLint num_platforms = 0;
         GLint gameMode = 0;
+        GLfloat currentY = 0; // The current y-position of the camera
+        GLfloat smoothFactor = 0.1; // Adjust for smoother/slower movement
+        GLfloat currentZ = 0; // The current z-position of the camera
     private:
 
         GLfloat fov;

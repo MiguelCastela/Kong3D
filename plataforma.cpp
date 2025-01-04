@@ -16,61 +16,48 @@ Platform::Platform(ofVec3f dimensions, ofVec3f position, int materialIndex) {
 }
 
 void Platform::draw() {
- // Set the material for the cubes
 
 loadMaterial(materialIndex);
  
 glEnable(GL_TEXTURE_2D);
-//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-global.platform_texture.bind(); // Bind the texture to the cubes
+global.platform_texture.bind(); 
 
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 
-int cubeCountX = 9; // Number of partitions along the X-axis
+
+int cubeCountX = 20; 
 GLfloat cubeSizeX = dimensions.x / cubeCountX; 
 
-// Loop through the vertical partitions along the X-axis (from left to right)
 for (int i = 0; i < cubeCountX; ++i) {
     glPushMatrix();
-    // Position each smaller cube along the X-axis
-    GLfloat offsetX = -dimensions.x / 2 + (i + 0.5f) * cubeSizeX;
-    glTranslatef(position.x + offsetX, position.y, position.z);
-
-    // Scale to match the size of each partition (along X)
-    glScalef(cubeSizeX, dimensions.y, dimensions.z);
-
-    // Draw the cube for this partition
-    cube_texture_unit(2.0);
-
+        GLfloat offsetX = -dimensions.x / 2 + (i + 0.5f) * cubeSizeX;
+        glTranslatef(position.x + offsetX, position.y, position.z);
+        glScalef(cubeSizeX, dimensions.y, dimensions.z);
+        cube_texture_unit(2.0);
     glPopMatrix();
 }
 
-global.platform_texture.unbind(); // Unbind the texture from the cubes
+global.platform_texture.unbind(); 
 glDisable(GL_TEXTURE_2D);
 /*
-// Now, draw the outlines
-loadMaterial(2); // Change material for the outlines
+//draw the outlines
+loadMaterial(2); 
 
-// Loop through the vertical partitions along the X-axis (same as above)
 for (int i = 0; i < cubeCountX; ++i) {
     glPushMatrix();
-    // Position each smaller cube along the X-axis
-    GLfloat offsetX = -dimensions.x / 2 + (i + 0.5f) * cubeSizeX;
-    glTranslatef(position.x + offsetX, position.y, position.z);
+        GLfloat offsetX = -dimensions.x / 2 + (i + 0.5f) * cubeSizeX;
+        glTranslatef(position.x + offsetX, position.y, position.z);
 
-    // Scale to match the size of each partition (along X)
-    glScalef(cubeSizeX, dimensions.y, dimensions.z);
+        glScalef(cubeSizeX, dimensions.y, dimensions.z);
 
-    // Draw the outline for this partition
-    cube_unit_outline(0.5);
+        cube_unit_outline(0.5);
     glPopMatrix();
     
 }
