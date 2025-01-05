@@ -204,7 +204,7 @@ void Game::update(){
     }else if(game_mode == 2){
         barrelSpawnDelay = ofRandom(2.5f, 75.0f);
     }else if (game_mode == 3){
-        barrelSpawnDelay = ofRandom(1.0f, 1000000000000000000.0f);
+        barrelSpawnDelay = ofRandom(10000000000.0f, 100000000000.0f);
     //medium mode
     }else if (game_mode == 4){
         barrelSpawnDelay = ofRandom(1.5f, 50.0f);

@@ -29,9 +29,9 @@ inline void loadMaterial(int material) {
 
 
 	// sky blue material
-    GLfloat skyBlueAmb[] = { 0.196, 0.6, 0.9, 1.0 };
-    GLfloat skyBlueDif[] = { 0.196, 0.6, 0.9, 1.0 };
-    GLfloat skyBlueSpec[] = { 0.196, 0.6, 0.9, 1.0 };
+    GLfloat skyBlueAmb[] = { 0.196, 0.4, 0.75, 1.0 };
+    GLfloat skyBlueDif[] = { 0.196, 0.4, 0.75, 1.0 };
+    GLfloat skyBlueSpec[] = { 0.196, 0.4, 0.75, 1.0 };
     GLint skyBlueCoef = 0.25 * 128;
 
 	GLfloat  jadeAmb[] = { 0.135 ,0.2225 ,0.1575, 1. };
