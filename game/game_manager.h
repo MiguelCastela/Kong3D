@@ -56,7 +56,7 @@ class Game{
         ofVec3f paulinePlatPos;
         ofVec3f lastLadderPos;
 
-        bool fov_flag = false;
+        bool fov_flag = true;
 
 
         std::vector<Platform*> platVec;
@@ -156,7 +156,7 @@ class Game{
         //stats
         bool statsActive = false;
         bool isKeyGPressed = true;
-        bool objActive = false;
+        bool objActive = true;
         bool keysActive = false;
         bool isKeyFPressed = true;
         bool isKeyHPressed = true;

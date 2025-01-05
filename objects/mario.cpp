@@ -259,8 +259,8 @@ void Mario::spawn_back() {
             next_position_y = 0;
 
             respawnStartTime = currentTime;
-            currentDirection = FRONT;
-            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
+            currentDirection =  FRONT;
+            marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
             
         }
     }else{
@@ -283,16 +283,16 @@ void Mario::spawn_back() {
             isRespawning = false;
             times_dead++;
             cout << "Mario has died " << times_dead << " times." << endl;
-            currentDirection = FRONT;
-            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
+            currentDirection =  FRONT;
+            marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
         }
     }else{
         if (currentTime - respawnStartTime >= 0.1f && position == global.marioPos) {
             isRespawning = false;
 
             cout << "Mario has died " << times_dead << " times." << endl;
-            currentDirection = FRONT;
-            marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
+            currentDirection =  FRONT;
+            marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
         }
     }
 }
@@ -386,6 +386,6 @@ void Mario::jump_down() {
     //currentDirection = FRONT;
 }
 void Mario::look_front(){
-    marioLookAt = ofVec3f(global.left_limit*2, position.y, position.z);
+    marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);
     currentDirection = BACK;
 }

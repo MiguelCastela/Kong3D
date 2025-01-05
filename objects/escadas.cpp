@@ -35,7 +35,7 @@ void Ladder::draw(){
     glPopMatrix();
 
 
-    //left side of the ladder
+    //right side of the ladder
     glPushMatrix();
         glTranslatef(position.x + dimension.x*0.45, position.y, position.z+ dimension.z *0.75) ;
         glScalef(dimension.x*0.1, dimension.y, dimension.z*0.5);
@@ -54,7 +54,7 @@ void Ladder::draw(){
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    //right side of the ladder
+    //left side of the ladder
     glPushMatrix();
     glTranslatef(position.x - dimension.x*0.45, position.y, position.z + dimension.z*0.75);
     glScalef(dimension.x*0.1, dimension.y, dimension.z*0.5);
@@ -173,7 +173,7 @@ void Ladder::draw_golden(){
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    //left side of the ladder
+    //right side of the ladder
     glPushMatrix();
         glTranslatef(position.x + dimension.x*0.45, position.y, position.z+ dimension.z *0.75) ;
         glScalef(dimension.x*0.1, dimension.y, dimension.z*0.5);
@@ -192,7 +192,7 @@ void Ladder::draw_golden(){
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    //right side of the ladder
+    //left side of the ladder
     glPushMatrix();
     glTranslatef(position.x - dimension.x*0.45, position.y, position.z + dimension.z*0.75);
     glScalef(dimension.x*0.1, dimension.y, dimension.z*0.5);

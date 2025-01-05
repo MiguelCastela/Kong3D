@@ -38,11 +38,11 @@ Global::Global(){
 void Global::load_textures(){
     platform_texture.load("platform_texture.png");
 
-    wood_texture.load("wood.png");
+    wood_texture.load("ladder.png");
 
-    wood_texture2.load("wood_side.png");
+    wood_texture2.load("ladder_side.png");
 
-    wood_texture3.load("wood_fake1.png");
+    wood_texture3.load("ladder_fake.png");
     
 
 }

@@ -40,7 +40,8 @@ for (int i = 0; i < cubeCountX; ++i) {
         GLfloat offsetX = -dimensions.x / 2 + (i + 0.5f) * cubeSizeX;
         glTranslatef(position.x + offsetX, position.y, position.z);
         glScalef(cubeSizeX, dimensions.y, dimensions.z);
-        cube_texture_unit(2.0);
+        //cube_texture_unit(2.0);
+        cube_texture_unit_platform(2.0, 1.6);
     glPopMatrix();
 }
 

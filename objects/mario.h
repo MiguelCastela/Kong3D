@@ -43,6 +43,7 @@ class Mario {
         GLfloat next_position_y;
         GLfloat target_y;
         GLfloat target_z;
+        bool mario_fov;
 
         //state
         int times_dead;

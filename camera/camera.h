@@ -17,6 +17,7 @@ class Camera{
         void draw_keys();
         void draw_objective();
         void draw_mode();
+        void draw_winning_message();
         GLint camMode;
         bool camFlag;
         GLint num_lives =0;
@@ -25,9 +26,6 @@ class Camera{
         GLint meters = 0;
         GLint num_platforms = 0;
         GLint gameMode = 0;
-        GLfloat currentY = 0; // The current y-position of the camera
-        GLfloat smoothFactor = 0.1; // Adjust for smoother/slower movement
-        GLfloat currentZ = 0; // The current z-position of the camera
         GLfloat fov;
     private:
 

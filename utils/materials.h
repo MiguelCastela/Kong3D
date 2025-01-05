@@ -2,7 +2,7 @@
 #define MATERIALS_H
 #include "ofMain.h"
 
-#define NUM_MAT 27
+#define NUM_MAT 28
 
 inline extern string Materiais[] = {
 	"Esmerald",  "Jade",  "obsidian",    "Pearl",        "Ruby",
@@ -10,7 +10,7 @@ inline extern string Materiais[] = {
 	"Gold",      "Silver","blackPlastic","cyankPlastic", "greenPlastic",
 	"redPlastic", "whitePlastic","yellowPlastic", "skin", "darkBrownSkin", 
     "lightBrownSkin" , "blueFabric", "redFabric", "lightGold", "black", 
-	"shinyBlue", "wood", "pinkPlastic"};
+	"shinyBlue", "wood", "pinkPlastic", "skyblue", "clear"};
 
 
 inline void loadMaterial(int material) {
@@ -20,10 +20,18 @@ inline void loadMaterial(int material) {
 	GLfloat  esmeraldSpec[] = { 0.633 ,0.727811 ,0.633, 1. };
 	GLint    esmeraldCoef = 0.6 * 128;
 
+	//clear material
+	GLfloat clearAmb[] = { 0.0, 0.0, 0.0, 0.0 };
+	GLfloat clearDif[] = { 0.0, 0.0, 0.0, 0.0 };
+	GLfloat clearSpec[] = { 0.0, 0.0, 0.0, 0.0 };
+	GLint clearCoef = 0.0 * 128;
+
+
+
 	// sky blue material
-    GLfloat skyBlueAmb[] = { 0.196, 0.6, 0.8, 1.0 };
-    GLfloat skyBlueDif[] = { 0.196, 0.6, 0.8, 1.0 };
-    GLfloat skyBlueSpec[] = { 0.196, 0.6, 0.8, 1.0 };
+    GLfloat skyBlueAmb[] = { 0.196, 0.6, 0.9, 1.0 };
+    GLfloat skyBlueDif[] = { 0.196, 0.6, 0.9, 1.0 };
+    GLfloat skyBlueSpec[] = { 0.196, 0.6, 0.9, 1.0 };
     GLint skyBlueCoef = 0.25 * 128;
 
 	GLfloat  jadeAmb[] = { 0.135 ,0.2225 ,0.1575, 1. };
@@ -84,7 +92,7 @@ inline void loadMaterial(int material) {
 	GLfloat  silverAmb[] = { 0.19225 ,0.19225 ,0.19225, 1. };
 	GLfloat  silverDif[] = { 0.50754 ,0.50754 ,0.50754, 1. };
 	GLfloat  silverSpec[] = { 0.508273 ,0.508273 ,0.508273, 1. };
-	GLint  silverCoef = 0.4 * 128;
+	GLint  silverCoef = 0.6 * 128;
 
 	GLfloat blackPlasticAmb[] = { 0.0 ,0.0 ,0.0, 1. };
 	GLfloat blackPlasticDif[] = { 0.00 ,0.00 ,0.00, 1. };
@@ -169,6 +177,12 @@ inline void loadMaterial(int material) {
 	GLint woodCoef = 0.1 * 128;
 
 	switch (material) {
+	case 1:
+		glMaterialfv(GL_FRONT, GL_AMBIENT, clearAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, clearDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, clearSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, clearCoef);
+		break;
 	case 2: //obsidian
 		glMaterialfv(GL_FRONT, GL_AMBIENT, obsidianAmb);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, obsidianDif);

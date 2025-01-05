@@ -187,7 +187,7 @@ Game::Game(){
 void Game::update(){
 
     
-
+    
     update_movement();
 
 
@@ -202,12 +202,12 @@ void Game::update(){
         barrelSpawnDelay = ofRandom(1.0f, 30.0f);
     //easy mode
     }else if(game_mode == 2){
-        barrelSpawnDelay = ofRandom(3.0f, 100.0f);
+        barrelSpawnDelay = ofRandom(2.5f, 75.0f);
     }else if (game_mode == 3){
         barrelSpawnDelay = ofRandom(1.0f, 1000000000000000000.0f);
     //medium mode
     }else if (game_mode == 4){
-        barrelSpawnDelay = ofRandom(2.0f, 50.0f);
+        barrelSpawnDelay = ofRandom(1.5f, 50.0f);
     }
 
     
@@ -287,6 +287,15 @@ void Game::update(){
                         ofVec3f(1, 1, 1),
                         19
 
+                    )
+                );
+            }
+            for (int i = 0; i < 30; i++){
+                explosion.push_back(
+                    new Particle(
+                        kongPos,
+                        ofVec3f(1, 1, 1),
+                        11
                     )
                 );
             }
@@ -473,11 +482,13 @@ void Game::update_game_mode(){
 
 
 void Game::draw(){
+    /*
     if (fov_flag == true) {
         cam->fov = 2;
     } else {
         cam->fov = 60;
     }
+    */
     
 
     cam->apply(marioPos, mario->marioLookAt);
@@ -512,13 +523,7 @@ void Game::draw(){
 
     
 
-
-
-
-
-
-
-
+    cam->draw_winning_message();
     if (cam->camMode == 0) {
         draw_scene(true);
 
@@ -898,7 +903,6 @@ void Game::update_movement(){
 
     if(cam->camMode != 0){
         fov_flag = false;
-        cam->fov = 60;
         if (ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
             if(!mario->is_climbing){
                 mario->start_jump();
