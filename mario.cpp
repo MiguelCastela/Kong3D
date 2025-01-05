@@ -18,7 +18,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
 
     this->on_ladder = false; 
     this->is_climbing = false;
-    this->jump_vel_const = 0.5f * (60.0 / ofGetFrameRate());
+    this->jump_vel_const = 0.6f * (60.0 / ofGetFrameRate());
     this->jumpVelocity = jump_vel_const;
     this->pre_jump_y = 0;
     
@@ -376,7 +376,7 @@ void Mario::climb_down(){
 
 void Mario::go_down(){
     cout << "Mario can't go down levels" << endl;
-    marioLookAt = ofVec3f(position.x, position.y, position.z + 50);
+    marioLookAt = ofVec3f(global.left_limit*2, position.y, position.z);
     currentDirection = FRONT;
 
 }
@@ -386,6 +386,6 @@ void Mario::jump_down() {
     //currentDirection = FRONT;
 }
 void Mario::look_front(){
-    marioLookAt = ofVec3f(position.x, position.y, position.z - 50);
+    marioLookAt = ofVec3f(global.left_limit*2, position.y, position.z);
     currentDirection = BACK;
 }

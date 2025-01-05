@@ -79,7 +79,8 @@ void Camera::miniMap(ofVec3f marioPos){
 
 void Camera::draw_objective(){
     objText = " Avoid the barrels and save Pauline from Donkey Kong! \n Activate stats with 'H' and keybinds with 'F' \n hide this window with 'G'";
-
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3f(1, 0, 0);
     float textWidth = font.stringWidth(objText);
     float textHeight = font.stringHeight(objText);
 
@@ -99,9 +100,9 @@ void Camera::draw_objective(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
-    GLfloat mat_ambient[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_diffuse[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_specular[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
@@ -109,7 +110,6 @@ void Camera::draw_objective(){
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    ofSetColor(255, 255, 255); 
     font.drawString(objText, x, y);
 
     glDisable(GL_LIGHTING);
@@ -121,9 +121,12 @@ void Camera::draw_objective(){
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void Camera::draw_stats(){
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3f(1, 0, 0);
 
     std::string statsText = " Times dead: " + std::to_string(num_lives) + "\n Current height/Pauline height: " + std::to_string(meters) + "/" + std::to_string(2 * (num_platforms * 10) + 20) + " meters \n Hide this window: 'H' \n Current Game Mode: " + std::to_string(gameMode);
 
@@ -146,9 +149,9 @@ void Camera::draw_stats(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
-    GLfloat mat_ambient[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_diffuse[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_specular[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
@@ -156,7 +159,6 @@ void Camera::draw_stats(){
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    ofSetColor(255, 255, 255); 
     font.drawString(statsText, x, y);
 
     glDisable(GL_LIGHTING);
@@ -168,9 +170,12 @@ void Camera::draw_stats(){
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void Camera::draw_keys(){
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3f(1, 0, 0);
     std::string keys_text = " Change camera mode: 'T' \n Move in third person: 'leftArrow', 'rightArrow', 'upArrow', 'downArrow' \n Move in first person: 'leftArrow', 'rightArrow', 'W', 'S' \n Jump: 'space'\n Ambient light on/off: 'z'\n Directional light on/off: 'X' Properties: 'I', 'O' , 'P'\n Point light (Mario) on/off: 'C' Properties: 'J', 'K' , 'L' \n Spot light (donkeyKong) on/off: 'V' Properties: 'B', 'N', 'M' \n EASY MODE: '1'\n MEDIUM MODE: '2'\n HARD/NIGHT MODE: '3' \n SANDBOX MODE: '4' \n Hide this window: 'F' ";
 
     float textWidth = font.stringWidth(keys_text);
@@ -192,9 +197,9 @@ void Camera::draw_keys(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
-    GLfloat mat_ambient[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_diffuse[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_specular[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
@@ -202,7 +207,6 @@ void Camera::draw_keys(){
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    ofSetColor(255, 255, 255); 
     font.drawString(keys_text, x, y);
 
     glDisable(GL_LIGHTING);
@@ -214,9 +218,15 @@ void Camera::draw_keys(){
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void Camera::draw_mode(){
+    // Enable color material and set texto to red
+    // wnable glcolormateiral
+    glEnable(GL_COLOR_MATERIAL);
+    glColor3f(1, 0, 0);
+
        std::string mode;
        std::string mode1;
     if(camMode == 0){
@@ -249,7 +259,7 @@ void Camera::draw_mode(){
     float textHeight = font.stringHeight(mode_text);
 
     float x = (gw() - textHeight) / 2 ;
-    float y = (gh() - textHeight) / 2;
+    float y = (gh() - textHeight) / 1.5;
 
     glMatrixMode(GL_PROJECTION);    
     glPushMatrix();
@@ -264,9 +274,9 @@ void Camera::draw_mode(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
-    GLfloat mat_ambient[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_diffuse[] = { 0.0, 0.5, 1.0, 1.0 };
-    GLfloat mat_specular[] = { 0.0, 0.5, 1.0, 1.0 };
+    GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
@@ -274,7 +284,6 @@ void Camera::draw_mode(){
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    ofSetColor(255, 255, 255); 
     font.drawString(mode_text, x, y);
 
     glDisable(GL_LIGHTING);
@@ -286,6 +295,9 @@ void Camera::draw_mode(){
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+
+    // Disable color material
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 

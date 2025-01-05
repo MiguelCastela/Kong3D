@@ -28,9 +28,9 @@ class Camera{
         GLfloat currentY = 0; // The current y-position of the camera
         GLfloat smoothFactor = 0.1; // Adjust for smoother/slower movement
         GLfloat currentZ = 0; // The current z-position of the camera
+        GLfloat fov;
     private:
 
-        GLfloat fov;
         GLfloat distance;
         ofVec3f position;
         GLint alpha;

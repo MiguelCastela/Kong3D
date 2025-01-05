@@ -20,6 +20,12 @@ inline void loadMaterial(int material) {
 	GLfloat  esmeraldSpec[] = { 0.633 ,0.727811 ,0.633, 1. };
 	GLint    esmeraldCoef = 0.6 * 128;
 
+	// sky blue material
+    GLfloat skyBlueAmb[] = { 0.196, 0.6, 0.8, 1.0 };
+    GLfloat skyBlueDif[] = { 0.196, 0.6, 0.8, 1.0 };
+    GLfloat skyBlueSpec[] = { 0.196, 0.6, 0.8, 1.0 };
+    GLint skyBlueCoef = 0.25 * 128;
+
 	GLfloat  jadeAmb[] = { 0.135 ,0.2225 ,0.1575, 1. };
 	GLfloat  jadeDif[] = { 0.54 ,0.89 ,0.63, 1. };
 	GLfloat  jadeSpec[] = { 0.316228 ,0.316228 ,0.316228, 1. };
@@ -168,6 +174,12 @@ inline void loadMaterial(int material) {
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, obsidianDif);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, obsidianSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, obsidianCoef);
+		break;
+	case 3: //
+		glMaterialfv(GL_FRONT, GL_AMBIENT, skyBlueAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, skyBlueDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, skyBlueSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, skyBlueCoef);
 		break;
 	case 5: //turquoise
 		glMaterialfv(GL_FRONT, GL_AMBIENT, turquoiseAmb);

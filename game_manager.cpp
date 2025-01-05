@@ -197,14 +197,17 @@ void Game::update(){
 
     cam->meters = marioPos.y;
     float curTime = ofGetElapsedTimef();
+    //hard mode
     if(game_mode == 1){
-        barrelSpawnDelay = ofRandom(5.0f, 30.0f);
+        barrelSpawnDelay = ofRandom(1.0f, 30.0f);
+    //easy mode
     }else if(game_mode == 2){
-        barrelSpawnDelay = ofRandom(10.0f, 100.0f);
+        barrelSpawnDelay = ofRandom(3.0f, 100.0f);
     }else if (game_mode == 3){
         barrelSpawnDelay = ofRandom(1.0f, 1000000000000000000.0f);
+    //medium mode
     }else if (game_mode == 4){
-        barrelSpawnDelay = ofRandom(5.0f, 50.0f);
+        barrelSpawnDelay = ofRandom(2.0f, 50.0f);
     }
 
     
@@ -470,10 +473,16 @@ void Game::update_game_mode(){
 
 
 void Game::draw(){
-    background->draw();
+    if (fov_flag == true) {
+        cam->fov = 2;
+    } else {
+        cam->fov = 60;
+    }
     
 
     cam->apply(marioPos, mario->marioLookAt);
+    background->draw();
+
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
     if (mario_dead) {
         if (cam -> camMode == 0) {
@@ -513,15 +522,18 @@ void Game::draw(){
     if (cam->camMode == 0) {
         draw_scene(true);
 
-        if ( game_mode != currentGameMode || cam_mode != currentCamMode) {
-        update_game_mode();
-        }else if (statsActive) {
+        if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
         } else if (keysActive) {
             cam->draw_keys();
         }
+        if ( game_mode != currentGameMode || cam_mode != currentCamMode) {
+
+            update_game_mode();
+        }
+
 
         cam->miniMap(marioPos);
         draw_scene(false);
@@ -529,7 +541,7 @@ void Game::draw(){
         draw_scene(false);
         if (game_mode != currentGameMode || cam_mode != currentCamMode) {
         update_game_mode();
-        }else if (statsActive) {
+        }if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
@@ -544,7 +556,7 @@ void Game::draw(){
 
         if (game_mode != currentGameMode || cam_mode != currentCamMode) {
         update_game_mode();
-        }else if (statsActive) {
+        }if (statsActive) {
             cam->draw_stats();
         } else if (objActive) {
             cam->draw_objective();
@@ -883,7 +895,10 @@ void Game::key_pressed(int key){
 }
 
 void Game::update_movement(){
+
     if(cam->camMode != 0){
+        fov_flag = false;
+        cam->fov = 60;
         if (ofGetKeyPressed(OF_KEY_DOWN) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
             if(!mario->is_climbing){
                 mario->start_jump();
@@ -919,7 +934,9 @@ void Game::update_movement(){
 
     }else{
         if ((ofGetKeyPressed('s') || ofGetKeyPressed('S')) && ofGetKeyPressed(' ') && !flag_down  && !mario->isRespawning) {
+            fov_flag = false;
             if(!mario->is_climbing){
+            fov_flag = false;
             mario->start_jump();
             mario->jump_down();
         }
@@ -928,26 +945,35 @@ void Game::update_movement(){
         
         
         if(!(ofGetKeyPressed('s') || ofGetKeyPressed('S')) && ofGetKeyPressed(' ')){
+                fov_flag = false;
             if(!mario->is_climbing){
+                    fov_flag = false;
             mario->start_jump();
             }
         }
         if(ofGetKeyPressed(OF_KEY_UP) && !mario->is_climbing && !mario->isRespawning){
+                fov_flag = false;
             mario->move_right();
         }
         if(ofGetKeyPressed(OF_KEY_DOWN) && !mario->is_climbing && !mario->isRespawning){
+                fov_flag = false;
             mario->move_left();
         }
         if((ofGetKeyPressed('w') || ofGetKeyPressed('W')) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
+                fov_flag = false;
             mario->climb_up();
         }
         if((ofGetKeyPressed('s') || ofGetKeyPressed('S')) && !mario->on_ladder && !mario->isJumping && !mario->isRespawning){
+                fov_flag = false;
             mario->climb_down();
         }
         if ((ofGetKeyPressed('s') || ofGetKeyPressed('S')) && !ofGetKeyPressed(OF_KEY_DOWN) && !ofGetKeyPressed(OF_KEY_UP) && !flag_down && !mario->isRespawning && !mario->is_climbing)  {
+            fov_flag = true;
             mario->go_down();
+
         }
         if(ofGetKeyPressed('w') && !ofGetKeyPressed(OF_KEY_DOWN) && !ofGetKeyPressed(OF_KEY_UP) && !mario->is_climbing && !mario->isJumping && !mario->isRespawning){
+            fov_flag = true;
             mario->look_front();
         }
     }

@@ -56,6 +56,8 @@ class Game{
         ofVec3f paulinePlatPos;
         ofVec3f lastLadderPos;
 
+        bool fov_flag = false;
+
 
         std::vector<Platform*> platVec;
         std::vector<Ladder*> ladVec;
