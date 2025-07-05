@@ -194,7 +194,6 @@ void Game::update(){
 
 
 
-
     cam->meters = marioPos.y;
     float curTime = ofGetElapsedTimef();
     //hard mode
@@ -238,7 +237,7 @@ void Game::update(){
                     new Particle(
                         marioPos,
                         ofVec3f(1, 1, 1),
-                        ofRandom(1, 23)
+                        ofRandom(1, 27)
                     )
                 );
             }
@@ -247,7 +246,7 @@ void Game::update(){
                     new Particle(
                         paulinePos,
                         ofVec3f(1, 1, 1),
-                        ofRandom(1, 23)
+                        28
 
                     )
                 );
@@ -265,6 +264,13 @@ void Game::update(){
         if(currentTime - lastParticleBurstTime >= 0.1f){
             int burstCount = std::min(particlesPerBurst, remainingParticles);
             for(int i =0; i<burstCount; i++){
+                explosion.push_back(
+                    new Particle(
+                        ofVec3f(ofRandom(marioPos.x, paulinePos.x), marioPos.y + marioDim.y*5, marioPos.z),
+                        ofVec3f(1, 1, 1),
+                        ofRandom(1, 23)
+                    )
+                );
                 explosion.push_back(
                     new Particle(
                         ofVec3f(ofRandom(marioPos.x, paulinePos.x), marioPos.y + marioDim.y*5, marioPos.z),
@@ -489,10 +495,21 @@ void Game::draw(){
         cam->fov = 60;
     }
     */
+      
+
     
 
     cam->apply(marioPos, mario->marioLookAt);
     background->draw();
+    
+    cam->draw_fps();
+
+
+    if(mario_wins){
+        cam->draw_victory_message();
+}
+
+
 
     //cout << mario->marioLookAt.x << " " << mario->marioLookAt.y << " " << mario->marioLookAt.z << endl;
     if (mario_dead) {
@@ -501,6 +518,7 @@ void Game::draw(){
         }
         mario->spawn_back();
         cam->num_lives = mario->times_dead;
+        cam->total_lifes = mario->total_times_dead;
 
  
         if (mario_dead && !mario->isRespawning) {

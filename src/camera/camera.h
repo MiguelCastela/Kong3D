@@ -18,6 +18,8 @@ class Camera{
         void draw_objective();
         void draw_mode();
         void draw_winning_message();
+        void draw_fps();
+        void draw_victory_message();
         GLint camMode;
         bool camFlag;
         GLint num_lives =0;
@@ -27,6 +29,7 @@ class Camera{
         GLint num_platforms = 0;
         GLint gameMode = 0;
         GLfloat fov;
+        GLint total_lifes = 0;
     private:
 
         GLfloat distance;

@@ -27,6 +27,7 @@ Mario::Mario(ofVec3f dimensions, ofVec3f position) {
 
     this->isRespawning = false;
     this->times_dead = 0;
+    this->total_times_dead = 0;
 
     this->going_up = false;
     this->target_y = 0;
@@ -282,6 +283,7 @@ void Mario::spawn_back() {
         if (currentTime - respawnStartTime >= 0.1f && position == global.marioPos) {
             isRespawning = false;
             times_dead++;
+            total_times_dead++;
             cout << "Mario has died " << times_dead << " times." << endl;
             currentDirection =  FRONT;
             marioLookAt = ofVec3f(global.right_limit*2, position.y, position.z);

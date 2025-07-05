@@ -287,6 +287,14 @@ inline void loadMaterial(int material) {
 		glMaterialfv(GL_FRONT, GL_SPECULAR, pinkPlasticSpec);
 		glMaterialf(GL_FRONT, GL_SHININESS, pinkPlasticCoef);
 		break;
+
+	case 28: //greenPlastic
+		glMaterialfv(GL_FRONT, GL_AMBIENT, greenPlasticAmb);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, greenPlasticDif);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, greenPlasticSpec);
+		glMaterialf(GL_FRONT, GL_SHININESS, greenPlasticCoef);
+		break;
+		
 	
 
 

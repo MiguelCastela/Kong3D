@@ -47,6 +47,7 @@ class Mario {
 
         //state
         int times_dead;
+        int total_times_dead;
         bool going_up;
         bool dead;
         bool winState;
