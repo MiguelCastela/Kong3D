@@ -1,0 +1,24 @@
+# Build output (openFrameworks)
+/bin/*
+!/bin/data/
+obj/
+*.o
+*.a
+
+# Generated project files (recreate with the openFrameworks project generator)
+Makefile
+config.make
+addons.make
+*.qbs
+*.qbs.user
+*.vcxproj
+*.vcxproj.*
+*.sln
+*.xcodeproj/
+
+# OS and editor junk
+.DS_Store
+__MACOSX/
+._*
+.vscode/
+*.swp
