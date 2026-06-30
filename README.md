@@ -122,3 +122,7 @@ that folder:
 `docs/tutorials/` holds the Computer Graphics course materials (lighting,
 texturing, and final operations) that this project was based on, along with the
 lighting calculator scripts (`calc_lights.py`, `calc_lights.m`).
+
+## Authors
+
+- Miguel Castela
